@@ -18,14 +18,8 @@ Erpnext Ecuador
 Aplicacion de ErpNext para Ecuador
 Permite habilitar los documentos electrónicos del SRI
 
-<<<<<<< HEAD
-[RC 1.1.1.1.1.1.1.1.1.1]
-[RC 1.1.1.1.1.1.1.1.1.1]
 
-=======
-[RC 1.1.1.1.1.1.1.1.1]
 [RC 1.1.1.1.1.1.1.1.1.1]
->>>>>>> ed8d217e9479ec09bc8115c2b6d78a9d3cb79765
 
 #### License
 
