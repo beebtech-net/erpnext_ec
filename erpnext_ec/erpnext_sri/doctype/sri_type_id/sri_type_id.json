@@ -1,0 +1,71 @@
+{
+ "actions": [],
+ "autoname": "format:EXP-{YYYY}-{#####}",
+ "creation": "2023-12-21 01:27:30.810619",
+ "doctype": "DocType",
+ "document_type": "Document", 
+ "show_name_in_global_search": 1,
+ "engine": "InnoDB",
+ "title_field": "description",
+ "show_title_field_in_link": 1,
+ "field_order": [
+  "sri_id",
+  "description"
+ ],
+ "fields": [
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "sri_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "Sri Id"
+  },
+  {
+    "fieldname": "description",
+    "fieldtype": "Data",
+    "in_list_view": 1,
+    "in_preview": 1,
+    "label": "Description"
+  }  
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-12-21 03:17:38.359596",
+ "modified_by": "Administrator",
+ "module": "Erpnext Sri",
+ "name": "Sri Type Id",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "sri_id",
+ "sort_order": "ASC",
+ "states": [],
+ "search_fields": "sri_id, description", 
+ "track_changes": 1
+}

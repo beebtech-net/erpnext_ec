@@ -1,0 +1,38 @@
+[
+  {
+    "doctype": "Sri Type Id",
+    "name": "04",
+    "sri_id": "04",
+    "description": "RUC"
+  },
+  {
+    "doctype": "Sri Type Id",
+    "name": "05",
+    "sri_id": "05",
+    "description": "CEDULA"
+  },
+  {
+    "doctype": "Sri Type Id",
+    "name": "06",
+    "sri_id": "06",
+    "description": "PASAPORTE"
+  },
+  {
+    "doctype": "Sri Type Id",
+    "name": "07",
+    "sri_id": "07",
+    "description": "VENTA A CONSUMIDOR FINAL"
+  },
+  {
+    "doctype": "Sri Type Id",
+    "name": "08",
+    "sri_id": "08",
+    "description": "IDENTIFICACION DEL EXTERIOR"
+  },
+  {
+    "doctype": "Sri Type Id",
+    "name": "09",
+    "sri_id": "09",
+    "description": "PLACA"
+  }
+]

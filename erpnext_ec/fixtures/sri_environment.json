@@ -1,0 +1,16 @@
+[
+  {
+    "doctype": "Sri Environment",
+    "name": "DES",
+    "id": 1,
+    "description": "Desarrollo",
+    "service_url": "https://cel.cert.xyz"
+  },
+  {
+    "doctype": "Sri Environment",
+    "name": "PRO",
+    "id": 2,
+    "description": "Produccion",
+    "service_url": "https://cel.cert.xyz.des"
+  }
+]

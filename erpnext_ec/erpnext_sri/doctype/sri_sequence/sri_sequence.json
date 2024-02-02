@@ -1,0 +1,97 @@
+{
+ "actions": [],
+ "autoname": "format:EXP-{YYYY}-{#####}",
+ "creation": "2023-12-21 01:27:30.810619",
+ "doctype": "DocType",
+ "document_type": "Document", 
+ "show_name_in_global_search": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "id",
+  "sri_environment_lnk",
+  "sri_type_doc_lnk",
+  "value",
+  "description"
+ ],
+ "fields": [
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "id",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "Id",
+   "translatable": 0
+  },
+  {
+    "allow_in_quick_entry": 1,
+    "fieldname": "sri_type_doc_lnk",
+    "fieldtype": "Link",
+    "label": "Tipo",
+    "options": "Sri Type Doc",
+    "in_list_view": 1,
+    "in_preview": 1
+   },
+   {
+    "allow_in_quick_entry": 1,
+    "fieldname": "sri_environment_lnk",
+    "fieldtype": "Link",
+    "label": "Ambiente",
+    "options": "Sri Environment",
+    "in_list_view": 1,
+    "in_preview": 1
+   },
+  {
+    "fieldname": "value",
+    "fieldtype": "Int",
+    "in_list_view": 1,
+    "in_preview": 1,
+    "label": "Valor"
+  },
+  {
+    "fieldname": "description",
+    "fieldtype": "Small Text",
+    "in_list_view": 1,
+    "in_preview": 1,
+    "label": "Description"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-12-21 03:17:38.359596",
+ "modified_by": "Administrator",
+ "module": "Erpnext Sri",
+ "name": "Sri Sequence",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "sri_type_doc_lnk",
+ "sort_order": "ASC",
+ "states": [],
+ "track_changes": 1
+}

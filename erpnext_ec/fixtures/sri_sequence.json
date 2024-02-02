@@ -1,0 +1,110 @@
+[
+  {
+    "doctype": "Sri Sequence",
+    "name": "FAC-DES",
+    "id": 1,
+    "sri_environment_lnk": "DES",
+    "sri_type_doc_lnk":"FAC",
+    "value": 0,
+    "description": "Secuencial para FACTURAS DESARROLLO"
+  },
+  {
+    "doctype": "Sri Sequence",
+    "name": "FAC-PRO",
+    "id": 2,
+    "sri_environment_lnk": "PRO",
+    "sri_type_doc_lnk":"FAC",
+    "value": 0,
+    "description": "Secuencial para FACTURAS PRODUCCION"
+  },
+  {
+    "doctype": "Sri Sequence",
+    "name": "NCR-DES",
+    "id": 3,
+    "sri_environment_lnk": "DES",
+    "sri_type_doc_lnk":"NCR",
+    "value": 0,
+    "description": "Secuencial para NOTCRED DESARROLLO"
+  },
+  {
+    "doctype": "Sri Sequence",
+    "name": "NCR-PRO",
+    "id": 4,
+    "sri_environment_lnk": "PRO",
+    "sri_type_doc_lnk":"NCR",
+    "value": 0,
+    "description": "Secuencial para NOTCRED PRODUCCION"
+  },
+  {
+    "doctype": "Sri Sequence",
+    "name": "NDE-DES",
+    "id": 5,
+    "sri_environment_lnk": "DES",
+    "sri_type_doc_lnk":"NDE",
+    "value": 0,
+    "description": "Secuencial para NOTDEB DESARROLLO"
+  },
+  {
+    "doctype": "Sri Sequence",
+    "name": "NDE-PRO",
+    "id": 6,
+    "sri_environment_lnk": "PRO",
+    "sri_type_doc_lnk":"NDE",
+    "value": 0,
+    "description": "Secuencial para NOTDEB PRODUCCION"
+  },
+  {
+    "doctype": "Sri Sequence",
+    "name": "GRS-DES",
+    "id": 7,
+    "sri_environment_lnk": "DES",
+    "sri_type_doc_lnk":"GRS",
+    "value": 0,
+    "description": "Secuencial para Guia Remis DESARROLLO"
+  },
+  {
+    "doctype": "Sri Sequence",
+    "name": "GRS-PRO",
+    "id": 8,
+    "sri_environment_lnk": "PRO",
+    "sri_type_doc_lnk":"GRS",
+    "value": 0,
+    "description": "Secuencial para Guia Remis PRODUCCION"
+  },
+  {
+    "doctype": "Sri Sequence",
+    "name": "CRE-DES",
+    "id": 9,
+    "sri_environment_lnk": "DES",
+    "sri_type_doc_lnk":"CRE",
+    "value": 0,
+    "description": "Secuencial para Comp. Reten. DESARROLLO"
+  },
+  {
+    "doctype": "Sri Sequence",
+    "name": "CRE-PRO",
+    "id": 10,
+    "sri_environment_lnk": "PRO",
+    "sri_type_doc_lnk":"CRE",
+    "value": 0,
+    "description": "Secuencial para Comp. Reten. PRODUCCION"
+  },
+  {
+    "doctype": "Sri Sequence",
+    "name": "LIQ-DES",
+    "id": 11,
+    "sri_environment_lnk": "DES",
+    "sri_type_doc_lnk":"LIQ",
+    "value": 0,
+    "description": "Secuencial para Liq. Comp. DESARROLLO"
+  },
+  {
+    "doctype": "Sri Sequence",
+    "name": "LIQ-PRO",
+    "id": 12,
+    "sri_environment_lnk": "PRO",
+    "sri_type_doc_lnk":"LIQ",
+    "value": 0,
+    "description": "Secuencial para Liq. Comp. PRODUCCION"
+  }
+]

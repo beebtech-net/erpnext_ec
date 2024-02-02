@@ -1,0 +1,62 @@
+[
+  {
+    "doctype": "Sri Type Doc",
+    "name": "FAC",
+    "sri_id": 1,
+    "description": "Factura Electrónica",
+    "document_type": "01",
+    "abbreviation": "FAC",
+    "example": "001-001-000000001",
+    "note": "Documento que respalda la venta de bienes o servicios."
+  },
+  {
+    "doctype": "Sri Type Doc",
+    "name": "NCR",
+    "sri_id": 2,
+    "description": "Nota de Crédito Electrónica",
+    "document_type": "04",
+    "abbreviation": "NCR",
+    "example": "004-001-000000001",
+    "note": "Documento que permite corregir errores en una factura electrónica."
+  },
+  {
+    "doctype": "Sri Type Doc",
+    "name": "NDE",
+    "sri_id": 3,
+    "description": "Nota de Débito Electrónica",
+    "document_type": "05",
+    "abbreviation": "NDB",
+    "example": "005-001-000000001",
+    "note": "Documento que permite registrar el incremento de valor de una factura electrónica."
+  },
+  {
+    "doctype": "Sri Type Doc",
+    "name": "GRS",
+    "sri_id": 4,
+    "description": "Guía de Remisión Electrónica",
+    "document_type": "06",
+    "abbreviation": "GRR",
+    "example": "006-001-000000001",
+    "note": "Documento que permite el transporte de bienes y productos."
+  },
+  {
+    "doctype": "Sri Type Doc",
+    "name": "CRE",
+    "sri_id": 5,
+    "description": "Comprobante de Retención Electrónico",
+    "document_type": "07",
+    "abbreviation": "COT",
+    "example": "007-001-000000001",
+    "note": "Documento que respalda las retenciones de impuestos realizadas en una transacción."
+  },
+  {
+    "doctype": "Sri Type Doc",
+    "name": "LIQ",
+    "sri_id": 6,
+    "description": "Liquidación de Compra Electrónico",
+    "document_type": "08",
+    "abbreviation": "LIQ",
+    "example": "008-001-000000001",
+    "note": "Documento que respalda las retenciones de impuestos realizadas en una transacción."
+  }
+]

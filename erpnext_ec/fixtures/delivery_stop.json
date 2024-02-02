@@ -1,0 +1,50 @@
+[  
+	{
+		"name": "Delivery Stop-docaduanerounico",
+		"parent": "Customize Form",
+		"parentfield": "fields",
+		"parenttype": "Customize Form",
+		"idx": 5,
+		"docstatus": 0,
+		"label": "docaduanerounico",
+		"fieldtype": "Data",
+		"fieldname": "docaduanerounico",
+		"inser_after": "customer_address",
+		"is_custom_field": 1,
+		"doctype": "Custom Field",
+		"default": "001-000",
+		"dt": "Delivery Stop"
+	},
+	{
+		"name": "Delivery Stop-motivotraslado",
+		"parent": "Customize Form",
+		"parentfield": "fields",
+		"parenttype": "Customize Form",
+		"idx": 6,
+		"docstatus": 0,
+		"label": "motivotraslado",
+		"fieldtype": "Data",
+		"fieldname": "motivotraslado",
+		"inser_after": "docaduanerounico",
+		"is_custom_field": 1,
+		"doctype": "Custom Field",
+		"default": "Entrega",
+		"dt": "Delivery Stop"
+	},
+	{
+		"name": "Delivery Stop-ruta",
+		"parent": "Customize Form",
+		"parentfield": "fields",
+		"parenttype": "Customize Form",
+		"idx": 6,
+		"docstatus": 0,
+		"label": "ruta",
+		"fieldtype": "Data",
+		"fieldname": "ruta",
+		"inser_after": "motivotraslado",
+		"is_custom_field": 1,
+		"doctype": "Custom Field",
+		"default": "Guayaquil - ",
+		"dt": "Delivery Stop"
+	}
+]

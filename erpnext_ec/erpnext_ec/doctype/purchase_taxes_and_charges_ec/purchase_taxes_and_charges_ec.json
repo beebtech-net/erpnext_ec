@@ -1,0 +1,112 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2013-05-21 16:16:04",
+ "doctype": "DocType",
+ "document_type": "Setup",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [  
+  "codigo",
+  "codDocSustentoLink",
+  "codDocSustento",
+  "numDocSustentoLink",
+  "numDocSustento",
+  "fechaEmisionDocSustento",
+  "codigoRetencion",
+  "baseImponible",
+  "porcentajeRetener"
+ ],
+ "fields": [
+  {   
+   "fieldname": "codigo",
+   "fieldtype": "Int",
+   "label": "Code",   
+   "reqd": 0
+  },
+  {   
+   "fieldname": "codDocSustentoLink",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Cod Doc Sustento Link",
+   "options": "Sri Type Doc",
+   "reqd": 0
+  },
+  {   
+   "fieldname": "codDocSustento",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Cod Doc Sustento",   
+   "reqd": 0,
+   "read_only": 1,
+   "hidden": 0
+  },
+  {   
+   "fieldname": "numDocSustentoLink",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Num DocSustento Link",
+   "options": "Purchase Invoice",
+   "reqd": 0
+  },
+  {   
+   "fieldname": "numDocSustento",
+   "fieldtype": "Data",
+   "in_list_view": 0,
+   "label": "Num DocSustento",   
+   "reqd": 0,
+   "read_only": 1
+  },
+  {   
+   "fieldname": "fechaEmisionDocSustento",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "fechaEmisionDocSustento",   
+   "reqd": 0,
+   "read_only": 1
+  },
+  {   
+   "fieldname": "codigoRetencion",
+   "fieldtype": "Link",
+   "options": "Account",
+   "in_list_view": 1,
+   "label": "Codigo Retención",
+   "reqd": 0
+  },
+  {
+    "columns": 2,
+    "fieldname": "baseImponible",
+    "fieldtype": "Currency",
+    "in_list_view": 1,
+    "label": "Base Imponible",    
+    "read_only": 0
+   },
+   {
+    "columns": 2,
+    "fieldname": "porcentajeRetener",
+    "fieldtype": "Float",
+    "in_list_view": 1,
+    "label": "Porcentaje Retener"    
+   },
+   {
+    "columns": 2,
+    "fieldname": "valorRetenido",
+    "fieldtype": "Currency",
+    "in_list_view": 1,
+    "label": "Valor Retenido",    
+    "read_only": 0
+   }
+ ],
+ "idx": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-01-14 10:04:36.618240",
+ "modified_by": "Administrator",
+ "module": "Erpnext Ec",
+ "name": "Purchase Taxes and Charges Ec",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

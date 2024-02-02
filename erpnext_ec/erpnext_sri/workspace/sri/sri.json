@@ -1,0 +1,52 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"zGVrPDbnHn\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Sri</span>\",\"col\":12}},{\"id\":\"jUYKLjvGRZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Retenciones\",\"col\":3}},{\"id\":\"MtTIC-F4iI\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Secuencias\",\"col\":3}},{\"id\":\"UAo3z71NbA\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Firmas Electr\u00f3nicas\",\"col\":3}}]",
+ "creation": "2024-01-26 11:24:07.707685",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "solid-success",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Sri",
+ "links": [],
+ "modified": "2024-01-29 08:42:33.540814",
+ "modified_by": "Administrator",
+ "module": "Erpnext Sri",
+ "name": "Sri",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 23.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Firmas Electr\u00f3nicas",
+   "link_to": "Sri Signature",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Retenciones",
+   "link_to": "Purchase Withholding Sri Ec",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Secuencias",
+   "link_to": "Sri Sequence",
+   "type": "DocType"
+  }
+ ],
+ "title": "Sri"
+}
