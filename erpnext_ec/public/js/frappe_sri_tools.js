@@ -176,7 +176,7 @@ async function GetFullCompanySri(def_company)
 	//frappe.defaults.get_user_default("Company") || frappe.defaults.get_global_default("company")
 
 	var docs = await frappe.db.get_list('Company', { 'fields': '["*"]', 'filters': { 'name': def_company } });
-		console.log(docs);
+	console.log(docs);
 		
 	if(docs.length > 0)
 	{

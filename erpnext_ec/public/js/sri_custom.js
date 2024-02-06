@@ -380,6 +380,12 @@ const Website = {
     },
     DownloadFile(doc, typeFile, siteName)
     {
+        typeDocSri = 'FAC';
+        
+        console.log(typeDocSri);
+        console.log(typeFile);
+        console.log(siteName);
+
         var btnProcess = $('div.dropdown[data-name="' + doc + '"]');
         //Oculta el botón
         $(btnProcess).hide();
@@ -389,7 +395,7 @@ const Website = {
         frappe.call({
             method: "erpnext_ec.utilities.sri_ws.get_doc",
             args: {
-                doc: doc,
+                doc_name: doc,
                 typeDocSri: typeDocSri,
                 typeFile: typeFile,
                 siteName: siteName
@@ -400,13 +406,19 @@ const Website = {
                 console.log('success');
                 console.log(r);
             },                
-            always: function(r) {},
+            always: function(r) {
+                //console.log("siempre!!");
+                $(btnProcess).show();
+                $(btnProcess).parent().find('.custom-animation').remove();
+            },
             error: function(r) {
+
                 console.log('error');
                 console.log(r);
+
                 frappe.show_alert({
                     //message: __(`Error al procesar documento ${doc}:` + req.statusText + ":" + req.responseText),
-                    message: __(`Error al procesar documento ${doc}:`),
+                    message: __(`Error al procesar descarga del documento ${doc}:`),
                     indicator: 'red'
                 }, 5);
             },
@@ -429,6 +441,11 @@ const Website = {
                     link.href = window.URL.createObjectURL(blob);
                     link.download = fileNameForDownload; //doc+".xml";
                     link.click();
+
+                    frappe.show_alert({                        
+                        message: __(`Documento XML ${doc} descargado.`),
+                        indicator: 'green'
+                    }, 5);
                 }
                 else
                 {
@@ -437,7 +454,7 @@ const Website = {
                     //console.log('1x');
                     frappe.show_alert({
                         //message: __(`Error al procesar documento ${doc}:` + req.statusText + ":" + req.responseText),
-                        message: __(`Error al procesar documento ${doc}:`),
+                        message: __(`Error al procesar descarga del documento ${doc}:`),
                         indicator: 'red'
                     }, 5);
                     
@@ -449,64 +466,18 @@ const Website = {
                 $(btnProcess).parent().find('.custom-animation').remove();
             }
         });
-    },
-    DownloadFile_old(doc, typeFile, sitename) {
-
-        //Cuando se usan botones individuales
-        //var btnProcess = $('.list-actions button[data-name="' + doc + '"]').parent().find('.btn-download-' + typeFile);
-
-        var btnProcess = $('div.dropdown[data-name="' + doc + '"]');
-        //Oculta el botón
-        $(btnProcess).hide();
-        //Muestra animación de carga
-        $(btnProcess).after(document.Website.loadingAnimation);
-        //console.log(btnProcess);
-
-        var url = `${btApiServer}/api/Download/${typeFile}/${doc}?tip_doc=FAC&sitename=${sitename}`;
-        var req = new XMLHttpRequest();
-        req.open("POST", url, true);
-        req.responseType = "blob";
-        /*
-        req.loadend = function (event) {
-            console.log('Terminado');
-            $(btnProcess).show();
-            $(btnProcess).parent().find('.custom-animation').remove();
-        };
-        */
-        req.onload = function (event) {
-            //console.log(req);
-            var fileNameForDownload = doc + `.${typeFile}`;
-            var disposition = req.getResponseHeader('Content-Disposition');
-            //console.log(disposition);
-            if (disposition && disposition.indexOf('attachment') !== -1) {
-                var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-                var matches = filenameRegex.exec(disposition);
-                if (matches != null && matches[1]) {
-                    fileNameForDownload = matches[1].replace(/['"]/g, '');
-                }
-            }
-            
-            var blob = req.response;
-            //var fileName = req.getResponseHeader("fileName") //if you have the fileName header available
-            var link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = fileNameForDownload;
-            link.click();
-
-            //console.log('Terminado');
-            $(btnProcess).show();
-            $(btnProcess).parent().find('.custom-animation').remove();
-        };
-
-        req.send();
-
-
     },    
     DownloadXml(doc) {
+        console.log(doc);
+        
+        //var doctype_customized_d = frappe.dynamic_link.doc.doctype;
+        //console.log(doctype_customized_d);
         var sitenameVar = frappe.boot.sitename;
         document.Website.DownloadFile(doc, 'xml', sitenameVar);        
     },
     DownloadPdf(doc) {
+        var doctype_customized_d = frappe.dynamic_link.doc.doctype;
+        console.log(doctype_customized_d);
         var sitenameVar = frappe.boot.sitename;
         document.Website.DownloadFile(doc, 'pdf', sitenameVar);
         //console.log(doc);

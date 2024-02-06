@@ -15,18 +15,46 @@ def execute():
 	#print(dir_path)
 	#print(cwd)
     
+	# script_list = [
+    #         {
+    #               "doctype" : "Sales Invoice",
+    #               "name" : "cs-erpnext-ec-si-list-001",
+    #               "view" : "List",
+    #               "source_path" : "sales_invoices_list_v15.js"
+	# 		},
+	# 		{
+    #               "doctype" : "Sales Invoice",
+    #               "name" : "cs-erpnext-ec-si-form-002",
+    #               "view" : "Form",
+    #               "source_path" : "sales_invoice_form.js"
+	# 		}
+	# ]
+
+
 	script_list = [
             {
                   "doctype" : "Sales Invoice",
                   "name" : "cs-erpnext-ec-si-list-001",
                   "view" : "List",
-                  "source_path" : "sales_invoices_list_v15.js"
+                  "source_path" : "doctype_custom_list_sri.js"
 			},
 			{
                   "doctype" : "Sales Invoice",
                   "name" : "cs-erpnext-ec-si-form-002",
                   "view" : "Form",
-                  "source_path" : "sales_invoice_form.js"
+                  "source_path" : "doctype_custom_form_sri.js"
+			},
+			{
+                  "doctype" : "Delivery Note",
+                  "name" : "cs-erpnext-ec-dn-list-003",
+                  "view" : "List",
+                  "source_path" : "doctype_custom_list_sri.js"
+			},
+			{
+                  "doctype" : "Delivery Note",
+                  "name" : "cs-erpnext-ec-dn-form-004",
+                  "view" : "Form",
+                  "source_path" : "doctype_custom_form_sri.js"
 			}
 	]
     
@@ -35,7 +63,8 @@ def execute():
 	for script_item in script_list:
 		print (script_item)
 		with open(dir_path + "/../../public/js/" + script_item['source_path']) as f:			
-			data = f.read()		
+			data = f.read()
+			data = data.replace('[DOCTYPE_CUSTOM_FORM_SRI]',script_item['doctype'])
 		assign_client_script_to_doctype(script_item['doctype'], script_item['name'], script_item['view'], data)
 
 

@@ -13,6 +13,21 @@
 		"is_custom_field": 1,
 		"doctype": "Custom Field",
 		"dt": "Delivery Note"
+	},	
+	{
+		"name": "Delivery Note-numeroautorizacion",
+		"parent": "Customize Form",
+		"parentfield": "fields",
+		"parenttype": "Customize Form",
+		"idx": 14,
+		"docstatus": 0,
+		"label": "numeroautorizacion",
+		"fieldtype": "Data",
+		"fieldname": "numeroautorizacion",
+		"inser_after": "numdocsustento",
+		"is_custom_field": 1,
+		"doctype": "Custom Field",
+		"dt": "Delivery Note"
 	},
 	{
 		"name": "Delivery Note-sri_response",
