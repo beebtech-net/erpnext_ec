@@ -378,9 +378,15 @@ const Website = {
 
         d.show();
     },
-    DownloadFile(doc, typeFile, siteName)
+    DownloadFile(doc, typeFile, siteName, doctype_erpnext)
     {
-        typeDocSri = 'FAC';
+        typeDocSri = '-';
+
+        if(doctype_erpnext == 'Sales Invoice')
+            typeDocSri = 'FAC';
+
+        if(doctype_erpnext == 'Delivery Note')
+            typeDocSri = 'GRS';
         
         console.log(typeDocSri);
         console.log(typeFile);
@@ -468,18 +474,21 @@ const Website = {
         });
     },    
     DownloadXml(doc) {
-        console.log(doc);
+        //console.log(doc);
         
-        //var doctype_customized_d = frappe.dynamic_link.doc.doctype;
-        //console.log(doctype_customized_d);
+        var properties_view = Object.getOwnPropertyNames(frappe.views.list_view);
+        var doctype_erpnext = properties_view[0];
+        //console.log(properties_view[0]); 
+
         var sitenameVar = frappe.boot.sitename;
-        document.Website.DownloadFile(doc, 'xml', sitenameVar);        
+        document.Website.DownloadFile(doc, 'xml', sitenameVar, doctype_erpnext);
     },
     DownloadPdf(doc) {
-        var doctype_customized_d = frappe.dynamic_link.doc.doctype;
-        console.log(doctype_customized_d);
+        var properties_view = Object.getOwnPropertyNames(frappe.views.list_view);
+        var doctype_erpnext = properties_view[0];
+
         var sitenameVar = frappe.boot.sitename;
-        document.Website.DownloadFile(doc, 'pdf', sitenameVar);
+        document.Website.DownloadFile(doc, 'pdf', sitenameVar, doctype_erpnext);
         //console.log(doc);
     }    
 }

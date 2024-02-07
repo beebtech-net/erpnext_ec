@@ -241,6 +241,36 @@ def get_full_taxes(doc_name):
 
 	return impuestos
 
+def get_full_delivery_trips(doc):
+    
+	print (doc)
+
+	doc_name = doc.name
+
+	# document_links = frappe.get_all('Document link', filters={'parent': doc_name}, fields=['*'])
+	# print("document_links")
+	# print(document_links)
+
+	delivery_trips = frappe.get_all('Delivery Trip', filters={'delivery_note': doc_name}, fields=['*'])
+    #    fields=['charge_type', 'account_head', 'tax_amount']
+		
+	# print(delivery_trips)
+
+	for delivery_tripItem in delivery_trips:
+		delivery_stops = frappe.get_all('Delivery Stop', filters={'parent': delivery_tripItem.name}, fields=['*'])
+		# print('CUENTAAAAAAAAAAAAA')
+		print("delivery_trips")
+		print(delivery_tripItem)
+
+		print("delivery_stops")
+		print(delivery_stops)
+		# print(accountApi.sricodeper)
+		delivery_tripItem.delivery_stops = delivery_stops
+		
+
+	return delivery_trips
+
+
 def build_doc_fac(doc_name):
 	# DireccionMatriz = ''
 	# dirEstablecimiento = ''
@@ -326,21 +356,110 @@ def build_doc_fac(doc_name):
 		return doc
 
 
+def build_doc_grs(doc_name):
+	# DireccionMatriz = ''
+	# dirEstablecimiento = ''
+	# direccionComprador = ''
+	# emailComprador = ''	
+    
+	docs = frappe.get_all('Delivery Note', filters={"name": doc_name}, fields = ['*'])
+	customer_email_id =  ''
+
+	sri_validated = 'ok';
+	sri_validated_message = ''
+
+	if docs:
+		doc = docs[0]
+		#print("ITEEEEMMMMSSSS")
+		doc.items = get_full_items(doc.name)
+		#print(doc.items)
+        
+		doc.taxes = get_full_taxes(doc.name)
+		#print("TAXEEESSS")
+		#print(doc.taxes)
+
+		#Datos completos de la compañia emisora
+		company_full = get_full_company_sri(doc.company)
+
+		#print('Compañia')
+		#print(company_full)
+
+		doc.nombreComercial = company_full['nombreComercial']
+		doc.company_name = doc.company
+		
+		doc.tax_id = company_full['ruc']
+		doc.DireccionMatriz = company_full['dirMatriz']
+		doc.dirEstablecimiento = company_full['dirMatriz'] # TODO: temporal, la dirección del establecimiento debe ser definida
+
+		#Datos completos del cliente
+		customer_full = get_full_customer_sri(doc.customer)
+		doc.customer_tax_id = customer_full['customer_tax_id']
+		doc.RazonSocial = customer_full['customer_name']
+		doc.tipoIdentificacionComprador = customer_full['tipoIdentificacionComprador']
+		customer_phone = customer_full['customer_phone']
+		customer_email_id = customer_full['customer_email_id']
+
+		doc.infoAdicional = build_infoAdicional_sri(doc_name, customer_email_id, customer_phone)
+
+		# Obtener datos de entrega desde delivery trip y stops
+
+		doc.deliveryTrips = get_full_delivery_trips(doc)
+
+		# print(doc.infoAdicional)
+
+		#Simulando error
+		sri_validated = 'error'
+		sri_validated_message += 'Cliente requerido-'
+		sri_validated_message += 'No se han definido datos de dirección del cliente-'
+		sri_validated_message += 'No se ha definido Email del cliente-'
+		sri_validated_message += 'Establecimiento incorrecto-'
+		sri_validated_message += 'Punto de emisión incorrecto-'
+		sri_validated_message += 'No se ha definido ni solicitud de pago ni entrada de pago-'
+		#Simulando error-----------fin
+
+		if sri_validated == 'ok':
+			sri_validated_message = 'Listo!';
+		
+		doc.sri_validated = sri_validated
+		doc.sri_validated_message = sri_validated_message
+		return doc
+
 @frappe.whitelist()
 def get_doc(doc_name, typeDocSri, typeFile, siteName):
 
-	# print(doc_name, typeDocSri, typeFile, siteName)
-
 	#El parametro doc aquí es el nombre del documento
+      
+	match typeDocSri:
+		case "FAC":
+			doc = build_doc_fac(doc_name)
+			print ("")
+		case "GRS":
+			doc = build_doc_grs(doc_name)
+	
+	# print(doc_name, typeDocSri, typeFile, siteName)
+	
+	if doc:		
+		doc_str = json.dumps(doc, default=str) 
 
-	doc = build_doc_fac(doc_name)
+		print ("NODYYYYYYYY")
+		print (doc)
+		print (doc_str)
+
+		headers = {}
+		api_url = f"https://192.168.204.66:7037/api/v2/Download/{typeFile}?documentName={doc_name}&tip_doc={typeDocSri}&sitename={siteName}"	
+		#response = requests.post(api_url, json=doc_str, verify=False, stream=True, headers= headers)
+		response = requests.post(api_url, data=doc_str, verify=False, stream=True, headers= headers)
+		return response.text
+
+	return ""
+
 	#print(doc_name)
 	#print(doc.customer_email_id)
 
 	#print(doc.sri_validated)
 	#print(doc.sri_validated_message)
 
-	doc_str = json.dumps(doc, default=str)
+	
 	#print(doc_str)
 
 	#json -> object
@@ -349,7 +468,7 @@ def get_doc(doc_name, typeDocSri, typeFile, siteName):
 	# print(x.name)
 	
 	#headers = { "Authorization" : "our_unique_secret_token" }
-	headers = {}
+	# headers = {}
 
 	# data = {
 	# 	"id": 1001,
@@ -357,10 +476,10 @@ def get_doc(doc_name, typeDocSri, typeFile, siteName):
 	# 	"passion": "coding",
 	# }
 	
-	api_url = f"https://192.168.204.66:7037/api/v2/Download/{typeFile}?documentName={doc_name}&tip_doc={typeDocSri}&sitename={siteName}"
+	# api_url = f"https://192.168.204.66:7037/api/v2/Download/{typeFile}?documentName={doc_name}&tip_doc={typeDocSri}&sitename={siteName}"
 	
 	#response = requests.post(api_url, json=doc_str, verify=False, stream=True, headers= headers)
-	response = requests.post(api_url, data=doc_str, verify=False, stream=True, headers= headers)
+	# response = requests.post(api_url, data=doc_str, verify=False, stream=True, headers= headers)
 	
 	#for k,v in r.raw.headers.items(): print(f"{k}: {v}")
 	#print(r.text)
@@ -384,7 +503,7 @@ def get_doc(doc_name, typeDocSri, typeFile, siteName):
 	#frappe.throw(_('You need to have "Share" permission'), frappe.PermissionError)
 	#raise Exception("Sorry, no numbers below zero")
 
-	return response.text
+	# return response.text
 
 @frappe.whitelist()
 def send_doc(doc):	

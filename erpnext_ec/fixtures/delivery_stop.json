@@ -46,5 +46,21 @@
 		"doctype": "Custom Field",
 		"default": "Guayaquil - ",
 		"dt": "Delivery Stop"
+	},
+	{
+		"name": "Delivery Stop-cust-establishment",
+		"parent": "Customize Form",
+		"parentfield": "fields",
+		"parenttype": "Customize Form",
+		"idx": 18,
+		"docstatus": 0,
+		"label": "Establecimiento Cliente",
+		"fieldtype": "Link",
+		"fieldname": "customerEstablishment",
+		"options":"Sri External Establishment",
+		"inser_after": "customer",
+		"is_custom_field": 1,
+		"doctype": "Custom Field",
+		"dt": "Delivery Stop"
 	}
 ]

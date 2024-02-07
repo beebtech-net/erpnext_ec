@@ -105,7 +105,7 @@ function SetupCustomButtons(doc)
             `);
             */
 
-            console.log(doc);
+            //console.log(doc);
 
             var buttonGroup = `<div class="dropdown show" data-name="` + doc.name + `" style="display: inline-block;position: unset !important;">
   <a class="btn btn-secondary dropdown-toggle btn-xs" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
