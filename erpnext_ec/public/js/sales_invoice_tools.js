@@ -10,14 +10,13 @@ function PrepareDocument(doc_name)
 			var sitenameVar = frappe.boot.sitename;			
 			var customerApi = await frappe.db.get_doc('Customer', docApi.customer);
 
-			var customerAddress = null;
-
-			if(customerApi.customer_primary_address != null)
-			{
-				customerAddress = await frappe.db.get_doc('Address', customerApi.customer_primary_address);
+			//var customerAddress = null;
+			//console.log(customerApi);
+			//if(customerApi.customer_primary_address != null && customerApi.customer_primary_address != '')
+			//{
+			//	customerAddress = await frappe.db.get_doc('Address', customerApi.customer_primary_address);
 				//console.log(customerAddress);
-			}
-
+			//}
 			
 			var paymentsItems = null;
 			var paymentsEntryApi = null;
@@ -118,6 +117,8 @@ function PrepareDocument(doc_name)
 				
 			}
 			
+			console.log(docApi.customer_address);
+
 			if(docApi.customer_address != undefined)
 			{
 				var customerAddressApi = await frappe.db.get_doc('Address', docApi.customer_address);
@@ -270,17 +271,23 @@ function PrepareDocumentForSend(doc) {
     setTimeout(
         async function () {
 
+
+			var properties_view = Object.getOwnPropertyNames(frappe.views.list_view);
+			var doctype_erpnext = properties_view[0];
+
+			console.log(doctype_erpnext);
+
             console.log(doc);
 
             var sitenameVar = frappe.boot.sitename;
 			var customer_email_id = '';
 			
             var customerApi = await frappe.db.get_doc('Customer', doc.customer);
-            //console.log(customerApi);
+            console.log(customerApi);
 
-			var customerAddress = null;
+			var customerAddress = null;			
 
-			if(customerApi.customer_primary_address != null)
+			if(customerApi.customer_primary_address != null && customerApi.customer_primary_address != '')
 			{
 				customerAddress = await frappe.db.get_doc('Address', customerApi.customer_primary_address);
 				//console.log(customerAddress);
@@ -320,8 +327,7 @@ function PrepareDocumentForSend(doc) {
 			if (customerAddress == null) {
                 data_alert += document.Website.CreateAlertItem(`No se han definido datos de dirección del cliente`);
 				documentIsReady = false;
-            }
-			
+            }			
 			
 			if (customerAddress != null && (customerAddress.email_id == "" || customerAddress.email_id == null )) {
                 data_alert += document.Website.CreateAlertItem(`No se ha definido Email del cliente`);
@@ -405,13 +411,24 @@ function PrepareDocumentForSend(doc) {
                         console.log('Enviando al SRI');
                         //console.log(doc);
                         var docApi = frappe.get_doc('Sales Invoice', doc.name);
-                        //console.log(docApi);						
+                        //console.log(docApi);
+						
+						typeDocSri = '-';
+
+						if(doctype_erpnext == 'Sales Invoice')
+							typeDocSri = 'FAC';
+				
+						if(doctype_erpnext == 'Delivery Note')
+							typeDocSri = 'GRS';
 
 						frappe.call({
 							method: "erpnext_ec.utilities.sri_ws.send_doc",
 							args: 
 							{
 								doc: doc,
+								typeDocSri: typeDocSri,
+								doctype_erpnext: doctype_erpnext,
+								siteName: sitenameVar,
 								freeze: true,
 								freeze_message: "Procesando documento, espere un momento.",
 								success: function(r) {},

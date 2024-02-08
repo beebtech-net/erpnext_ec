@@ -506,7 +506,9 @@ def get_doc(doc_name, typeDocSri, typeFile, siteName):
 	# return response.text
 
 @frappe.whitelist()
-def send_doc(doc):	
+def send_doc(doc, typeDocSri, doctype_erpnext, siteName):	
+	
+	doc_data = None
 
 	activation_level = 0
 	sales_data = []
@@ -552,89 +554,132 @@ def send_doc(doc):
 	
 	#print(doc)
 
-	x = json.loads(doc, object_hook=lambda d: SimpleNamespace(**d))
+	#	SE OMITE ESTE PASO
+	doc_object_build = json.loads(doc, object_hook=lambda d: SimpleNamespace(**d))
 	print("DESDE OBJETO")
-	print(x.name)
+	print(doc_object_build.name)
+	print(typeDocSri)
+	#   ----------------
 
 	level = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 	#time.sleep(5)
 	level += '   RESPUESTA SRI   ' # + doc.name
 	level += datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 
-	#Se agrega un nuevo Xml Response para que se lance el evento y se envie el email
-	xml_response_new = frappe.get_doc({
-		'id': 1,
-        'doctype': 'Xml Responses',
-        'description': "[Description]", #f"{doc.name} Added",        
-    })
-
-	xml_response_new.insert()
-	frappe.db.commit()
+	match typeDocSri:
+		case "FAC":
+			doc_data = build_doc_fac(doc_object_build.name)
+			print ("")
+		case "GRS":
+			doc_data = build_doc_grs(doc_object_build.name)
 
 	#Preparar documento enviarlo al servicio externo de autorización
 	#---------------------------------------------------------------
+	# Obtener configuracion desde los datos
+	# - url_server_beebtech
+	# , filters = { 'reference_name': doc_name }, fields='*'
+	settings_ec = frappe.get_list(doctype='Regional Settings Ec', fields='*')
+	#print(settings_ec)
 	
+	url_server_beebtech = '';
+
+	if settings_ec:
+		url_server_beebtech = settings_ec[0].url_server_beebtech
+		#print(url_server_beebtech)
+
 	#api_url = "http://localhost:3003/api/Download/xml/MAT-DT-2023-00065?tip_doc=GRS&sitename=hdc"
 	
-	#url para simulacion de SRI
-	#api_url = "http://67.225.226.30:3003/api/Tool/Simulate"
-	api_url = "http://localhost:7037/api/Tool/Simulate"
+	is_simulation_mode = True
 	
-	response = requests.post(api_url, verify=False, stream=True)
-	#for k,v in r.raw.headers.items(): print(f"{k}: {v}")
-	#print(r.text)
+	if(is_simulation_mode):
+		#Modo de simulación
+		api_url = f"{url_server_beebtech}/Tool/Simulate"
+	else:
+		#Envío normal
+		api_url = f"{url_server_beebtech}/sendmethod"
 	
-	#print(response.text);
-	#print(response.status_code);
-	
-	response_json = json.loads(response.text, object_hook=lambda d: SimpleNamespace(**d))
+	#print(doc_data)
 
-	if(response.status_code):
-		#evaluar estado de respuesta SRI
-		if(response_json.ok and int(response_json.data.numeroComprobantes) > 0):
-			print ("correcto")
+	if (doc_data):
+		doc_str = json.dumps(doc_data, default=str)
 
-			#proceder a actualizar datos del registro	
-			print(response_json.data.claveAccesoConsultada)
-			print(response_json.data.numeroComprobantes)
-			print(response_json.data.autorizaciones.autorizacion[0].estado)
-			print(response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
-			print(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
-			print(response_json.data.autorizaciones.autorizacion[0].ambiente)
+		print ("NODYYYYYYYY")
+		print (doc_data)
+		print (doc_str)
 
-			signature_object = frappe.get_last_doc('Sri Signature', filters = { 'tax_id': '091982695800111'})
-			#signature_object = frappe.get_doc('Sri Signature','EXP-2024-00097')
+		headers = {}
+		#api_url = f"https://192.168.204.66:7037/api/v2/Download/{typeFile}?documentName={doc_name}&tip_doc={typeDocSri}&sitename={siteName}"	
+		#response = requests.post(api_url, json=doc_str, verify=False, stream=True, headers= headers)
+		
+		if(is_simulation_mode):
+			response = requests.post(api_url, verify=False, stream=True)
+		else:
+			response = requests.post(api_url, data=doc_str, verify=False, stream=True, headers= headers)
 
-			if(signature_object):
-				print(signature_object)
-				print(signature_object.Firma)
+		#for k,v in r.raw.headers.items(): print(f"{k}: {v}")
+		#print(r.text)
+		
+		#print(response.text);
+		#print(response.status_code);
+		
+		response_json = json.loads(response.text, object_hook=lambda d: SimpleNamespace(**d))
 
-				if(signature_object.Firma):
-					input_data = signature_object.Firma
+		if(response.status_code):
+			#evaluar estado de respuesta SRI
+			if(response_json.ok and int(response_json.data.numeroComprobantes) > 0):
+				print ("correcto")
 
-					key = "ratonratonquequieresgatoladron.." #32 bytes
+				#proceder a actualizar datos del registro	
+				print(response_json.data.claveAccesoConsultada)
+				print(response_json.data.numeroComprobantes)
+				print(response_json.data.autorizaciones.autorizacion[0].estado)
+				print(response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
+				print(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
+				print(response_json.data.autorizaciones.autorizacion[0].ambiente)
 
-					encrypted_data = encrypt_string(input_data, key)
-					print("p12 encriptado")
-					print(encrypted_data)
+				#Se agrega un nuevo Xml Response para que se lance el evento y se envie el email
+				xml_response_new = frappe.get_doc({
+					'id': 1,
+					'doctype': 'Xml Responses',
+					'description': "[Description]", #f"{doc.name} Added",        
+				})
 
-					input_pwd = "ronaldpassword"
-					encrypted_pwd = encrypt_string(input_pwd, key)
-					print("pwd encriptado")
-					print(encrypted_pwd)
+				signature_object = frappe.get_last_doc('Sri Signature', filters = { 'tax_id': '091982695800111'})
+				#signature_object = frappe.get_doc('Sri Signature','EXP-2024-00097')			
 
-	#api_url = "https://jsonplaceholder.typicode.com/todos/10"
-	#response = requests.get(api_url)
-	
-	#print(response.json());
+				xml_response_new.insert()
+				frappe.db.commit()
 
-	#{'userId': 1, 'id': 10, 'title': 'illo est ... aut', 'completed': True}
+				if(signature_object):
+					print(signature_object)
+					print(signature_object.p12)
 
-	#todo = {"userId": 1, "title": "Wash car", "completed": True}
-	#response = requests.put(api_url, json=todo)
-	#print(response.json())
-	#{'userId': 1, 'title': 'Wash car', 'completed': True, 'id': 10}
+					if(signature_object.p12):
+						input_data = open('../' + signature_object.p12).read()						
 
-	#frappe.msgprint(f"{xml_response_new.id} has been created.")
+						key = "ratonratonquequieresgatoladron.." #32 bytes
 
-	return response.text
+						encrypted_data = encrypt_string(input_data, key)
+						print("p12 encriptado")
+						print(encrypted_data)
+
+						input_pwd = "ronaldpassword"
+						encrypted_pwd = encrypt_string(input_pwd, key)
+						print("pwd encriptado")
+						print(encrypted_pwd)
+
+		#api_url = "https://jsonplaceholder.typicode.com/todos/10"
+		#response = requests.get(api_url)
+		
+		#print(response.json());
+
+		#{'userId': 1, 'id': 10, 'title': 'illo est ... aut', 'completed': True}
+
+		#todo = {"userId": 1, "title": "Wash car", "completed": True}
+		#response = requests.put(api_url, json=todo)
+		#print(response.json())
+		#{'userId': 1, 'title': 'Wash car', 'completed': True, 'id': 10}
+
+		#frappe.msgprint(f"{xml_response_new.id} has been created.")
+
+		return response.text
