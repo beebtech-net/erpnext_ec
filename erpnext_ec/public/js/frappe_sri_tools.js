@@ -1,5 +1,29 @@
+function PrepareDocumentForSendV2(doc, DocTypeErpNext)
+{
+	switch(DocTypeErpNext)
+	{
+		case 'Sales Invoice':
+			{
+				console.log('MEtodo Facturas de venta');
+			}
+			break;
+		case 'Delivery Note':
+			{
+				console.log('MEtodo Guia de remision');
+			}
+			break;
+		case 'Purchase Withholding Sri Ec':
+			{
+				console.log('MEtodo COmprobante de Retencion');
+			}
+			break;
+	}
 
-function SetupCustomButtons(doc)
+	console.log(DocTypeErpNext);
+}
+
+
+function SetupCustomButtons(doc, DocTypeErpNext)
 {
     setTimeout(
         async function () {
@@ -13,7 +37,7 @@ function SetupCustomButtons(doc)
             }
             
             //console.log(doc.name);
-            var docApi = await frappe.db.get_doc('Sales Invoice', doc.name);
+            var docApi = await frappe.db.get_doc(DocTypeErpNext, doc.name);
             
             //Lograr que sea visible en mobile
             $('.list-actions').parent().removeClass('hidden-md');
@@ -30,7 +54,8 @@ function SetupCustomButtons(doc)
 
             $(actionButton).click(function (e) {
                 e.preventDefault();
-                PrepareDocumentForSend(doc);
+                //PrepareDocumentForSend(doc);
+				PrepareDocumentForSendV2(doc, DocTypeErpNext);
             });
 
             //icon-attachment
@@ -154,7 +179,8 @@ function SetFormSriButtons(frm)
 		console.log("Cargado Script add_custom_button ----cambiado");
 		var subject = frm.doc.subject;
 		var event_type = frm.doc.event_type;
-		PrepareDocumentForSend(frm.doc);
+		//PrepareDocumentForSend(frm.doc);
+		PrepareDocumentForSendV2(frm.doc, DocTypeErpNext);
 	},);
 
 	frm.add_custom_button(__('<i class="fa fa-play"></i> Descargar XML'), function() 

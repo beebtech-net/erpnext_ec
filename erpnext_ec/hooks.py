@@ -266,3 +266,7 @@ is_frappe_above_v12 = int(frappe_version.split('.')[0]) > 12
 #] if is_frappe_above_v12 else [
 #    '/assets/frappe_better_list_view/js/better_list_view_v12.js'
 #])
+
+get_translated_dict = {
+	("doctype", "Global Defaults"): "frappe.geo.country_info.get_translated_dict"
+}

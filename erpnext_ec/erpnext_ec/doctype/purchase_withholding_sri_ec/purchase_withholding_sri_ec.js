@@ -1,5 +1,6 @@
 //Prepare in list mode
-SetListSriButtons('Purchase Withholding Sri Ec');
+//NO USAR AQUI
+//SetListSriButtons('Purchase Withholding Sri Ec');
 
 //Prepare in form mode
 frappe.ui.form.on('Purchase Withholding Sri Ec', 
@@ -59,6 +60,7 @@ frappe.ui.form.on('Purchase Withholding Sri Ec',
         
     },
 	refresh(frm) {
+        //console.log(frm);
 		// your code here
 		console.log('Refreshhhh!!!');
 

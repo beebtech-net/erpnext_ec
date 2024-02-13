@@ -1,4 +1,7 @@
-doctype_customized = "[DOCTYPE_CUSTOM_FORM_SRI]";
+//doctype_customized = "[DOCTYPE_CUSTOM_FORM_SRI]";
+//doctype_customized = "Purchase Withholding Sri Ec";
+
+DocTypeErpNext = "Purchase Withholding Sri Ec";
 
 // function SetupCustomButtons(doc)
 // {
@@ -137,11 +140,11 @@ doctype_customized = "[DOCTYPE_CUSTOM_FORM_SRI]";
 // }
 
 //TODO: Colocar validacide lista hasta solucionar la carga focalizada
-console.log("Inicio Lista v2:" + Date().toString());
+console.log("Inicio Lista v2 - Withholding Script:" + Date().toString());
 
-frappe.listview_settings[doctype_customized] = frappe.listview_settings[doctype_customized] || {};
+frappe.listview_settings[DocTypeErpNext] = frappe.listview_settings[DocTypeErpNext] || {};
 
-frappe.listview_settings[doctype_customized].button = {
+frappe.listview_settings[DocTypeErpNext].button = {
     show(doc) {
         //console.log("Lista:" + Date().toString());
         //return doc.status != 'Paid';
@@ -150,10 +153,10 @@ frappe.listview_settings[doctype_customized].button = {
         //    return false;
         //}
 
-        SetupCustomButtons(doc, doctype_customized);
+        SetupCustomButtons(doc, 'Purchase Withholding Sri Ec');
         return true;
     },
-    get_label() 
+    get_label()
     {
         //old return __('<svg class="icon icon-sm" style=""><use class="" href="#icon-mark-as-read"></use></svg>');
         return __('<i class="fa fa-play"></i>');
@@ -167,7 +170,8 @@ frappe.listview_settings[doctype_customized].button = {
         var actionButton = $('.list-actions > .btn-action[data-name="' + doc.name + '"]');
         //console.log($(actionButton).attr('endRender'));
 
-        if ($(actionButton).attr('endRender') != 'true') {
+        if ($(actionButton).attr('endRender') != 'true') 
+        {
             frappe.show_alert({
                 message: __(`${doc.name} aún se está configurando, espere un momento por favor.`),
                 indicator: 'red'

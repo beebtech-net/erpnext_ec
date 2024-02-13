@@ -1,7 +1,9 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
+from __future__ import unicode_literals
 
+import frappe
 from frappe.model.document import Document
 
 class PurchaseWithholdingSriEc(Document):
@@ -9,6 +11,14 @@ class PurchaseWithholdingSriEc(Document):
 	# This code is auto-generated. Do not modify anything in this block.
 
 	pass
+
+	def validate(self):
+		print('validate 1')
+		#super(PurchaseWithholdingSriEc, self).validate()
+		print('validate 2')
+
+	def on_submit(self):
+		print('submit!!')
 
 # <infoTributaria>
 # 		<ambiente>2</ambiente>

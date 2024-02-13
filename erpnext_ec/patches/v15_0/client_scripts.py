@@ -55,7 +55,7 @@ def execute():
                   "name" : "cs-erpnext-ec-dn-form-004",
                   "view" : "Form",
                   "source_path" : "doctype_custom_form_sri.js"
-			}
+			},			
 	]
     
 	print ("client_script")

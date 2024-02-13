@@ -387,6 +387,9 @@ const Website = {
 
         if(doctype_erpnext == 'Delivery Note')
             typeDocSri = 'GRS';
+
+        if(doctype_erpnext == 'Purchase Withholding Sri Ec')
+            typeDocSri = 'CRE';
         
         console.log(typeDocSri);
         console.log(typeFile);
