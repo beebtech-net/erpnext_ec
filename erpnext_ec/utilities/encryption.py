@@ -2,6 +2,7 @@ from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
 from Crypto.Util.Padding import unpad
 from Crypto.Random import get_random_bytes
+from cryptography.fernet import Fernet
 from base64 import b64encode
 from base64 import b64decode
 
@@ -11,10 +12,9 @@ from frappe import _
 from frappe.utils.file_manager import get_file, save_uploaded
 
 def encriptar_datos(datos, clave):
-    iv = get_random_bytes(16)  # Genera un IV aleatorio
-    cipher = AES.new(clave, AES.MODE_CBC, iv)  # Crea una nueva instancia de cifrado AES en modo CBC
-    datos_encriptados = cipher.encrypt(pad(datos, AES.block_size))  # Encripta y rellena los datos según sea necesario
-    return iv + datos_encriptados  # Prepende el IV para su uso durante la desencriptación
+    cifrador = Fernet(clave)
+    datos_encriptados = cifrador.encrypt(datos)
+    return datos_encriptados
 
 
 def encrypt_string(input_string, key):
@@ -61,27 +61,54 @@ def get_signature(tax_id):
     signature_object = frappe.get_last_doc('Sri Signature', filters = { 'tax_id': tax_id})
 	#signature_object = frappe.get_doc('Sri Signature','EXP-2024-00097')
     if(signature_object):
-        print(signature_object)
-        print(signature_object.name)
+        #print(signature_object)
+        #print(signature_object.name)
         
         if(signature_object.p12):
             #link = frappe.utils.get_url() + signature_object.p12
             #f = requests.get(link)
 
             f = get_file(signature_object.p12)
-            print(f)
+            #print(f)
+            #print(len(f[1]))
+            input_data = f[1]
+            return input_data
+        
+
+def get_ecrypted_signature(tax_id):
+    
+    tax_id = '091982695800111'
+
+    #print(frappe.utils.get_url())
+
+    signature_object = frappe.get_last_doc('Sri Signature', filters = { 'tax_id': tax_id})
+	#signature_object = frappe.get_doc('Sri Signature','EXP-2024-00097')
+    if(signature_object):
+        #print(signature_object)
+        #print(signature_object.name)
+        
+        if(signature_object.p12):
+            #link = frappe.utils.get_url() + signature_object.p12
+            #f = requests.get(link)
+
+            f = get_file(signature_object.p12)
+            #print(f)
             #print(len(f[1]))
 
             input_data = f[1]
-            print(type(input_data))
+            #print(type(input_data))
             #print(input_data)
-            print(len(input_data))
+            #print(len(input_data))
 
-            key = "ratonratonquequieresgatoladron.." #32 bytes
+            #print(Fernet.generate_key())
+
+            #key = "ratonratonquequieresgatoladron.." #32 bytes
+            #key = "ratonratonquequi" #16 bytes
+            key = b'ZcyY8iHwMVXCNlu2jmGmeNlmyV_URisNjHWlshUf4Fk='
 
             encrypted_data = encriptar_datos(input_data, key)
-            print("p12 encriptado")
-            print(encrypted_data)
+            #print("p12 encriptado")
+            #print(encrypted_data)
 
             #decrypted_data = decrypt_string(encrypted_data, key)
             #print("p12 encriptado decripted")
@@ -91,3 +118,4 @@ def get_signature(tax_id):
             #encrypted_pwd = encrypt_string(input_pwd, key)
             #print("pwd encriptado")
             #print(encrypted_pwd)
+            return encrypted_data        

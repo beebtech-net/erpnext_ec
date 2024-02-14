@@ -3,7 +3,7 @@
 
 #from erpnext_ec.erpnext_ec.doctype import xml_responses
 
-from datetime import datetime
+from datetime import datetime, date, timedelta
 import time
 import frappe
 from frappe import _
@@ -22,6 +22,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # import json
 
 import re
+import base64
 
 from erpnext_ec.utilities.doc_builder_fac import build_doc_fac 
 from erpnext_ec.utilities.doc_builder_grs import build_doc_grs
@@ -110,6 +111,21 @@ def get_doc(doc_name, typeDocSri, typeFile, siteName):
 
 	# return response.text
 
+def handler(obj):
+    
+	if isinstance(obj, datetime):
+		return obj.isoformat()
+	elif isinstance(obj, date):
+		return obj.isoformat()	
+	elif isinstance(obj, timedelta):
+		return obj.total_seconds()	
+	elif isinstance(obj, bytes):
+		print('ENTRO EN EL BYTES!!!!')
+		return base64.b64encode(obj).decode('utf-8')
+	
+	raise TypeError("El objeto de tipo %s no es serializable JSON." % type(obj).__name__)
+
+
 @frappe.whitelist()
 def send_doc(doc, typeDocSri, doctype_erpnext, siteName):	
 	
@@ -195,7 +211,7 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 
 	#api_url = "http://localhost:3003/api/Download/xml/MAT-DT-2023-00065?tip_doc=GRS&sitename=hdc"
 	
-	is_simulation_mode = True
+	is_simulation_mode = False
 	
 	if(is_simulation_mode):
 		#Modo de simulación
@@ -207,7 +223,17 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 	#print(doc_data)
 
 	if (doc_data):
+		#signatureP12 = get_signature(doc_data.tax_id)
+		#print(type(signatureP12))
+		#doc_data.signatureP12 = signatureP12
+		#data_str = b"Este es un mensaje de prueba"
+		#signatureP12 = base64.b64encode(data_str).decode('utf-8')
+		#doc_data.signatureP12 = signatureP12
+
+		#doc_str = json.dumps(doc_data, default=handler)
 		doc_str = json.dumps(doc_data, default=str)
+		#doc_data = json.loads(doc_str)
+		#doc_data.signatureP12 = signatureP12
 
 		#print ("NODYYYYYYYY")
 		#print (doc_data)
@@ -216,13 +242,12 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 		headers = {}
 		#api_url = f"https://192.168.204.66:7037/api/v2/Download/{typeFile}?documentName={doc_name}&tip_doc={typeDocSri}&sitename={siteName}"	
 		#response = requests.post(api_url, json=doc_str, verify=False, stream=True, headers= headers)
-		
-		get_signature(doc_data.tax_id)
 
 		if(is_simulation_mode):
 			response = requests.post(api_url, verify=False, stream=True)
 		else:
 			response = requests.post(api_url, data=doc_str, verify=False, stream=True, headers= headers)
+			#response = requests.post(api_url, json=doc_data, verify=False, stream=True, headers= headers)
 
 		#for k,v in r.raw.headers.items(): print(f"{k}: {v}")
 		#print(r.text)		
