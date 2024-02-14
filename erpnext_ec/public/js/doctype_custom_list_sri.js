@@ -1,4 +1,4 @@
-doctype_customized = "[DOCTYPE_CUSTOM_FORM_SRI]";
+var doctype_customized = "[DOCTYPE_CUSTOM_FORM_SRI]";
 
 // function SetupCustomButtons(doc)
 // {

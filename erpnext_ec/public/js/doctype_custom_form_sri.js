@@ -17,7 +17,7 @@
 //         //}
 //     },2000);
 
-doctype_customized = "[DOCTYPE_CUSTOM_FORM_SRI]";
+var doctype_customized = "[DOCTYPE_CUSTOM_FORM_SRI]";
 
 frappe.ui.form.on(doctype_customized, {
 	refresh(frm)

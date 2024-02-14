@@ -1,7 +1,7 @@
 //doctype_customized = "[DOCTYPE_CUSTOM_FORM_SRI]";
 //doctype_customized = "Purchase Withholding Sri Ec";
 
-DocTypeErpNext = "Purchase Withholding Sri Ec";
+var DocTypeErpNext = "Purchase Withholding Sri Ec";
 
 // function SetupCustomButtons(doc)
 // {
