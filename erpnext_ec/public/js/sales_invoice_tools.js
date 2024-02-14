@@ -267,7 +267,7 @@ function PrepareDocument(doc_name)
 }
 
 
-function PrepareDocumentForSend(doc) {
+function SendSalesInvoice(doc) {
     setTimeout(
         async function () {
 

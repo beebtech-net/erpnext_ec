@@ -65,7 +65,7 @@ frappe.ui.form.on('Purchase Withholding Sri Ec',
 		console.log('Refreshhhh!!!');
 
         //Botones de formulario
-        SetFormSriButtons(frm);
+        SetFormSriButtons(frm, 'Purchase Withholding Sri Ec');
 	},
     purchase_withholding_supplier: function(frm)
 	{

@@ -13,7 +13,7 @@ import erpnext
 import json
 from types import SimpleNamespace
 import requests
-from erpnext_ec.utilities.encryption import encrypt_string
+from erpnext_ec.utilities.encryption import *
 
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -174,7 +174,6 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 	match typeDocSri:
 		case "FAC":
 			doc_data = build_doc_fac(doc_object_build.name)
-			print ("")
 		case "GRS":
 			doc_data = build_doc_grs(doc_object_build.name)
 		case "CRE":
@@ -210,22 +209,23 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 	if (doc_data):
 		doc_str = json.dumps(doc_data, default=str)
 
-		print ("NODYYYYYYYY")
-		print (doc_data)
-		print (doc_str)
+		#print ("NODYYYYYYYY")
+		#print (doc_data)
+		#print (doc_str)
 
 		headers = {}
 		#api_url = f"https://192.168.204.66:7037/api/v2/Download/{typeFile}?documentName={doc_name}&tip_doc={typeDocSri}&sitename={siteName}"	
 		#response = requests.post(api_url, json=doc_str, verify=False, stream=True, headers= headers)
 		
+		get_signature(doc_data.tax_id)
+
 		if(is_simulation_mode):
 			response = requests.post(api_url, verify=False, stream=True)
 		else:
 			response = requests.post(api_url, data=doc_str, verify=False, stream=True, headers= headers)
 
 		#for k,v in r.raw.headers.items(): print(f"{k}: {v}")
-		#print(r.text)
-		
+		#print(r.text)		
 		#print(response.text);
 		#print(response.status_code);
 		
@@ -251,29 +251,12 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 					'description': "[Description]", #f"{doc.name} Added",        
 				})
 
-				signature_object = frappe.get_last_doc('Sri Signature', filters = { 'tax_id': '091982695800111'})
-				#signature_object = frappe.get_doc('Sri Signature','EXP-2024-00097')			
+							
 
 				xml_response_new.insert()
 				frappe.db.commit()
 
-				if(signature_object):
-					print(signature_object)
-					print(signature_object.p12)
-
-					if(signature_object.p12):
-						input_data = open('../' + signature_object.p12).read()						
-
-						key = "ratonratonquequieresgatoladron.." #32 bytes
-
-						encrypted_data = encrypt_string(input_data, key)
-						print("p12 encriptado")
-						print(encrypted_data)
-
-						input_pwd = "ronaldpassword"
-						encrypted_pwd = encrypt_string(input_pwd, key)
-						print("pwd encriptado")
-						print(encrypted_pwd)
+				
 
 		#api_url = "https://jsonplaceholder.typicode.com/todos/10"
 		#response = requests.get(api_url)

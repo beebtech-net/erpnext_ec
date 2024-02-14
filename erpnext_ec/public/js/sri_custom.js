@@ -478,17 +478,37 @@ const Website = {
     },    
     DownloadXml(doc) {
         //console.log(doc);
-        
+        var doctype_erpnext = '';
         var properties_view = Object.getOwnPropertyNames(frappe.views.list_view);
-        var doctype_erpnext = properties_view[0];
-        //console.log(properties_view[0]); 
+        if(properties_view.length > 0)
+        {
+            //Lista
+            doctype_erpnext = properties_view[0];
+            console.log(properties_view[0]);
+        }
+        else
+        {
+            //Form
+            doctype_erpnext = cur_frm.doctype;
+        }         
 
         var sitenameVar = frappe.boot.sitename;
         document.Website.DownloadFile(doc, 'xml', sitenameVar, doctype_erpnext);
     },
     DownloadPdf(doc) {
+        var doctype_erpnext = '';
         var properties_view = Object.getOwnPropertyNames(frappe.views.list_view);
-        var doctype_erpnext = properties_view[0];
+        if(properties_view.length > 0)
+        {
+            //Lista
+            doctype_erpnext = properties_view[0];
+            console.log(properties_view[0]);
+        }
+        else
+        {
+            //Form
+            doctype_erpnext = cur_frm.doctype;
+        }  
 
         var sitenameVar = frappe.boot.sitename;
         document.Website.DownloadFile(doc, 'pdf', sitenameVar, doctype_erpnext);

@@ -23,7 +23,7 @@ frappe.ui.form.on(doctype_customized, {
 	refresh(frm)
     {
         console.log(frm.doc);
-        SetFormSriButtons(frm);
+        SetFormSriButtons(frm, doctype_customized);
 
         // frm.add_custom_button(__('<i class="fa fa-play"></i> Enviar al SRI'), function() {
         //     console.log(frm.doc);

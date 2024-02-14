@@ -5,6 +5,7 @@ function PrepareDocumentForSendV2(doc, DocTypeErpNext)
 		case 'Sales Invoice':
 			{
 				console.log('MEtodo Facturas de venta');
+				SendSalesInvoice(doc);
 			}
 			break;
 		case 'Delivery Note':
@@ -141,7 +142,7 @@ function SetListSriButtons(DocTypeErpNext)
 			//    return false;
 			//}
 
-			SetupCustomButtons(doc);
+			SetupCustomButtons(doc,DocTypeErpNext);
 			return true;
 		},
 		get_label() 
@@ -171,7 +172,7 @@ function SetListSriButtons(DocTypeErpNext)
 	}
 }
 
-function SetFormSriButtons(frm)
+function SetFormSriButtons(frm, DocTypeErpNext)
 {
 	frm.add_custom_button(__('<i class="fa fa-play"></i> Enviar al SRI'), function() {
 		// When this button is clicked, do this            
@@ -183,14 +184,25 @@ function SetFormSriButtons(frm)
 		PrepareDocumentForSendV2(frm.doc, DocTypeErpNext);
 	},);
 
-	frm.add_custom_button(__('<i class="fa fa-play"></i> Descargar XML'), function() 
+	frm.add_custom_button(__('<i class="fa fa-file-code-o"></i> Descargar XML'), function() 
 	{
-		frappe.show_alert({
-			message: __(`${frm.doc.name} Implementación requerida.`),
-			indicator: 'red'
-		}, 3);
+		//frappe.show_alert({
+		//	message: __(`${frm.doc.name} Implementación requerida.`),
+		//	indicator: 'red'
+		//}, 3);
+
+		//console.log('DOC NAMEEEEEEEEEEE');
+		//console.log(frm.doc.name);
+
+		//document.Website.DownloadXml('` + frm.doc.name + `');
+		document.Website.DownloadXml(frm.doc.name);
 
 	},__('<svg class="icon  icon-sm" style=""><use class="" href="#icon-organization"></use></svg>Sri')); //NO SOPORTA AWESOME ICONS
+
+	frm.add_custom_button(__('<i class="fa fa-file-pdf-o"></i> Descargar PDF'), function() 
+	{		
+		document.Website.DownloadPdf(frm.doc.name);
+	},__('<svg class="icon  icon-sm" style=""><use class="" href="#icon-organization"></use></svg>Sri'));
 }
 
 async function GetFullCompanySri(def_company)
