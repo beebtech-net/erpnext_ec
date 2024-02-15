@@ -157,7 +157,7 @@ def get_full_customer_sri(def_customer):
 
     docs = frappe.get_all('Customer', fields='*', filters={'name': def_customer})    
     
-    print(docs)
+    #print(docs)
 
     if docs:
         doc = docs[0]

@@ -177,9 +177,9 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 
 	#	SE OMITE ESTE PASO
 	doc_object_build = json.loads(doc, object_hook=lambda d: SimpleNamespace(**d))
-	print("DESDE OBJETO")
-	print(doc_object_build.name)
-	print(typeDocSri)
+	#print("DESDE OBJETO")
+	#print(doc_object_build.name)
+	#print(typeDocSri)
 	#   ----------------
 
 	level = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
@@ -218,9 +218,11 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 		api_url = f"{url_server_beebtech}/Tool/Simulate"
 	else:
 		#Envío normal
-		api_url = f"{url_server_beebtech}/sendmethod"
+		#https://localhost:7037/api/v2/SriProcess/sendmethod
+		api_url = f"{url_server_beebtech}/SriProcess/sendmethod?tip_doc={typeDocSri}&sitename={siteName}" 
 	
 	#print(doc_data)
+	print(api_url)
 
 	if (doc_data):
 		#signatureP12 = get_signature(doc_data.tax_id)
@@ -253,8 +255,11 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 		#print(r.text)		
 		#print(response.text);
 		#print(response.status_code);
+			
+		print(response)
+		print(response.text)
 		
-		response_json = json.loads(response.text, object_hook=lambda d: SimpleNamespace(**d))
+		response_json = json.loads(response.text, object_hook=lambda d: SimpleNamespace(**d))		
 
 		if(response.status_code):
 			#evaluar estado de respuesta SRI
@@ -274,13 +279,10 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 					'id': 1,
 					'doctype': 'Xml Responses',
 					'description': "[Description]", #f"{doc.name} Added",        
-				})
-
-							
+				})							
 
 				xml_response_new.insert()
 				frappe.db.commit()
-
 				
 
 		#api_url = "https://jsonplaceholder.typicode.com/todos/10"
