@@ -23,13 +23,40 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 import re
 import base64
+from dateutil import parser
 
 from erpnext_ec.utilities.doc_builder_fac import build_doc_fac 
 from erpnext_ec.utilities.doc_builder_grs import build_doc_grs
 from erpnext_ec.utilities.doc_builder_cre import build_doc_cre
 
 @frappe.whitelist()
+def send_email(doc, typeDocSri, doctype_erpnext, siteName, email_to):	
+	#var url = `${btApiServer}/api/Tool/AddToEmailQuote/${doc}?tip_doc=FAC&sitename=${sitenameVar}&email_to=${values.email_to}`;
+	pass
+
+@frappe.whitelist()
+def get_responses(doc, typeDocSri, doctype_erpnext, siteName):
+	# var url = `${btApiServer}/api/SriProcess/getresponses/${doc}?tip_doc=${tip_doc}&sitename=${sitenamePar}`;
+	pass
+
+def get_api_url():
+	settings_ec = frappe.get_list(doctype='Regional Settings Ec', fields='*')
+	#print(settings_ec)
+	
+	url_server_beebtech = '';
+
+	if settings_ec:
+		url_server_beebtech = settings_ec[0].url_server_beebtech
+		return url_server_beebtech
+	
+	raise ReferenceError("No se encontró configuración requerida 'Regional Settings Ec' url_server_beebtech")
+	#raise TypeError("El objeto de tipo %s no es serializable JSON." % type(obj).__name__)
+	#return ""
+
+@frappe.whitelist()
 def get_doc(doc_name, typeDocSri, typeFile, siteName):
+
+	print(doc_name, typeDocSri, typeFile, siteName)
 
 	#El parametro doc aquí es el nombre del documento
       
@@ -41,8 +68,7 @@ def get_doc(doc_name, typeDocSri, typeFile, siteName):
 			doc = build_doc_grs(doc_name)
 		case "CRE":
 			doc = build_doc_cre(doc_name)
-	
-	# print(doc_name, typeDocSri, typeFile, siteName)
+			print(doc)
 	
 	if doc:		
 		doc_str = json.dumps(doc, default=str) 
@@ -52,9 +78,16 @@ def get_doc(doc_name, typeDocSri, typeFile, siteName):
 		#print (doc_str)
 
 		headers = {}
-		api_url = f"https://192.168.200.19:7037/api/v2/Download/{typeFile}?documentName={doc_name}&tip_doc={typeDocSri}&sitename={siteName}"	
+		
+		url_server_beebtech = get_api_url()
+
+		print(url_server_beebtech)
+
+		api_url = f"{url_server_beebtech}/Download/{typeFile}?documentName={doc_name}&tip_doc={typeDocSri}&sitename={siteName}"	
 		#response = requests.post(api_url, json=doc_str, verify=False, stream=True, headers= headers)
 		response = requests.post(api_url, data=doc_str, verify=False, stream=True, headers= headers)
+
+		#print(response.text)
 		return response.text
 
 	return ""
@@ -189,7 +222,11 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 
 	match typeDocSri:
 		case "FAC":
+			setSecuencial(doc_object_build, typeDocSri)
 			doc_data = build_doc_fac(doc_object_build.name)
+			print('-----------------------')
+			print(doc_data.secuencial)
+			print('-----------------------')
 		case "GRS":
 			doc_data = build_doc_grs(doc_object_build.name)
 		case "CRE":
@@ -197,21 +234,11 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 
 	#Preparar documento enviarlo al servicio externo de autorización
 	#---------------------------------------------------------------
-	# Obtener configuracion desde los datos
-	# - url_server_beebtech
-	# , filters = { 'reference_name': doc_name }, fields='*'
-	settings_ec = frappe.get_list(doctype='Regional Settings Ec', fields='*')
-	#print(settings_ec)
-	
-	url_server_beebtech = '';
+	url_server_beebtech = get_api_url()
 
-	if settings_ec:
-		url_server_beebtech = settings_ec[0].url_server_beebtech
-		#print(url_server_beebtech)
+	#print(url_server_beebtech)
 
-	#api_url = "http://localhost:3003/api/Download/xml/MAT-DT-2023-00065?tip_doc=GRS&sitename=hdc"
-	
-	is_simulation_mode = False
+	is_simulation_mode = True
 	
 	if(is_simulation_mode):
 		#Modo de simulación
@@ -222,7 +249,7 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 		api_url = f"{url_server_beebtech}/SriProcess/sendmethod?tip_doc={typeDocSri}&sitename={siteName}" 
 	
 	#print(doc_data)
-	print(api_url)
+	#print(api_url)
 
 	if (doc_data):
 		#signatureP12 = get_signature(doc_data.tax_id)
@@ -275,15 +302,17 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 				print(response_json.data.autorizaciones.autorizacion[0].ambiente)
 
 				#Se agrega un nuevo Xml Response para que se lance el evento y se envie el email
-				xml_response_new = frappe.get_doc({
-					'id': 1,
-					'doctype': 'Xml Responses',
-					'description': "[Description]", #f"{doc.name} Added",        
-				})							
+				# xml_response_new = frappe.get_doc({
+				# 	'id': 1,
+				# 	'doctype': 'Xml Responses',
+				# 	'description': "[Description]", #f"{doc.name} Added",        
+				# })							
 
-				xml_response_new.insert()
-				frappe.db.commit()
-				
+				# xml_response_new.insert()
+				# frappe.db.commit()
+
+				if(response_json.data.autorizaciones.autorizacion[0].estado == "AUTORIZADO"):
+					updateStatusDocument(doc_object_build, typeDocSri, response_json)
 
 		#api_url = "https://jsonplaceholder.typicode.com/todos/10"
 		#response = requests.get(api_url)
@@ -300,3 +329,76 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 		#frappe.msgprint(f"{xml_response_new.id} has been created.")
 
 		return response.text
+
+def setSecuencial(doc, typeDocSri):
+	match typeDocSri:
+		case "FAC":			
+			
+			#print(doc)
+			document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name})
+			if(document_object):
+				if(document_object.secuencial > 0):
+					print("Secuencial ya asignado!")
+					print(document_object.secuencial)
+					return 
+
+				#doc.ambiente ---- aun no asignado   --- probablemente desde company
+				environment_object = frappe.get_last_doc('Sri Environment', filters = { 'id': 1  })
+
+				print(environment_object.name)
+				print(environment_object.id)
+
+				print("--------------------------")
+
+				nuevo_secuencial = 0
+
+				#TODO: Agregar filtro por empresa, no fue considerado al inicio, se requerirá cambios en el modelo
+				sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'id': 1, 'sri_environment_lnk': environment_object.name, 'sri_type_doc_lnk': typeDocSri })
+
+				if (sequence_object):
+					print(sequence_object.value)
+					nuevo_secuencial = sequence_object.value
+					nuevo_secuencial += 1
+					print(nuevo_secuencial)
+					#Se asigna al documento
+					document_object.db_set('secuencial', nuevo_secuencial)
+					#Se asigna a la tabla de secuenciales
+					sequence_object.db_set('value', nuevo_secuencial)
+	
+
+def updateStatusDocument(doc, typeDocSri, response_json):
+	match typeDocSri:
+		case "FAC":
+			xml_response_new = frappe.get_doc({
+					'id': 1,
+					'doctype': 'Xml Responses',
+					'description': "[Description]", #f"{doc.name} Added",        
+				})							
+
+			xml_response_new.insert()
+			frappe.db.commit()
+
+			document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name })
+			if(document_object):
+				document_object.db_set('numeroautorizacion', response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
+				document_object.db_set('sri_estado', 200)
+				document_object.db_set('sri_response', response_json.data.autorizaciones.autorizacion[0].estado)
+				fechaAutorizacion = parser.parse(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
+				#print(fechaAutorizacion)
+				#print(type(fechaAutorizacion))
+				#print(datetime.now())
+				#print(type(datetime.now()))
+
+				document_object.db_set('fechaautorizacion', fechaAutorizacion)
+				#document_object.db_set('fechaautorizacion', datetime.now())
+				
+				#NO ES NECESARIO EJECUTAR SAVE
+				#document_object.save(
+				#	ignore_permissions=True, # ignore write permissions during insert
+				#	ignore_version=True # do not create a version record
+				#)
+	
+		#case "GRS":
+			#doc_data = build_doc_grs(doc_object_build.name)
+		#case "CRE":
+			#doc_data = build_doc_cre(doc_object_build.name)

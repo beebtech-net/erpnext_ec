@@ -161,7 +161,7 @@ def get_full_customer_sri(def_customer):
 
     if docs:
         doc = docs[0]
-        print(doc)
+        #print(doc)
         customer_sri['customer_tax_id'] = doc.tax_id
         customer_sri['customer_name'] = doc.nombrecomercial
         customer_sri['tipoIdentificacionComprador'] = doc.typeidtax

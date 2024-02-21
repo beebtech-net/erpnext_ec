@@ -22,7 +22,9 @@ def build_doc_cre(doc_name):
 		doc = docs[0]
 		#print("ITEEEEMMMMSSSS")
 		doc.items = get_full_items(doc.name)
-		#print(doc.items)
+		
+		print(doc)
+		print(doc.items)
         
 		doc.taxes = get_full_taxes_withhold(doc.name)
 
@@ -71,3 +73,6 @@ def build_doc_cre(doc_name):
 		doc.sri_validated = sri_validated
 		doc.sri_validated_message = sri_validated_message
 		return doc
+	
+	#Sino es encontrado
+	return None

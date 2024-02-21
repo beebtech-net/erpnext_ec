@@ -502,10 +502,8 @@ function SendSalesInvoice(doc) {
 								*/
 							}
 						});
-
+						
 					//},);
-
-
 
                     },
                     'Confirmar proceso de envío al SRI'

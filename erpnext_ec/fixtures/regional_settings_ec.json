@@ -1,0 +1,10 @@
+[
+  {
+    "doctype": "Regional Settings Ec",
+    "name": "001",
+    "id": 1,
+    "usuario": "Desarrollo",
+    "password":"",
+    "url_server_beebtech": "https://192.168.204.66:7037/api/v2"
+  }
+]

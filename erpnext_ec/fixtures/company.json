@@ -73,5 +73,22 @@
 		"is_custom_field": 1,
 		"doctype": "Custom Field",
 		"dt": "Company"
+	},
+	{
+		"name": "Company-sri-active-environment",
+		"parent": "Customize Form",
+		"parentfield": "fields",
+		"parenttype": "Customize Form",
+		"idx": 27,
+		"docstatus": 0,
+		"label": "Ambiente Sri",
+		"fieldtype": "Link",
+		"fieldname": "sri_active_environment",
+		"inser_after": "agenteretencion",
+		"options":"Sri Environment",
+		"default":"DES",
+		"is_custom_field": 1,
+		"doctype": "Custom Field",
+		"dt": "Company"
 	}
 ]

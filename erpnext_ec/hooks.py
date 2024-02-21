@@ -17,12 +17,10 @@ required_apps = [
 # app_include_css = "/assets/erpnext_ec/css/erpnext_ec.css"
 # app_include_js = "/assets/erpnext_ec/js/erpnext_ec.js"
 
-app_include_js = [    
+app_include_js = [
     "/assets/erpnext_ec/js/sri_custom.js",
-    #"/assets/erpnext_ec/js/sales_invoice_form.js",
-    "/assets/erpnext_ec/js/sales_invoice_tools.js",
-    #"/assets/erpnext_ec/js/sales_invoices_list_v15.js",
-    "/assets/erpnext_ec/js/frappe_sri_tools.js",
+    "/assets/erpnext_ec/js/sales_invoice_tools.js",    
+    "/assets/erpnext_ec/js/frappe_sri_ui_tools.js",
     "/assets/erpnext_ec/js/erpnext_ec.bundle.js"
 ]
 
