@@ -22,6 +22,10 @@ var doctype_customized = "[DOCTYPE_CUSTOM_FORM_SRI]";
 frappe.ui.form.on(doctype_customized, {
 	refresh(frm)
     {
+        if (frm.doc.status == 'Cancelled' || frm.doc.status == 'Draft') {
+            return false;
+        }
+
         console.log(frm.doc);
         SetFormSriButtons(frm, doctype_customized);
 

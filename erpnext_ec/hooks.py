@@ -19,7 +19,8 @@ required_apps = [
 
 app_include_js = [
     "/assets/erpnext_ec/js/sri_custom.js",
-    "/assets/erpnext_ec/js/sales_invoice_tools.js",    
+    "/assets/erpnext_ec/js/sales_invoice_tools.js",
+    "/assets/erpnext_ec/js/delivery_note_tools.js",
     "/assets/erpnext_ec/js/frappe_sri_ui_tools.js",
     "/assets/erpnext_ec/js/erpnext_ec.bundle.js"
 ]

@@ -146,9 +146,9 @@ frappe.listview_settings[doctype_customized].button = {
         //console.log("Lista:" + Date().toString());
         //return doc.status != 'Paid';
 
-        //if (doc.status == 'Cancelled' || doc.status == 'Draft') {
-        //    return false;
-        //}
+        if (doc.status == 'Cancelled' || doc.status == 'Draft') {
+            return false;
+        }
 
         SetupCustomButtons(doc, doctype_customized);
         return true;

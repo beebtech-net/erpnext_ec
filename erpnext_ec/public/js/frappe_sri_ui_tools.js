@@ -11,6 +11,7 @@ function PrepareDocumentForSendV2(doc, DocTypeErpNext)
 		case 'Delivery Note':
 			{
 				console.log('MEtodo Guia de remision');
+				SendDeliveryNote(doc);
 			}
 			break;
 		case 'Purchase Withholding Sri Ec':
@@ -71,8 +72,9 @@ function SetupCustomButtons(doc, DocTypeErpNext)
             //console.log(docApi.sri_estado);
             var removeMainButton = false;
 
-            //if ((docApi.numeroautorizacion == "" || docApi.numeroautorizacion == "0") && docApi.sri_estado != 200)
-            if(true) //true cuando aun no se han implementado los campos custom - modo de desarrollo
+			if(allowSendSri(docApi))
+            //if ((docApi.numeroautorizacion == null || docApi.numeroautorizacion == "" || docApi.numeroautorizacion == "0") && docApi.sri_estado != 200)
+            //if(true) //true cuando aun no se han implementado los campos custom - modo de desarrollo
             {
 				//Continúa la renderización del botón de envío
 				// ya que no se ha autorizado
@@ -172,17 +174,35 @@ function SetListSriButtons(DocTypeErpNext)
 	}
 }
 
+function allowSendSri(docApi)
+{
+	if ((docApi.numeroautorizacion == null || docApi.numeroautorizacion == "" || docApi.numeroautorizacion == "0") && docApi.sri_estado != 200)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 function SetFormSriButtons(frm, DocTypeErpNext)
 {
-	frm.add_custom_button(__('<i class="fa fa-play"></i> Enviar al SRI'), function() {
-		// When this button is clicked, do this            
-		console.log(frm.doc);
-		console.log("Cargado Script add_custom_button ----cambiado");
-		var subject = frm.doc.subject;
-		var event_type = frm.doc.event_type;
-		//PrepareDocumentForSend(frm.doc);
-		PrepareDocumentForSendV2(frm.doc, DocTypeErpNext);
-	},);
+	console.log('allowSendSri');
+	console.log(allowSendSri(frm.doc));
+
+	if(allowSendSri(frm.doc))
+	{
+		frm.add_custom_button(__('<i class="fa fa-play"></i> Enviar al SRI'), function() {
+			// When this button is clicked, do this            
+			console.log(frm.doc);
+			console.log("Cargado Script add_custom_button ----cambiado");
+			var subject = frm.doc.subject;
+			var event_type = frm.doc.event_type;
+			//PrepareDocumentForSend(frm.doc);
+			PrepareDocumentForSendV2(frm.doc, DocTypeErpNext);
+		},);
+	}
 
 	frm.add_custom_button(__('<i class="fa fa-file-code-o"></i> Descargar XML'), function() 
 	{

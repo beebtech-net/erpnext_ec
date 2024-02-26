@@ -39,7 +39,7 @@ def build_doc_cre(doc_name):
 		doc.tax_id = company_full['ruc']
 		doc.DireccionMatriz = company_full['dirMatriz']
 		doc.dirEstablecimiento = company_full['dirMatriz'] # TODO: temporal, la dirección del establecimiento debe ser definida
-
+		doc.contribuyenteRimpe = company_full['contribuyenteRimpe']
 		
 		#Datos completos del cliente
 		supplier_full = get_full_supplier_sri(doc.purchase_withholding_supplier)

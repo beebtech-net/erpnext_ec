@@ -387,7 +387,7 @@ function SendSalesInvoice(doc) {
             ` + data_alert +
                 `<div class="warning-sri">Por favor, verifique que toda la información esté correctamente ingresada antes de enviarla al SRI y generar el documento electrónico.</div>`;
 
-			//if (documentIsReady) 
+			//if (documentIsReady)
             if (true)
 			{
 
@@ -430,8 +430,7 @@ function SendSalesInvoice(doc) {
 								siteName: sitenameVar,
 								freeze: true,
 								freeze_message: "Procesando documento, espere un momento.",
-								success: function(r) {},
-								error: function(r) {},
+								success: function(r) {},								
 								always: function(r) {},
 							},
 							callback: function(r) 
@@ -439,7 +438,6 @@ function SendSalesInvoice(doc) {
 								//console.log(r);
 
 								jsonResponse = JSON.parse(r.message);
-
 								console.log(jsonResponse);
 
 								//console.log(json_data.data.claveAccesoConsultada);
@@ -468,25 +466,48 @@ function SendSalesInvoice(doc) {
 										indicator: 'green'
 									}, 5);
 
+									if(jsonResponse.error!==undefined && jsonResponse.error !== '')
+									{
+										var string_error = jsonResponse.error;
+										frappe.show_alert({
+											message: __(string_error),
+											indicator: 'red'
+										}, 10);
+									}
+
 									//bye bye!!
 									return;
 
 								} 
 								else 
 								{
-									console.log(req);
+									//MOSTRAR EL MENSAJE DE ERROR MAS DETALLADO
+									//console.log(req);
 									//console.log("Error", req.statusText);
-									console.log('1x');
+									//console.log('1x');
+									var string_error = jsonResponse.error;
+									var string_informacionAdicional = '';
+									var string_mensaje = '';
+									try
+									{
+										string_error = jsonResponse.error;
+										string_mensaje = jsonResponse.data.autorizaciones.autorizacion[0].mensajes.mensaje[0].mensaje_;
+										string_informacionAdicional = jsonResponse.data.autorizaciones.autorizacion[0].mensajes.mensaje[0].informacionAdicional;										 
+									}
+									catch(ex_messages)
+									{
+
+									}
+
 									frappe.show_alert({
-										message: __(`Error al procesar documento ${doc.name}:` + req.statusText + ":" + req.responseText),
+										message: __(`Error al procesar documento ${doc.name}:` + string_error + ":" + string_mensaje + ":" + string_informacionAdicional),
 										indicator: 'red'
-									}, 5);
+									}, 10);
 								}
 
-									//console.log('Terminado proceso con el SRI!');
-									$(btnProcess).show();
-									$(btnProcess).parent().find('.custom-animation').remove();
-                            	
+								//console.log('Terminado proceso con el SRI!');
+								$(btnProcess).show();
+								$(btnProcess).parent().find('.custom-animation').remove();                            	
 								
 								/*
 								if(r.message)
@@ -499,7 +520,11 @@ function SendSalesInvoice(doc) {
 									});
 								}
 								*/
-							}
+							},
+							error: function(r) {
+								$(btnProcess).show();
+								$(btnProcess).parent().find('.custom-animation').remove();
+							},
 						});
 						
 					//},);

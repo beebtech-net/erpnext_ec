@@ -113,7 +113,8 @@ def get_full_company_sri(def_company):
         compania_sri['nombreComercial'] = doc.nombrecomercial
         compania_sri['ruc'] = doc.tax_id
         compania_sri['obligadoContabilidad'] = doc.obligadocontabilidad
-
+        compania_sri['contribuyenteRimpe'] = doc.contribuyenterimpe
+        
         company_address_primary = None
         company_address_first = None
 

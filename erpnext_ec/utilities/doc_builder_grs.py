@@ -24,7 +24,7 @@ def build_doc_grs(doc_name):
 		doc.items = get_full_items(doc.name)
 		#print(doc.items)
         
-		doc.taxes = get_full_taxes(doc.name)
+		#doc.taxes = get_full_taxes(doc.name)
 		#print("TAXEEESSS")
 		#print(doc.taxes)
 
@@ -40,6 +40,7 @@ def build_doc_grs(doc_name):
 		doc.tax_id = company_full['ruc']
 		doc.DireccionMatriz = company_full['dirMatriz']
 		doc.dirEstablecimiento = company_full['dirMatriz'] # TODO: temporal, la dirección del establecimiento debe ser definida
+		doc.contribuyenteRimpe = company_full['contribuyenteRimpe']
 
 		#Datos completos del cliente
 		customer_full = get_full_customer_sri(doc.customer)

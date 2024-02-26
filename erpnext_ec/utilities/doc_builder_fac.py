@@ -40,6 +40,7 @@ def build_doc_fac(doc_name):
 		doc.tax_id = company_full['ruc']
 		doc.DireccionMatriz = company_full['dirMatriz']
 		doc.dirEstablecimiento = company_full['dirMatriz'] # TODO: temporal, la dirección del establecimiento debe ser definida
+		doc.contribuyenteRimpe = company_full['contribuyenteRimpe']
 
 		#Datos completos del cliente
 		customer_full = get_full_customer_sri(doc.customer)

@@ -36,7 +36,7 @@ def send_email(doc, typeDocSri, doctype_erpnext, siteName, email_to):
 
 @frappe.whitelist()
 def get_responses(doc, typeDocSri, doctype_erpnext, siteName):
-	# var url = `${btApiServer}/api/SriProcess/getresponses/${doc}?tip_doc=${tip_doc}&sitename=${sitenamePar}`;
+	#var url = `${btApiServer}/api/SriProcess/getresponses/${doc}?tip_doc=${tip_doc}&sitename=${sitenamePar}`;
 	pass
 
 def get_api_url():
@@ -48,6 +48,8 @@ def get_api_url():
 	if settings_ec:
 		url_server_beebtech = settings_ec[0].url_server_beebtech
 		server_timeout = settings_ec[0].server_timeout
+		if(server_timeout == 0):
+			server_timeout = 10
 		return url_server_beebtech, server_timeout
 	
 	raise ReferenceError("No se encontró configuración requerida 'Regional Settings Ec' url_server_beebtech")
@@ -160,6 +162,22 @@ def handler(obj):
 	
 	raise TypeError("El objeto de tipo %s no es serializable JSON." % type(obj).__name__)
 
+def validate_doc(doc, typeDocSri, doctype_erpnext, siteName):
+	#match typeDocSri:
+	#	case "FAC":
+	#		doc.
+	#	case "GRS":
+	#		
+	#	case "CRE":
+
+	print ('---------------')
+	print ('validacion')
+	print (doc)
+	print(doc.customer_tax_id)
+	print(doc.RazonSocial)
+	print(doc.tipoIdentificacionComprador)
+	
+	raise ValueError("Error de validación %s" % type(doc).__name__)
 
 @frappe.whitelist()
 def send_doc(doc, typeDocSri, doctype_erpnext, siteName):	
@@ -233,6 +251,9 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 			doc_data = build_doc_grs(doc_object_build.name)
 		case "CRE":
 			doc_data = build_doc_cre(doc_object_build.name)
+	
+	#TODO: Validacion de los datos previo al envío al SRI
+	#validate_doc(doc_data, typeDocSri, doctype_erpnext, siteName)
 
 	#Preparar documento enviarlo al servicio externo de autorización
 	#---------------------------------------------------------------
@@ -240,7 +261,7 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 
 	#print(url_server_beebtech)
 
-	is_simulation_mode = True
+	is_simulation_mode = False
 	
 	if(is_simulation_mode):
 		#Modo de simulación
@@ -287,13 +308,33 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 			
 		print(response)
 		print(response.text)
-		
-		response_json = json.loads(response.text, object_hook=lambda d: SimpleNamespace(**d))		
 
-		if(response.status_code):
+		print('Numero de respuesta')		
+		
+		response_json = json.loads(response.text, object_hook=lambda d: SimpleNamespace(**d))
+
+		print(response.status_code)
+		print(response.ok)
+
+		response_ok = response.ok
+
+		if(response.status_code == 400):
+			if(int(response_json.data.numeroComprobantes) > 0):
+				if( 'ya estaba autorizada' in response_json.error):
+					print ("correcto ya registrado previamente")
+					#Se simula que el proceso fue correcto para que los datos sean actualizados
+					response.status_code = 200
+					response_ok = True
+
+		if(response.status_code == 200):
+			
+			registerResponse(doc_data, typeDocSri, doctype_erpnext, response_json)
+
 			#evaluar estado de respuesta SRI
-			if(response_json.ok and int(response_json.data.numeroComprobantes) > 0):
+			if(response_ok and int(response_json.data.numeroComprobantes) > 0):
 				print ("correcto")
+
+				print(response_json)
 
 				#proceder a actualizar datos del registro	
 				print(response_json.data.claveAccesoConsultada)
@@ -366,26 +407,38 @@ def setSecuencial(doc, typeDocSri):
 					document_object.db_set('secuencial', nuevo_secuencial)
 					#Se asigna a la tabla de secuenciales
 					sequence_object.db_set('value', nuevo_secuencial)
-	
+
+def registerResponse(doc, typeDocSri, doctype_erpnext, response_json):
+	#TODO: El XML se guarda de forma incorrecta, pero al parecer es un comportamiento normal
+	# del frappe, hay que verificar.
+	xml_response_new = frappe.get_doc({
+					'doctype': 'Xml Responses',
+					'doc_ref': doc.name,
+					#'xmldata': response_json.data.autorizaciones.autorizacion[0].comprobante,
+					'xmldata': response_json,
+					'sri_status': response_json.data.autorizaciones.autorizacion[0].estado,
+					'tip_doc': typeDocSri,
+					'doc_type': doctype_erpnext
+				})
+
+	xml_response_new.insert()
+	frappe.db.commit()
 
 def updateStatusDocument(doc, typeDocSri, response_json):
 	match typeDocSri:
 		case "FAC":
-			xml_response_new = frappe.get_doc({
-					'id': 1,
-					'doctype': 'Xml Responses',
-					'description': "[Description]", #f"{doc.name} Added",        
-				})							
-
-			xml_response_new.insert()
-			frappe.db.commit()
 
 			document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name })
 			if(document_object):
 				document_object.db_set('numeroautorizacion', response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
 				document_object.db_set('sri_estado', 200)
 				document_object.db_set('sri_response', response_json.data.autorizaciones.autorizacion[0].estado)
-				fechaAutorizacion = parser.parse(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
+				#fechaAutorizacion = parser.parse(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
+
+				fecha_con_zona = datetime.fromisoformat(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
+				# Eliminar la zona horaria
+				fechaAutorizacion = fecha_con_zona.replace(tzinfo=None)
+
 				#print(fechaAutorizacion)
 				#print(type(fechaAutorizacion))
 				#print(datetime.now())
