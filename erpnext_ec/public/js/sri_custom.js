@@ -391,6 +391,7 @@ const Website = {
         if(doctype_erpnext == 'Purchase Withholding Sri Ec')
             typeDocSri = 'CRE';
         
+        console.log(doc);
         console.log(typeDocSri);
         console.log(typeFile);
         console.log(siteName);

@@ -39,6 +39,14 @@
     "in_list_view": 0,
     "in_preview": 0,
     "label": "Firma"
+  },
+  {
+    "fieldname": "server_timeout",
+    "fieldtype": "Int",
+    "in_list_view": 0,
+    "in_preview": 0,
+    "default": "10",
+    "label": "Server Timeout"
   }
  ],
  "index_web_pages_for_search": 1,

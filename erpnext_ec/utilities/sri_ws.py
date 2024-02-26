@@ -47,7 +47,8 @@ def get_api_url():
 
 	if settings_ec:
 		url_server_beebtech = settings_ec[0].url_server_beebtech
-		return url_server_beebtech
+		server_timeout = settings_ec[0].server_timeout
+		return url_server_beebtech, server_timeout
 	
 	raise ReferenceError("No se encontró configuración requerida 'Regional Settings Ec' url_server_beebtech")
 	#raise TypeError("El objeto de tipo %s no es serializable JSON." % type(obj).__name__)
@@ -79,13 +80,14 @@ def get_doc(doc_name, typeDocSri, typeFile, siteName):
 
 		headers = {}
 		
-		url_server_beebtech = get_api_url()
-
+		url_server_beebtech, server_timeout = get_api_url()
+		#url_server_beebtech = "https://192.168.200.9:7037/api/v2"
 		print(url_server_beebtech)
+		print(server_timeout)
 
 		api_url = f"{url_server_beebtech}/Download/{typeFile}?documentName={doc_name}&tip_doc={typeDocSri}&sitename={siteName}"	
 		#response = requests.post(api_url, json=doc_str, verify=False, stream=True, headers= headers)
-		response = requests.post(api_url, data=doc_str, verify=False, stream=True, headers= headers)
+		response = requests.post(api_url, data=doc_str, verify=False, stream=True, headers= headers, timeout=server_timeout)
 
 		#print(response.text)
 		return response.text
@@ -234,7 +236,7 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 
 	#Preparar documento enviarlo al servicio externo de autorización
 	#---------------------------------------------------------------
-	url_server_beebtech = get_api_url()
+	url_server_beebtech, server_timeout = get_api_url()
 
 	#print(url_server_beebtech)
 
@@ -273,9 +275,9 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 		#response = requests.post(api_url, json=doc_str, verify=False, stream=True, headers= headers)
 
 		if(is_simulation_mode):
-			response = requests.post(api_url, verify=False, stream=True)
+			response = requests.post(api_url, verify=False, stream=True, timeout=server_timeout)
 		else:
-			response = requests.post(api_url, data=doc_str, verify=False, stream=True, headers= headers)
+			response = requests.post(api_url, data=doc_str, verify=False, stream=True, headers= headers, timeout=server_timeout)
 			#response = requests.post(api_url, json=doc_data, verify=False, stream=True, headers= headers)
 
 		#for k,v in r.raw.headers.items(): print(f"{k}: {v}")

@@ -276,7 +276,6 @@ function SendSalesInvoice(doc) {
 			var doctype_erpnext = properties_view[0];
 
 			console.log(doctype_erpnext);
-
             console.log(doc);
 
             var sitenameVar = frappe.boot.sitename;
