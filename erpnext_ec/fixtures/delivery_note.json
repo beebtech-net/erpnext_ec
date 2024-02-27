@@ -12,7 +12,8 @@
 		"inser_after": "numdocsustento",
 		"is_custom_field": 1,
 		"doctype": "Custom Field",
-		"dt": "Delivery Note"
+		"dt": "Delivery Note",
+		"no_copy": 1
 	},	
 	{
 		"name": "Delivery Note-numeroautorizacion",
@@ -27,7 +28,8 @@
 		"inser_after": "numdocsustento",
 		"is_custom_field": 1,
 		"doctype": "Custom Field",
-		"dt": "Delivery Note"
+		"dt": "Delivery Note",
+		"no_copy": 1
 	},
 	{
 		"name": "Delivery Note-sri_response",
@@ -42,7 +44,8 @@
 		"inser_after": "sri_estado",
 		"is_custom_field": 1,
 		"doctype": "Custom Field",
-		"dt": "Delivery Note"
+		"dt": "Delivery Note",
+		"no_copy": 1
 	},
 	{
 		"name": "Delivery Note-estab",
@@ -89,7 +92,8 @@
 		"inser_after": "ptoemi",
 		"is_custom_field": 1,
 		"doctype": "Custom Field",		
-		"dt": "Delivery Note"
+		"dt": "Delivery Note",
+		"no_copy": 1
 	}
 	
 ]

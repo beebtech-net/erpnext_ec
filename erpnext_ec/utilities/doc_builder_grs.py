@@ -21,7 +21,7 @@ def build_doc_grs(doc_name):
 	if docs:
 		doc = docs[0]
 		#print("ITEEEEMMMMSSSS")
-		doc.items = get_full_items(doc.name)
+		doc.items = get_full_items_delivery_note(doc.name)
 		#print(doc.items)
         
 		#doc.taxes = get_full_taxes(doc.name)

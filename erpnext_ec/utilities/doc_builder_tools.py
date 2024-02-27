@@ -279,6 +279,15 @@ def get_full_items(doc_name):
                                        )
 
     return items
+    
+def get_full_items_delivery_note(doc_name):    
+    items = frappe.get_all('Delivery Note Item',
+                           filters={'parent': doc_name},
+                           fields=['*']
+                        #    fields=['item_code', 'item_name', 'rate', 'qty', 'amount']
+                                       )
+
+    return items
 
 def get_full_taxes(doc_name):    
     

@@ -396,6 +396,7 @@ def setSecuencial(doc, typeDocSri):
 				nuevo_secuencial = 0
 
 				#TODO: Agregar filtro por empresa, no fue considerado al inicio, se requerirá cambios en el modelo
+				#TODO: Falta automatizar el filtro, por ahora se puso id = 1
 				sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'id': 1, 'sri_environment_lnk': environment_object.name, 'sri_type_doc_lnk': typeDocSri })
 
 				if (sequence_object):
