@@ -48,6 +48,7 @@ def build_doc_cre(doc_name):
 		doc.supplier_tax_id = supplier_full['supplier_tax_id']
 		doc.RazonSocial = supplier_full['supplier_name']
 		doc.tipoIdentificacionSujetoRetenido = supplier_full['tipoIdentificacionProveedor']
+		doc.direccionComprador = supplier_full['direccionProveedor']
 		supplier_phone = supplier_full['supplier_phone']
 		supplier_email_id = supplier_full['supplier_email_id']
 

@@ -18,18 +18,18 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 import re
 
 def build_comment(comments):
-	str_comment = ''
-	for comment in comments:
-		# print(comment)
-		str_comment = comment.get('content', '')
-		str_comment = strip_html(str_comment)
-		str_comment = normalize_string(str_comment)
-		break  # Sale del bucle después de procesar el primer comentario
+    str_comment = ''
+    for comment in comments:
+        # print(comment)
+        str_comment = comment.get('content', '')
+        str_comment = strip_html(str_comment)
+        str_comment = normalize_string(str_comment)
+        break  # Sale del bucle después de procesar el primer comentario
     
     # Aquí puedes manejar si str_comment está vacío después del bucle
     # if not str_comment:
     #     pass
-	return str_comment
+    return str_comment
 
 def strip_html(input_string):
     """Elimina todas las etiquetas HTML de una cadena."""
@@ -50,53 +50,53 @@ def normalize_string(source_str):
 
 def build_infoAdicional_sri(doc_name, customer_email_id, customer_phone):
 
-	commentsApi = frappe.get_all('Comment', filters = { 'reference_name': doc_name }, fields='*' );
-	# print('COMENTAAAAAARIOOOOOOSSSSSS')
-	# print(commentsApi)
+    commentsApi = frappe.get_all('Comment', filters = { 'reference_name': doc_name }, fields='*' );
+    # print('COMENTAAAAAARIOOOOOOSSSSSS')
+    # print(commentsApi)
 
-	strComment = build_comment(commentsApi)
+    strComment = build_comment(commentsApi)
 
-	infoAdicionalData = "";
-	infoAdicionalData = [{
-							"nombre":"email",
-							"valor": customer_email_id
-							},
-							{
-							"nombre":"tel.",
-							"valor": customer_phone
-							},
-							{
-							"nombre":"Doc. Ref.",
-							"valor":doc_name
-							},
-							{
-							"nombre":"Coment.",
-							"valor":strComment
-							}
-						];
+    infoAdicionalData = "";
+    infoAdicionalData = [{
+                            "nombre":"email",
+                            "valor": customer_email_id
+                            },
+                            {
+                            "nombre":"tel.",
+                            "valor": customer_phone
+                            },
+                            {
+                            "nombre":"Doc. Ref.",
+                            "valor":doc_name
+                            },
+                            {
+                            "nombre":"Coment.",
+                            "valor":strComment
+                            }
+                        ];
 
-	return infoAdicionalData
+    return infoAdicionalData
 
 def get_payments_sri(doc_name):
-	sri_validated = ''
-	sri_validated_message = ''
+    sri_validated = ''
+    sri_validated_message = ''
       
-	paymentsEntryApi = frappe.get_list('Payment Entry Reference', filters = { 'reference_name': doc_name })
-	# print(paymentsEntryApi)
+    paymentsEntryApi = frappe.get_list('Payment Entry Reference', filters = { 'reference_name': doc_name })
+    # print(paymentsEntryApi)
 
-	if not paymentsEntryApi:
-		paymentsApi = frappe.get_list('Payment Request', filters = { 'reference_name': doc_name })
-		# print(paymentsApi)
+    if not paymentsEntryApi:
+        paymentsApi = frappe.get_list('Payment Request', filters = { 'reference_name': doc_name })
+        # print(paymentsApi)
 
-		if not paymentsApi and  not paymentsEntryApi:
-			sri_validated = 'error'
-			sri_validated_message += 'No se ha definido ni solicitud de pago ni entrada de pago-'
-		else:
-			return paymentsApi
-	else:
-		return paymentsEntryApi
-	
-	return None
+        if not paymentsApi and  not paymentsEntryApi:
+            sri_validated = 'error'
+            sri_validated_message += 'No se ha definido ni solicitud de pago ni entrada de pago-'
+        else:
+            return paymentsApi
+    else:
+        return paymentsEntryApi
+    
+    return None
 
 def get_full_company_sri(def_company):
     # Variable de retorno
@@ -147,7 +147,7 @@ def get_full_company_sri(def_company):
 
         #print(compania_sri)
         return compania_sri
-	
+    
 
 def get_full_customer_sri(def_customer):
     # Variable de retorno
@@ -201,10 +201,13 @@ def get_full_customer_sri(def_customer):
                 customer_address_primary = customer_address[0]
             else:
                 print('---')
-				
+                
         if customer_address_primary:
             customer_sri['customer_email_id']  = customer_address_primary.email_id
             customer_sri['customer_phone']  = customer_address_primary.phone
+            customer_sri['address_line1']  = customer_address_primary.address_line1
+            customer_sri['address_line2']  = customer_address_primary.address_line2
+            customer_sri['direccionComprador']  = customer_address_primary.address_line1 + ' ' + customer_address_primary.address_line2
 
         #print(compania_sri)
         return customer_sri
@@ -262,7 +265,7 @@ def get_full_supplier_sri(def_customer):
                 supplier_address_primary = supplier_address[0]
             else:
                 print('---')
-				
+                
         if supplier_address_primary:
             supplier_sri['supplier_email_id']  = supplier_address_primary.email_id
             supplier_sri['supplier_phone']  = supplier_address_primary.phone
@@ -279,7 +282,7 @@ def get_full_items(doc_name):
                                        )
 
     return items
-    
+
 def get_full_items_delivery_note(doc_name):    
     items = frappe.get_all('Delivery Note Item',
                            filters={'parent': doc_name},
@@ -291,70 +294,159 @@ def get_full_items_delivery_note(doc_name):
 
 def get_full_taxes(doc_name):    
     
-	impuestos = frappe.get_all('Sales Taxes and Charges', filters={'parent': doc_name}, fields=['*'])
+    impuestos = frappe.get_all('Sales Taxes and Charges', filters={'parent': doc_name}, fields=['*'])
     #    fields=['charge_type', 'account_head', 'tax_amount']
-	
-	for taxItem in impuestos:
-		accountApi = frappe.get_doc('Account', taxItem.account_head)
-		# print('CUENTAAAAAAAAAAAAA')
-		# print(accountApi)
-		# print(accountApi.sricode)
-		# print(accountApi.sricodeper)
+    
+    for taxItem in impuestos:
+        accountApi = frappe.get_doc('Account', taxItem.account_head)
+        # print('CUENTAAAAAAAAAAAAA')
+        # print(accountApi)
+        # print(accountApi.sricode)
+        # print(accountApi.sricodeper)
 
-		if accountApi.sricode:
-			taxItem.sricode =  int(accountApi.sricode)
+        if accountApi.sricode:
+            taxItem.sricode =  int(accountApi.sricode)
               
-		if accountApi.sricodeper:
-			taxItem.codigoPorcentaje = int(accountApi.sricodeper)
+        if accountApi.sricodeper:
+            taxItem.codigoPorcentaje = int(accountApi.sricodeper)
 
-	return impuestos
+    return impuestos
+
+def get_address_by_name(link_name, primary_address, link_doctype):
+    address_data = {}
+    customer_address_primary = None
+    customer_address_first = None
+
+    din_link_api = frappe.get_all('Dynamic Link', fields='["name","parent","link_title"]',
+                                                filters={'link_doctype': link_doctype, 'parenttype': 'Address', 'link_name': link_name})
+        
+    # print('DIRECCCCCCCCCCIIIIIIIONNNNNNN CUSTOMMMMERRRR')
+    print(din_link_api)
+
+    if din_link_api:
+        found_primary = False
+        for i, link in enumerate(din_link_api):
+            customer_address = frappe.get_all('Address', fields='*', filters={'name': link.parent})
+            #print(customer_address)
+
+            if customer_address:
+                if i == 0:
+                    customer_address_first = customer_address[0]
+
+                if customer_address[0].get('is_primary_address'):
+                    found_primary = True
+                    customer_address_primary = customer_address[0]
+                    break
+
+        if not found_primary and customer_address_first:
+            customer_address_primary = customer_address_first
+    else:
+        #Sino se encuentra una dirección vinculada se busca una direccion primaria del cliente
+        customer_address = frappe.get_all('Address', fields='*', filters={'name':  primary_address})
+        if customer_address:
+            customer_address_primary = customer_address[0]
+        else:
+            print('---')
+            
+    if customer_address_primary:
+        address_data['email_id']  = customer_address_primary.email_id
+        address_data['phone']  = customer_address_primary.phone
+        address_data['address_line1']  = customer_address_primary.address_line1
+        address_data['address_line2']  = customer_address_primary.address_line2
+        address_data['direccion']  = customer_address_primary.address_line1 + ' ' + customer_address_primary.address_line2
+    
+    return address_data
+
+
+def get_invoice_by_link(link_name, link_doctype):
+    invoice_data = {}   
+
+    din_link_api = frappe.get_all('Dynamic Link', fields='["name","parent","link_title"]',
+                                                filters={'link_doctype': link_doctype, 'parenttype': 'Sales Invoice', 'link_name': link_name})        
+    
+    print(din_link_api)
+
+    if din_link_api:
+        found_primary = False
+        for i, link in enumerate(din_link_api):
+            pass
 
 def get_full_delivery_trips(doc):
     
-	print (doc)
+    print (doc)
 
-	doc_name = doc.name
+    doc_name = doc.name
 
-	# document_links = frappe.get_all('Document link', filters={'parent': doc_name}, fields=['*'])
-	# print("document_links")
-	# print(document_links)
+    # document_links = frappe.get_all('Document link', filters={'parent': doc_name}, fields=['*'])
+    # print("document_links")
+    # print(document_links)
 
-	delivery_trips = frappe.get_all('Delivery Trip', filters={'delivery_note': doc_name}, fields=['*'])
+    delivery_trips = frappe.get_all('Delivery Trip', filters={'delivery_note': doc_name}, fields=['*'])
     #    fields=['charge_type', 'account_head', 'tax_amount']
-		
-	# print(delivery_trips)
+        
+    # print(delivery_trips)
 
-	for delivery_tripItem in delivery_trips:
-		delivery_stops = frappe.get_all('Delivery Stop', filters={'parent': delivery_tripItem.name}, fields=['*'])
-		# print('CUENTAAAAAAAAAAAAA')
-		print("delivery_trips")
-		print(delivery_tripItem)
+    for delivery_tripItem in delivery_trips:
+        delivery_stops = frappe.get_all('Delivery Stop', filters={'parent': delivery_tripItem.name}, fields=['*'])
+        
+        for delivery_stops_item in delivery_stops:
+            #dirDestinatario
+            #numAutDocSustento
+            #get_address_by_name(link_name, primary_address, link_doctype, parenttype)
+            print(delivery_stops_item.address)
+            primary_address = delivery_stops_item.address
+            address_data = get_address_by_name(delivery_stops_item.address, primary_address, 'Customer')            
+            #delivery_stops_item.customer
+            print('address_data')
+            print(address_data)
+            delivery_stops_item.dirDestinatario = address_data['direccion']
 
-		print("delivery_stops")
-		print(delivery_stops)
-		# print(accountApi.sricodeper)
-		delivery_tripItem.delivery_stops = delivery_stops
-		
+            print(delivery_stops_item.name)
 
-	return delivery_trips
+            pass
+
+        #obtener datos del conductor y direccion de partida
+        
+        #obtener datos del vehículo
+
+        # print('CUENTAAAAAAAAAAAAA')
+        #print("delivery_trips")
+        #print(delivery_tripItem)
+
+        #print("delivery_stops")
+        #print(delivery_stops)
+        # print(accountApi.sricodeper)
+        delivery_tripItem.delivery_stops = delivery_stops
+        
+        #delivery_trip_driver = frappe.get_last_doc('Driver', filters={'name': delivery_tripItem.driver})
+        delivery_trip_driver = frappe.get_all('Driver', filters={'name': delivery_tripItem.driver}, fields=['*'])
+        delivery_tripItem.trip_driver = delivery_trip_driver
+        #print(delivery_trip_driver)
+     
+        #delivery_trip_vehicle = frappe.get_last_doc('Vehicle', filters={'name': delivery_tripItem.vehicle})
+        delivery_trip_vehicle = frappe.get_all('Vehicle', filters={'name': delivery_tripItem.vehicle}, fields=['*'])
+        delivery_tripItem.trip_vehicle = delivery_trip_vehicle
+        #print(delivery_trip_vehicle)
+        
+    return delivery_trips
 
 
 def get_full_taxes_withhold(doc_name):    
     
-	impuestos = frappe.get_all('Purchase Taxes and Charges Ec', filters={'parent': doc_name}, fields=['*'])
+    impuestos = frappe.get_all('Purchase Taxes and Charges Ec', filters={'parent': doc_name}, fields=['*'])
     #    fields=['charge_type', 'account_head', 'tax_amount']
-	
-	for taxItem in impuestos:
-		accountApi = frappe.get_doc('Account', taxItem.codigoRetencion)
-		# print('CUENTAAAAAAAAAAAAA')
-		# print(accountApi)
-		# print(accountApi.sricode)
-		# print(accountApi.sricodeper)
+    
+    for taxItem in impuestos:
+        accountApi = frappe.get_doc('Account', taxItem.codigoRetencion)
+        # print('CUENTAAAAAAAAAAAAA')
+        # print(accountApi)
+        # print(accountApi.sricode)
+        # print(accountApi.sricodeper)
 
-		if accountApi.sricode:
-			taxItem.sricode =  int(accountApi.sricode)
+        if accountApi.sricode:
+            taxItem.sricode =  int(accountApi.sricode)
               
-		if accountApi.sricodeper:
-			taxItem.codigoPorcentaje = int(accountApi.sricodeper)
+        if accountApi.sricodeper:
+            taxItem.codigoPorcentaje = int(accountApi.sricodeper)
 
-	return impuestos
+    return impuestos

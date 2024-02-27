@@ -47,6 +47,7 @@ def build_doc_fac(doc_name):
 		doc.customer_tax_id = customer_full['customer_tax_id']
 		doc.RazonSocial = customer_full['customer_name']
 		doc.tipoIdentificacionComprador = customer_full['tipoIdentificacionComprador']
+		doc.direccionComprador = customer_full['direccionComprador']
 		customer_phone = customer_full['customer_phone']
 		customer_email_id = customer_full['customer_email_id']
 

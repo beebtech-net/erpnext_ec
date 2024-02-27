@@ -96,57 +96,6 @@ def get_doc(doc_name, typeDocSri, typeFile, siteName):
 
 	return ""
 
-	#print(doc_name)
-	#print(doc.customer_email_id)
-
-	#print(doc.sri_validated)
-	#print(doc.sri_validated_message)
-
-	
-	#print(doc_str)
-
-	#json -> object
-	# x = json.loads(doc, object_hook=lambda d: SimpleNamespace(**d))
-	# print("get_doc")
-	# print(x.name)
-	
-	#headers = { "Authorization" : "our_unique_secret_token" }
-	# headers = {}
-
-	# data = {
-	# 	"id": 1001,
-	# 	"name": "geek",
-	# 	"passion": "coding",
-	# }
-	
-	# api_url = f"https://192.168.204.66:7037/api/v2/Download/{typeFile}?documentName={doc_name}&tip_doc={typeDocSri}&sitename={siteName}"
-	
-	#response = requests.post(api_url, json=doc_str, verify=False, stream=True, headers= headers)
-	# response = requests.post(api_url, data=doc_str, verify=False, stream=True, headers= headers)
-	
-	#for k,v in r.raw.headers.items(): print(f"{k}: {v}")
-	#print(r.text)
-	#print(response)
-	#print(response.text)
-	
-	#html = '<h1>Invoice from Star Electronics e-Store!</h1>'
-
-    # Add items to PDF HTML
-	#html += '<ol>'	
-	#html += '<li>item 1</li>'
-	#html += '</ol>'
-
-	#print(get_pdf(html))
-
-    # Attaching PDF to response
-	#frappe.response.filename = 'invoice.pdf'
-	#frappe.response.filecontent = get_pdf(html)
-	#frappe.response.type = 'pdf'
-	
-	#frappe.throw(_('You need to have "Share" permission'), frappe.PermissionError)
-	#raise Exception("Sorry, no numbers below zero")
-
-	# return response.text
 
 def handler(obj):
     
@@ -408,6 +357,73 @@ def setSecuencial(doc, typeDocSri):
 					document_object.db_set('secuencial', nuevo_secuencial)
 					#Se asigna a la tabla de secuenciales
 					sequence_object.db_set('value', nuevo_secuencial)
+
+		case "GRS":
+			
+			#print(doc)
+			document_object = frappe.get_last_doc('Delivery Note', filters = { 'name': doc.name})
+			if(document_object):
+				if(document_object.secuencial > 0):
+					print("Secuencial ya asignado!")
+					print(document_object.secuencial)
+					return 
+
+				#doc.ambiente ---- aun no asignado   --- probablemente desde company
+				environment_object = frappe.get_last_doc('Sri Environment', filters = { 'id': 1  })
+
+				print(environment_object.name)
+				print(environment_object.id)
+
+				print("--------------------------")
+
+				nuevo_secuencial = 0
+
+				#TODO: Agregar filtro por empresa, no fue considerado al inicio, se requerirá cambios en el modelo
+				sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'id': 1, 'sri_environment_lnk': environment_object.name, 'sri_type_doc_lnk': typeDocSri })
+
+				if (sequence_object):
+					print(sequence_object.value)
+					nuevo_secuencial = sequence_object.value
+					nuevo_secuencial += 1
+					print(nuevo_secuencial)
+					#Se asigna al documento
+					document_object.db_set('secuencial', nuevo_secuencial)
+					#Se asigna a la tabla de secuenciales
+					sequence_object.db_set('value', nuevo_secuencial)
+
+		case "CRE":
+			
+			#print(doc)
+			document_object = frappe.get_last_doc('Purchase Withholding Sri Ec', filters = { 'name': doc.name})
+			if(document_object):
+				if(document_object.secuencial > 0):
+					print("Secuencial ya asignado!")
+					print(document_object.secuencial)
+					return 
+
+				#doc.ambiente ---- aun no asignado   --- probablemente desde company
+				environment_object = frappe.get_last_doc('Sri Environment', filters = { 'id': 1  })
+
+				print(environment_object.name)
+				print(environment_object.id)
+
+				print("--------------------------")
+
+				nuevo_secuencial = 0
+
+				#TODO: Agregar filtro por empresa, no fue considerado al inicio, se requerirá cambios en el modelo
+				sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'id': 1, 'sri_environment_lnk': environment_object.name, 'sri_type_doc_lnk': typeDocSri })
+
+				if (sequence_object):
+					print(sequence_object.value)
+					nuevo_secuencial = sequence_object.value
+					nuevo_secuencial += 1
+					print(nuevo_secuencial)
+					#Se asigna al documento
+					document_object.db_set('secuencial', nuevo_secuencial)
+					#Se asigna a la tabla de secuenciales
+					sequence_object.db_set('value', nuevo_secuencial)
+
 
 def registerResponse(doc, typeDocSri, doctype_erpnext, response_json):
 	#TODO: El XML se guarda de forma incorrecta, pero al parecer es un comportamiento normal
