@@ -45,7 +45,7 @@
     "fieldtype": "Int",
     "in_list_view": 0,
     "in_preview": 0,
-    "default": "10",
+    "default": "20",
     "label": "Server Timeout"
   }
  ],

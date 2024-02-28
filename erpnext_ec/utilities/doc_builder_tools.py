@@ -373,7 +373,7 @@ def get_invoice_by_link(link_name, link_doctype):
 
 def get_full_delivery_trips(doc):
     
-    print (doc)
+    #print(doc['items'])
 
     doc_name = doc.name
 
@@ -383,8 +383,30 @@ def get_full_delivery_trips(doc):
 
     delivery_trips = frappe.get_all('Delivery Trip', filters={'delivery_note': doc_name}, fields=['*'])
     #    fields=['charge_type', 'account_head', 'tax_amount']
-        
+    
+    main_against_sales_invoice = ''
+    numAutDocSustento = ''
+    codEstabDestino = ''
+    numDocSustento = ''
     # print(delivery_trips)
+    for delivery_note_item in doc['items']:
+        print("against_sales_invoice----")
+        #print(doc.against_sales_invoice)
+        #print(delivery_tripItem.against_sales_invoice)
+        print(delivery_note_item.against_sales_invoice)
+        main_against_sales_invoice = delivery_note_item.against_sales_invoice
+        docs_si = frappe.get_all('Sales Invoice', filters={"name": main_against_sales_invoice}, fields = ['*'])        
+
+        if docs_si:
+            #doc = docs[0]
+            print(docs_si[0])
+            codEstabDestino = docs_si[0].estab
+            #secuencial = docs_si[0].secuencial
+            numAutDocSustento = docs_si[0].numeroautorizacion
+            numDocSustento = docs_si[0].estab + '-' + docs_si[0].ptoemi + '-' + format(docs_si[0].secuencial, '09')
+            print(numAutDocSustento)
+            print(numDocSustento)
+
 
     for delivery_tripItem in delivery_trips:
         delivery_stops = frappe.get_all('Delivery Stop', filters={'parent': delivery_tripItem.name}, fields=['*'])
@@ -402,9 +424,11 @@ def get_full_delivery_trips(doc):
             delivery_stops_item.dirDestinatario = address_data['direccion']
 
             print(delivery_stops_item.name)
-            print(delivery_stops_item.delivery_note)
-            print(doc.against_sales_invoice)
-            delivery_stops_item.numAutDocSustento = '001-001-000000001'
+            print(delivery_stops_item.delivery_note)            
+
+            delivery_stops_item.numAutDocSustento = numAutDocSustento
+            delivery_stops_item.numDocSustento = numDocSustento
+            delivery_stops_item.codEstabDestino = codEstabDestino
 
             pass
 

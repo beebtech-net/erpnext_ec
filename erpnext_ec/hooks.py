@@ -22,8 +22,16 @@ app_include_js = [
     "/assets/erpnext_ec/js/sales_invoice_tools.js",
     "/assets/erpnext_ec/js/delivery_note_tools.js",
     "/assets/erpnext_ec/js/frappe_sri_ui_tools.js",
-    "/assets/erpnext_ec/js/erpnext_ec.bundle.js"
+    "/assets/erpnext_ec/js/erpnext_ec.bundle.js",
+
+    "/assets/erpnext_ec/js/libs/jsonTree/jsonTree.js",
 ]
+
+app_include_css = [
+
+    "/assets/erpnext_ec/js/libs/jsonTree/jsonTree.css",
+]
+
 
 # include js, css files in header of web template
 # web_include_css = "/assets/erpnext_ec/css/erpnext_ec.css"

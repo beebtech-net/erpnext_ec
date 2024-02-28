@@ -21,6 +21,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # from bson import json_util
 # import json
 
+import dicttoxml
+
 import re
 import base64
 from dateutil import parser
@@ -34,10 +36,32 @@ def send_email(doc, typeDocSri, doctype_erpnext, siteName, email_to):
 	#var url = `${btApiServer}/api/Tool/AddToEmailQuote/${doc}?tip_doc=FAC&sitename=${sitenameVar}&email_to=${values.email_to}`;
 	pass
 
+
 @frappe.whitelist()
-def get_responses(doc, typeDocSri, doctype_erpnext, siteName):
+def get_info_doc(doc_name, typeDocSri, doctype_erpnext, siteName):
+	#print(doc)
 	#var url = `${btApiServer}/api/SriProcess/getresponses/${doc}?tip_doc=${tip_doc}&sitename=${sitenamePar}`;
-	pass
+	#xml_responses = frappe.get_list(doctype='Xml Responses', fields='*')
+	info_doc = {}
+	xml_responses = get_responses(doc_name, typeDocSri, doctype_erpnext, siteName)
+	
+	for xml_response_item in xml_responses:
+		print(xml_response_item.xmldata)
+
+	doc_json = get_doc_json(doc_name, typeDocSri, doctype_erpnext, siteName)
+	info_doc['responses'] = xml_responses
+	info_doc['doc_json'] = doc_json
+	print(info_doc)
+	return info_doc
+
+@frappe.whitelist()
+def get_responses(doc_name, typeDocSri, doctype_erpnext, siteName):
+	#print(doc)
+	#var url = `${btApiServer}/api/SriProcess/getresponses/${doc}?tip_doc=${tip_doc}&sitename=${sitenamePar}`;
+	#xml_responses = frappe.get_list(doctype='Xml Responses', fields='*')
+	xml_responses = frappe.get_all('Xml Responses', filters={'doc_ref': doc_name, 'tip_doc': typeDocSri }, fields=['*'], order_by='creation')
+	print(xml_responses)
+	return xml_responses
 
 def get_api_url():
 	settings_ec = frappe.get_list(doctype='Regional Settings Ec', fields='*')
@@ -55,6 +79,27 @@ def get_api_url():
 	raise ReferenceError("No se encontró configuración requerida 'Regional Settings Ec' url_server_beebtech")
 	#raise TypeError("El objeto de tipo %s no es serializable JSON." % type(obj).__name__)
 	#return ""
+
+
+@frappe.whitelist()
+def get_doc_json(doc_name, typeDocSri, typeFile, siteName):
+
+	doc = None
+	print(doc_name, typeDocSri, typeFile, siteName)
+
+	#El parametro doc aquí es el nombre del documento
+      
+	match typeDocSri:
+		case "FAC":
+			doc = build_doc_fac(doc_name)
+			print ("")
+		case "GRS":
+			doc = build_doc_grs(doc_name)
+		case "CRE":
+			doc = build_doc_cre(doc_name)
+			print(doc)
+
+	return doc
 
 @frappe.whitelist()
 def get_doc(doc_name, typeDocSri, typeFile, siteName):
@@ -197,6 +242,7 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 			print(doc_data.secuencial)
 			print('-----------------------')
 		case "GRS":
+			setSecuencial(doc_object_build, typeDocSri)
 			doc_data = build_doc_grs(doc_object_build.name)
 		case "CRE":
 			doc_data = build_doc_cre(doc_object_build.name)
@@ -262,13 +308,24 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 		
 		response_json = json.loads(response.text, object_hook=lambda d: SimpleNamespace(**d))
 
+		#print(json.loads(response.text))
+		#TODO: Conversión del XML para guardar en la base de datos es correcta, pero no agrega la declaracion:
+		# <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+		response_xml_data = dicttoxml.dicttoxml(json.loads(response.text)['data'], encoding="UTF-8", attr_type=False, root=False, xml_declaration=True)
+		response_xml_data_string = response_xml_data
+		# Imprimir el XML resultante
+		#response_xml_data_string = response_xml_data.decode() #no funciona 
+		#print(response_xml_data_string)
+
 		print(response.status_code)
 		print(response.ok)
 
 		response_ok = response.ok
 
 		if(response.status_code == 400):
-			if(int(response_json.data.numeroComprobantes) > 0):
+			registerResponse(doc_data, typeDocSri, doctype_erpnext, response_json, response_xml_data_string)
+			if(response_json.data.numeroComprobantes is not None and int(response_json.data.numeroComprobantes) > 0):
 				if( 'ya estaba autorizada' in response_json.error):
 					print ("correcto ya registrado previamente")
 					#Se simula que el proceso fue correcto para que los datos sean actualizados
@@ -277,7 +334,8 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 
 		if(response.status_code == 200):
 			
-			registerResponse(doc_data, typeDocSri, doctype_erpnext, response_json)
+			#registerResponse(doc_data, typeDocSri, doctype_erpnext, response_json, response.text)
+			registerResponse(doc_data, typeDocSri, doctype_erpnext, response_json, response_xml_data_string)
 
 			#evaluar estado de respuesta SRI
 			if(response_ok and int(response_json.data.numeroComprobantes) > 0):
@@ -323,8 +381,13 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 		return response.text
 
 def setSecuencial(doc, typeDocSri):
+	
+	company_object = frappe.get_last_doc('Company', filters = { 'name': document_object.company  })
+	#company_object.name
+	#company_object.sri_active_environment
+	
 	match typeDocSri:
-		case "FAC":			
+		case "FAC":
 			
 			#print(doc)
 			document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name})
@@ -333,30 +396,6 @@ def setSecuencial(doc, typeDocSri):
 					print("Secuencial ya asignado!")
 					print(document_object.secuencial)
 					return 
-
-				#doc.ambiente ---- aun no asignado   --- probablemente desde company
-				environment_object = frappe.get_last_doc('Sri Environment', filters = { 'id': 1  })
-
-				print(environment_object.name)
-				print(environment_object.id)
-
-				print("--------------------------")
-
-				nuevo_secuencial = 0
-
-				#TODO: Agregar filtro por empresa, no fue considerado al inicio, se requerirá cambios en el modelo
-				#TODO: Falta automatizar el filtro, por ahora se puso id = 1
-				sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'id': 1, 'sri_environment_lnk': environment_object.name, 'sri_type_doc_lnk': typeDocSri })
-
-				if (sequence_object):
-					print(sequence_object.value)
-					nuevo_secuencial = sequence_object.value
-					nuevo_secuencial += 1
-					print(nuevo_secuencial)
-					#Se asigna al documento
-					document_object.db_set('secuencial', nuevo_secuencial)
-					#Se asigna a la tabla de secuenciales
-					sequence_object.db_set('value', nuevo_secuencial)
 
 		case "GRS":
 			
@@ -368,29 +407,6 @@ def setSecuencial(doc, typeDocSri):
 					print(document_object.secuencial)
 					return 
 
-				#doc.ambiente ---- aun no asignado   --- probablemente desde company
-				environment_object = frappe.get_last_doc('Sri Environment', filters = { 'id': 1  })
-
-				print(environment_object.name)
-				print(environment_object.id)
-
-				print("--------------------------")
-
-				nuevo_secuencial = 0
-
-				#TODO: Agregar filtro por empresa, no fue considerado al inicio, se requerirá cambios en el modelo
-				sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'id': 1, 'sri_environment_lnk': environment_object.name, 'sri_type_doc_lnk': typeDocSri })
-
-				if (sequence_object):
-					print(sequence_object.value)
-					nuevo_secuencial = sequence_object.value
-					nuevo_secuencial += 1
-					print(nuevo_secuencial)
-					#Se asigna al documento
-					document_object.db_set('secuencial', nuevo_secuencial)
-					#Se asigna a la tabla de secuenciales
-					sequence_object.db_set('value', nuevo_secuencial)
-
 		case "CRE":
 			
 			#print(doc)
@@ -401,38 +417,39 @@ def setSecuencial(doc, typeDocSri):
 					print(document_object.secuencial)
 					return 
 
-				#doc.ambiente ---- aun no asignado   --- probablemente desde company
-				environment_object = frappe.get_last_doc('Sri Environment', filters = { 'id': 1  })
+	#PROCESO GENERAL -----
+	#doc.ambiente ---- aun no asignado   --- probablemente desde company
+	#environment_object = frappe.get_last_doc('Sri Environment', filters = { 'id': 1  })
+	#print(environment_object.name)
+	#print(environment_object.id)
 
-				print(environment_object.name)
-				print(environment_object.id)
+	print("--------------------------")
+	nuevo_secuencial = 0
 
-				print("--------------------------")
+	#TODO: Agregar filtro por empresa, no fue considerado al inicio, se requerirá cambios en el modelo
+	#TODO: Falta automatizar el filtro, por ahora se puso id = 1
+	#sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'id': 1, 'sri_environment_lnk': environment_object.name, 'sri_type_doc_lnk': typeDocSri })
+	sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'company_id': company_object.name, 'sri_environment_lnk': company_object.sri_active_environment, 'sri_type_doc_lnk': typeDocSri })	
 
-				nuevo_secuencial = 0
-
-				#TODO: Agregar filtro por empresa, no fue considerado al inicio, se requerirá cambios en el modelo
-				sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'id': 1, 'sri_environment_lnk': environment_object.name, 'sri_type_doc_lnk': typeDocSri })
-
-				if (sequence_object):
-					print(sequence_object.value)
-					nuevo_secuencial = sequence_object.value
-					nuevo_secuencial += 1
-					print(nuevo_secuencial)
-					#Se asigna al documento
-					document_object.db_set('secuencial', nuevo_secuencial)
-					#Se asigna a la tabla de secuenciales
-					sequence_object.db_set('value', nuevo_secuencial)
+	if (sequence_object):
+		print(sequence_object.value)
+		nuevo_secuencial = sequence_object.value
+		nuevo_secuencial += 1
+		print(nuevo_secuencial)
+		#Se asigna al documento
+		document_object.db_set('secuencial', nuevo_secuencial)
+		#Se asigna a la tabla de secuenciales
+		sequence_object.db_set('value', nuevo_secuencial)
 
 
-def registerResponse(doc, typeDocSri, doctype_erpnext, response_json):
+def registerResponse(doc, typeDocSri, doctype_erpnext, response_json, response_json_text):
 	#TODO: El XML se guarda de forma incorrecta, pero al parecer es un comportamiento normal
 	# del frappe, hay que verificar.
 	xml_response_new = frappe.get_doc({
 					'doctype': 'Xml Responses',
 					'doc_ref': doc.name,
 					#'xmldata': response_json.data.autorizaciones.autorizacion[0].comprobante,
-					'xmldata': response_json,
+					'xmldata': response_json_text,
 					'sri_status': response_json.data.autorizaciones.autorizacion[0].estado,
 					'tip_doc': typeDocSri,
 					'doc_type': doctype_erpnext
@@ -444,7 +461,6 @@ def registerResponse(doc, typeDocSri, doctype_erpnext, response_json):
 def updateStatusDocument(doc, typeDocSri, response_json):
 	match typeDocSri:
 		case "FAC":
-
 			document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name })
 			if(document_object):
 				document_object.db_set('numeroautorizacion', response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
@@ -470,7 +486,26 @@ def updateStatusDocument(doc, typeDocSri, response_json):
 				#	ignore_version=True # do not create a version record
 				#)
 	
-		#case "GRS":
-			#doc_data = build_doc_grs(doc_object_build.name)
+		case "GRS":
+			
+			print(response_json)
+
+			document_object = frappe.get_last_doc('Delivery Note', filters = { 'name': doc.name })
+			if(document_object):				
+				document_object.db_set('numeroautorizacion', response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
+				document_object.db_set('sri_estado', 200)
+				document_object.db_set('sri_response', response_json.data.autorizaciones.autorizacion[0].estado)
+				#fechaAutorizacion = parser.parse(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
+				fecha_con_zona = datetime.fromisoformat(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
+				# Eliminar la zona horaria
+				fechaAutorizacion = fecha_con_zona.replace(tzinfo=None)
+
+				#print(fechaAutorizacion)
+				#print(type(fechaAutorizacion))
+				#print(datetime.now())
+				#print(type(datetime.now()))
+
+				document_object.db_set('fechaautorizacion', fechaAutorizacion)
+
 		#case "CRE":
 			#doc_data = build_doc_cre(doc_object_build.name)

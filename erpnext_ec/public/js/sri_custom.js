@@ -1,3 +1,29 @@
+function get_current_doc_type()
+{
+    var properties_view = Object.getOwnPropertyNames(frappe.views.list_view);
+    var doctype_erpnext = properties_view[0];
+
+    //console.log(doctype_erpnext);
+    //console.log(doc_name);
+
+    //var sitenameVar = frappe.boot.sitename;
+
+    typeDocSri = '-';
+
+    if(doctype_erpnext == 'Sales Invoice')
+        typeDocSri = 'FAC';
+
+    if(doctype_erpnext == 'Delivery Note')
+        typeDocSri = 'GRS';
+
+    return [doctype_erpnext, typeDocSri];
+}
+
+function buscarObjetoPorPropiedad(array, propiedad, valorBuscado) {
+    return array.find(function(objeto) {
+        return objeto[propiedad] === valorBuscado;
+    });
+}
 
 function BuildComment(comments)
 {
@@ -39,6 +65,8 @@ function normalizeString(strSource) {
 const btApiServer = 'http://localhost:3003'; //
 
 const Website = {
+    current_document_info: undefined,
+
     loadingAnimation: `<div class="custom-animation" style="width: 25px;height: 25px;display: inline-block;"><svg version="1.1" id="L9" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
     <path fill="#000" d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50">
       <animateTransform attributeName="transform" attributeType="XML" type="rotate" dur="1s" from="0 50 50" to="360 50 50" repeatCount="indefinite"></animateTransform>
@@ -54,23 +82,71 @@ const Website = {
     		        <span class="ellipsis">${textInner}</span>
     			</span></td></tr>`;
     },
-    GetDocumentResponses(doc, tip_doc, sitenamePar) {
+    GetDocumentResponses(doc_name, tip_doc, sitenamePar) {
 
-        var url = `${btApiServer}/api/SriProcess/getresponses/${doc}?tip_doc=${tip_doc}&sitename=${sitenamePar}`;
+        // var properties_view = Object.getOwnPropertyNames(frappe.views.list_view);
+        // var doctype_erpnext = properties_view[0];
+
+        // //console.log(doctype_erpnext);
+        // //console.log(doc_name);
+
+        var sitenameVar = frappe.boot.sitename;
+
+        // typeDocSri = '-';
+
+        // if(doctype_erpnext == 'Sales Invoice')
+        //     typeDocSri = 'FAC';
+
+        // if(doctype_erpnext == 'Delivery Note')
+        //     typeDocSri = 'GRS';
+
+        doctype_erpnext = get_current_doc_type()[0];
+        typeDocSri = get_current_doc_type()[1];
+        
+        return frappe.call({
+                method: "erpnext_ec.utilities.sri_ws.get_responses",
+                args: 
+                {
+                    doc_name: doc_name,
+                    typeDocSri: typeDocSri,
+                    doctype_erpnext: doctype_erpnext,
+                    siteName: sitenameVar,
+                    //freeze: true,
+                    //freeze_message: "Procesando documento, espere un momento.",
+                    success: function(r) {},
+                    always: function(r) {},
+                },
+                callback: function(r) 
+                {
+                    //console.log(r);
+
+                    //jsonResponse = JSON.parse(r.message);
+                    //console.log(jsonResponse);                        
+
+                    //frappe.show_alert({
+                    //    message: __(`Error al procesar documento ${doc.name}:` + string_error + ":" + string_mensaje + ":" + string_informacionAdicional),
+                    //    indicator: 'red'
+                    //}, 10);
+
+                    //console.log('Terminado proceso con el SRI!');
+                    //$(btnProcess).show();
+                    //$(btnProcess).parent().find('.custom-animation').remove();                            	
+                 
+                },
+                error: function(r) {
+                    //$(btnProcess).show();
+                    //$(btnProcess).parent().find('.custom-animation').remove();
+                },
+            });
+
+
+        /*var url = `${btApiServer}/api/SriProcess/getresponses/${doc}?tip_doc=${tip_doc}&sitename=${sitenamePar}`;
         return new Promise(function (resolve, reject) {
             var xhr = new XMLHttpRequest();
             xhr.open('POST', url, true);
             //xhr.responseType = 'document';
             //xhr.onload = function () {
-            xhr.onreadystatechange = function (oEvent) {
-                /*
-                var status = xhr.status;
-                if (status == 200) {
-                    resolve(xhr.response);
-                } else {
-                    reject(status);
-                }
-                */
+            xhr.onreadystatechange = function (oEvent) {                
 
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
@@ -83,21 +159,78 @@ const Website = {
                 }
 
             };
-            /*
-            xhr.onloadend = function() {
-                if(xhr.status == 404) 
-                {
-                    throw new Error(url + ' replied 404');
-                    //reject('Inválido');
-                }
-            }
-            */
+            
             xhr.send();
-        });
+        });*/
 
     },
-    ShowCustomMessage(title, indicator, contentMessage) {
+    GetInfoDoc(doc_name, tip_doc, sitenamePar) {
+
+        // var properties_view = Object.getOwnPropertyNames(frappe.views.list_view);
+        // var doctype_erpnext = properties_view[0];
+
+
+        var sitenameVar = frappe.boot.sitename;
+
+        // typeDocSri = '-';
+
+        // if(doctype_erpnext == 'Sales Invoice')
+        //     typeDocSri = 'FAC';
+
+        // if(doctype_erpnext == 'Delivery Note')
+        //     typeDocSri = 'GRS';
+
+        doctype_erpnext = get_current_doc_type()[0];
+        typeDocSri = get_current_doc_type()[1];
+        
+        return frappe.call({
+                method: "erpnext_ec.utilities.sri_ws.get_info_doc",
+                args: 
+                {
+                    doc_name: doc_name,
+                    typeDocSri: typeDocSri,
+                    doctype_erpnext: doctype_erpnext,
+                    siteName: sitenameVar,
+                    //freeze: true,
+                    //freeze_message: "Procesando documento, espere un momento.",
+                    success: function(r) {},
+                    always: function(r) {},
+                },
+                callback: function(r) 
+                {
+                    //console.log(r);
+
+                    //jsonResponse = JSON.parse(r.message);
+                    //console.log(jsonResponse);                        
+
+                    //frappe.show_alert({
+                    //    message: __(`Error al procesar documento ${doc.name}:` + string_error + ":" + string_mensaje + ":" + string_informacionAdicional),
+                    //    indicator: 'red'
+                    //}, 10);
+
+                    //console.log('Terminado proceso con el SRI!');
+                    //$(btnProcess).show();
+                    //$(btnProcess).parent().find('.custom-animation').remove();                            	
+                 
+                },
+                error: function(r) {
+                    //$(btnProcess).show();
+                    //$(btnProcess).parent().find('.custom-animation').remove();
+                },
+            });
+    },
+    ShowCustomMessage(title, indicator, id_name) {
         $('#xmlPreviewDocument').remove();
+
+        //buscar por name
+        //RES-2024-00071
+        //buscarObjetoPorPropiedad(document.Website.current_document_info.responses, 'name', 'RES-2024-00071');
+        var item_found = buscarObjetoPorPropiedad(document.Website.current_document_info.responses, 'name', id_name);
+
+        if(!item_found) 
+            return;
+
+        var contentMessage = item_found.xmldata;
 
         var $div = $(`
             <div id="xmlPreviewDocument" class="modal fade" role="dialog" style="z-index: 3000;">
@@ -118,16 +251,19 @@ const Website = {
         `).appendTo('body');
 
 
-        $('#xmlPreviewDocument').modal('show');
-        //frappe.confirm('First Name');
-
-        /*frappe.msgprint({
-                        title: __(title),
-                        indicator: indicator,
-                        message: __(contentMessage)
-                    });  */
+        $('#xmlPreviewDocument').modal('show');        
     },
-    DownloadFromRaw(blobContent, fileNameForDownload) {
+    DownloadFromRaw(id_name, fileNameForDownload) {
+
+        //var blobContent = document.Website.current_document_info.responses[0].xmldata;
+
+        var item_found = buscarObjetoPorPropiedad(document.Website.current_document_info.responses, 'name', id_name);
+
+        if(!item_found)
+            return;
+
+        var blobContent = item_found.xmldata;
+
         var blob = new Blob([blobContent], { type: 'text/plain' });
         //var blob = blobContent;
         //var fileName = req.getResponseHeader("fileName") //if you have the fileName header available
@@ -138,7 +274,24 @@ const Website = {
         URL.revokeObjectURL(link.href);
     },
     ShowInfo(doc) {
-        //doc String Parameter
+        //doc String Parameter        
+        //console.log(doc);
+        // var textareaId = "sri_custom_textarea";
+        // var existingTextarea = document.getElementById(textareaId);
+
+        // if (!existingTextarea)
+        // {
+        //     var textarea = document.createElement("textarea");
+
+        //     // Asignar un ID específico al elemento
+        //     textarea.id = "sri_custom_textarea";
+
+        //     // Establecer el elemento como oculto
+        //     //textarea.style.display = "none";
+
+        //     // Agregar el elemento textarea al documento principal, por ejemplo, al body
+        //     document.body.appendChild(textarea);
+        // }
 
         var btnProcess = $('div.dropdown[data-name="' + doc + '"]');
         //Oculta el botón
@@ -148,7 +301,13 @@ const Website = {
 
         setTimeout(
             async function () {
-                var tip_doc = 'FAC';
+
+                //console.log(get_current_doc_type());
+                doctype_erpnext = get_current_doc_type()[0];
+                typeDocSri = get_current_doc_type()[1];
+
+                //var tip_doc = 'FAC';
+
                 var document_responses_json = '';
                 var document_responses = `<table class="table table-striped caption-top">
                 <thead>
@@ -161,41 +320,68 @@ const Website = {
                 </thead>
                 <tbody>
                 `;
+
                 var sitenameVar = frappe.boot.sitename;
+                //console.log(sitenameVar);
 
                 try {
-                    document_responses_json = await document.Website.GetDocumentResponses(doc, tip_doc, sitenameVar);
-                    document_responses_json = JSON.parse(document_responses_json);
+                    //document_responses_json = await document.Website.GetDocumentResponses(doc, typeDocSri, sitenameVar);
+                    document_info = await document.Website.GetInfoDoc(doc, typeDocSri, sitenameVar);
+                    
+                    //Se asigna al scope global
+                    document.Website.current_document_info = document_info.message;
+                    console.log(document_info.message);
+
+                    document_responses_json = document_info.message.responses;
+                    jsonResponse = document_info.message.doc_json;
+
+                    if(document_info == undefined || document_info.message.responses == undefined || document_info.message.doc_json == undefined)
+                    {
+                        $(btnProcess).show();
+                        $(btnProcess).parent().find('.custom-animation').remove();
+
+                        frappe.show_alert({
+                            message: __(`Error al procesar documento ${doc}:` + ":" + "-"),
+                            indicator: 'red'
+                        }, 5);
+                        return;
+                    }
+
+                    //document_responses_json = JSON.parse(document_responses_json.message);
 
                     for (let ij = 0; ij < document_responses_json.length; ij++) {
-                        var xmldata_dec = document_responses_json[ij].xmldata.replace(/&apos;/g, "'")
-                            .replace(/&quot;/g, '"')
-                            .replace(/&gt;/g, '>')
-                            .replace(/&lt;/g, '<')
-                            .replace(/&amp;/g, '&');
 
-                        var xmldata_enc = document_responses_json[ij].xmldata.replace(/&/g, '&amp;')
-                            .replace(/</g, '&lt;')
-                            .replace(/>/g, '&gt;')
-                            .replace(/"/g, '&quot;')
-                            .replace(/'/g, '&apos;')
-                            .replace(/(\r\n|\n|\r)/gm, "");
+                        //console.log(document_responses_json[ij].xmldata);                        
+                        //var xmldata_enc = document_responses_json[ij].xmldata;
+                        // var xmldata_dec = document_responses_json[ij].xmldata.replace(/&apos;/g, "'")
+                        //     .replace(/&quot;/g, '"')
+                        //     .replace(/&gt;/g, '>')
+                        //     .replace(/&lt;/g, '<')
+                        //     .replace(/&amp;/g, '&');
+                        // var xmldata_enc = document_responses_json[ij].xmldata.replace(/&/g, '&amp;')
+                        //     .replace(/</g, '&lt;')
+                        //     .replace(/>/g, '&gt;')
+                        //     .replace(/"/g, '&quot;')
+                        //     .replace(/'/g, '&apos;')
+                        //     .replace(/(\r\n|\n|\r)/gm, "");
 
-                        var r_date = document_responses_json[ij].aud_ing_date;
-                        var r_status = document_responses_json[ij].status;
+                        var r_date = document_responses_json[ij].creation;
+                        var r_status = document_responses_json[ij].sri_status;
 
-                        var r_date_path = document_responses_json[ij].aud_ing_date.replace(/:/g, '');
+                        var r_date_path = document_responses_json[ij].creation.replace(/:/g, '');
 
+                        var r_id = document_responses_json[ij].name;
+                        
                         document_responses += `<tr>
                             <td>${r_date}</td>
                             <td>${r_status}</td>
                             <td>
-                            <button class="btn btn-xs" data-name="" title="Mostrar" onclick="document.Website.ShowCustomMessage('${r_status} - ${r_date}','green', '${xmldata_enc}');">
+                            <button class="btn btn-xs" data-name="" title="Mostrar" onclick="document.Website.ShowCustomMessage('${r_status} - ${r_date}','green', '${r_id}');">
 						        <svg class="icon icon-sm" style=""><use class="" href="#icon-view"></use></svg>
 					        </button>
 					        </td>
 					        <td>
-                            <button class="btn btn-xs" data-name="" title="Descargar" onclick="document.Website.DownloadFromRaw('${xmldata_enc}', '${tip_doc}-${r_status}-${r_date_path}-${doc}.xml');">
+                            <button class="btn btn-xs" data-name="" title="Descargar" onclick="document.Website.DownloadFromRaw('${r_id}', '${typeDocSri}-${r_status}-${r_date_path}-${doc}.xml');">
 						        <svg class="icon icon-sm" style=""><use class="" href="#icon-file"></use></svg>
 					        </button>
 					        </td>
@@ -204,7 +390,7 @@ const Website = {
                         //console.log(document_responses_json[ij].status);
                         //aud_ing_date
                         //doc_ref
-                        //tip_doc
+                        //typeDocSri
                         //xmldata
                     }
 
@@ -215,35 +401,58 @@ const Website = {
                 }
 
                 document_responses += `</tbody></table>`
+                
+                /*******************/
+                var num_autorizacion = jsonResponse.numeroautorizacion;
+                var sri_estado = jsonResponse.sri_estado;
+                var sri_response = jsonResponse.sri_response;
+                var fechaautorizacion = jsonResponse.fechaautorizacion;
+                var secuencial = jsonResponse.secuencial;
 
-                var url = `${btApiServer}/api/SriProcess/getdocument/${doc}?tip_doc=FAC&sitename=${sitenameVar}`;
-                //console.log(url);
+                var document_sri_info = `<table class="table table-striped caption-top">
+                <thead>
+                    <tr>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                </thead>
+                <tbody>
+                `;
 
-                var req = new XMLHttpRequest();
-                req.open("POST", url, true);
+                document_sri_info += `<tr>
+                            <td class="bold">Autorización</td>
+                            <td colspan="3">${num_autorizacion}</td>
+                            </tr>`;
 
-                req.onreadystatechange = function (oEvent) {
-                    //console.log(req.readyState);
+                document_sri_info += `<tr>
+                            <td class="bold">sri_response</td>
+                            <td>${sri_response}</td>
+                            <td class="bold">sri_estado</td>
+                            <td>${sri_estado}</td>
+                            </tr>`;
+                
+                document_sri_info += `<tr>
+                            <td class="bold">Fec. Autor.</td>
+                            <td>${fechaautorizacion}</td>
+                            <td class="bold">Secuencial</td>
+                            <td>${secuencial}</td>
+                            </tr>`;
 
-                    if (req.readyState === 4) {
-                        if (req.status === 200) {
+                document_sri_info += `</tbody></table>`
+                /****************************/
 
-                            //var btnProcess = $('.dropdown div[data-name="' + doc + '"]').parent().find('.btn-download-' + typeFile);
-                            $(btnProcess).show();
-                            $(btnProcess).parent().find('.custom-animation').remove();
+                //var btnProcess = $('.dropdown div[data-name="' + doc + '"]').parent().find('.btn-download-' + typeFile);
+                $(btnProcess).show();
+                $(btnProcess).parent().find('.custom-animation').remove();
 
-                            var stringResponse = req.responseText;
+                //console.log(jsonResponse);
 
-                            try {
-                                var jsonResponse = JSON.parse(stringResponse);
-                            } catch (e) { }
+                //jsonResponse.detalle
 
-                            //console.log(jsonResponse);
-
-                            //jsonResponse.detalle
-
-                            //${stringResponse}
-                            var document_preview = `
+                //${stringResponse}
+                var document_preview = `
                             <nav>
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
     <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Json Data</button>
@@ -264,7 +473,7 @@ const Website = {
   </div>
   <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
     <div style="overflow-y: auto;max-height: 380px;">
-        
+        ${document_sri_info}
     </div>
   </div>
 </div>`;
@@ -274,7 +483,6 @@ const Website = {
                                 function () {
                                     var wrapper = document.getElementById("wrapper-json");
                                     var tree = jsonTree.create(jsonResponse, wrapper);
-
                                 }
                                 , 500);
 
@@ -290,29 +498,15 @@ const Website = {
                                 title: __('Datos del documento ' + doc),
                                 indicator: 'green',
                                 message: __(document_preview)
-                            });
-
-
-                            //bye bye!!
-                            return;
-
-                        } else {
-                            console.log(req);
+                            });                       
+                            
                             //console.log("Error", req.statusText);
-                            console.log('1x');
-                            frappe.show_alert({
-                                message: __(`Error al procesar documento ${doc}:` + req.statusText + ":" + req.responseText),
-                                indicator: 'red'
-                            }, 5);
-                        }
+                                                     
+                        
 
-                        //console.log('Terminado proceso con el SRI!');
-                        $(btnProcess).show();
-                        $(btnProcess).parent().find('.custom-animation').remove();
-
-                    }
-                };
-                req.send();
+                    //console.log('Terminado proceso con el SRI!');
+                    $(btnProcess).show();
+                    $(btnProcess).parent().find('.custom-animation').remove();
 
             }, 500);
 
