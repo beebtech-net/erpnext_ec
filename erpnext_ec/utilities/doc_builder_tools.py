@@ -402,6 +402,9 @@ def get_full_delivery_trips(doc):
             delivery_stops_item.dirDestinatario = address_data['direccion']
 
             print(delivery_stops_item.name)
+            print(delivery_stops_item.delivery_note)
+            print(doc.against_sales_invoice)
+            delivery_stops_item.numAutDocSustento = '001-001-000000001'
 
             pass
 
