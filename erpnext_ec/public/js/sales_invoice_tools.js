@@ -387,8 +387,8 @@ function SendSalesInvoice(doc) {
             ` + data_alert +
                 `<div class="warning-sri">Por favor, verifique que toda la información esté correctamente ingresada antes de enviarla al SRI y generar el documento electrónico.</div>`;
 
-			//if (documentIsReady)
-            if (true)
+			if (documentIsReady)
+            //if (true)
 			{
 
                 frappe.warn('Enviar al SRI?',

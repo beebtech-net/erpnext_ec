@@ -1,0 +1,10 @@
+#CMD as Admin 
+# in case WSL stop working
+
+
+sc queryex WslService
+
+I grabbed the PID from the output of the above and then:
+
+taskkill /PID "PID" /F
+

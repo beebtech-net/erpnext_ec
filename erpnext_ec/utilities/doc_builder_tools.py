@@ -144,6 +144,8 @@ def get_full_company_sri(def_company):
 
         if company_address_primary:
             compania_sri['dirMatriz'] = company_address_primary.address_line1
+        else:
+            compania_sri['dirMatriz'] = ''
 
         #print(compania_sri)
         return compania_sri
@@ -208,6 +210,12 @@ def get_full_customer_sri(def_customer):
             customer_sri['address_line1']  = customer_address_primary.address_line1
             customer_sri['address_line2']  = customer_address_primary.address_line2
             customer_sri['direccionComprador']  = customer_address_primary.address_line1 + ' ' + customer_address_primary.address_line2
+        else:
+            customer_sri['customer_email_id']  = ''
+            customer_sri['customer_phone']  = ''
+            customer_sri['address_line1']  = ''
+            customer_sri['address_line2']  = ''
+            customer_sri['direccionComprador']  = ''
 
         #print(compania_sri)
         return customer_sri
@@ -237,7 +245,7 @@ def get_full_supplier_sri(def_customer):
 
         din_link_api = frappe.get_all('Dynamic Link', fields='["name","parent","link_title"]',
                                                 filters={'link_doctype': 'Supplier', 'parenttype': 'Address', 'link_name': def_customer})
-        # print('DIRECCCCCCCCCCIIIIIIIONNNNNNN CUSTOMMMMERRRR')
+        
         # print(din_link_api)
 
         if din_link_api:
@@ -269,6 +277,9 @@ def get_full_supplier_sri(def_customer):
         if supplier_address_primary:
             supplier_sri['supplier_email_id']  = supplier_address_primary.email_id
             supplier_sri['supplier_phone']  = supplier_address_primary.phone
+        else:
+            supplier_sri['supplier_email_id']  = ''
+            supplier_sri['supplier_phone']  = ''
 
         #print(compania_sri)
         return supplier_sri
@@ -354,6 +365,12 @@ def get_address_by_name(link_name, primary_address, link_doctype):
         address_data['address_line1']  = customer_address_primary.address_line1
         address_data['address_line2']  = customer_address_primary.address_line2
         address_data['direccion']  = customer_address_primary.address_line1 + ' ' + customer_address_primary.address_line2
+    else:
+        address_data['email_id']  = ''
+        address_data['phone']  = ''
+        address_data['address_line1']  = ''
+        address_data['address_line2']  = ''
+        address_data['direccion']  = ''
     
     return address_data
 

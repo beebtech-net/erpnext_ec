@@ -572,6 +572,58 @@ const Website = {
 
         d.show();
     },
+    DownloadFileBlob(doc, typeFile, siteName, typeDocSri)
+    {
+        //var url = `${btApiServer}/api/Download/${typeFile}/${doc}?tip_doc=FAC&sitename=${sitename}`;
+        var url = `/api/method/erpnext_ec.utilities.sri_ws.get_doc_pdf`;
+        
+        var req = new XMLHttpRequest();
+        req.open("POST", url, true);
+        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        req.setRequestHeader("X-Frappe-CSRF-Token", frappe.csrf_token);
+
+        req.responseType = "blob";
+        /*
+        req.loadend = function (event) {
+            console.log('Terminado');
+            $(btnProcess).show();
+            $(btnProcess).parent().find('.custom-animation').remove();
+        };
+        */
+        req.onload = function (event) {
+            
+            console.log(req);
+            console.log(req.length);
+
+            var fileNameForDownload = doc + `.${typeFile}`;
+            var disposition = req.getResponseHeader('Content-Disposition');
+            //console.log(disposition);
+
+            if (disposition && disposition.indexOf('attachment') !== -1) {
+                var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                var matches = filenameRegex.exec(disposition);
+                if (matches != null && matches[1]) {
+                    fileNameForDownload = matches[1].replace(/['"]/g, '');
+                }
+            }
+
+            var blob = req.response;
+            //var fileName = req.getResponseHeader("fileName") //if you have the fileName header available
+            var link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = fileNameForDownload;
+            link.click();
+
+            
+        };
+
+        var datos = "doc_name=" + encodeURIComponent(doc) +
+                "&typeDocSri=" + encodeURIComponent(typeDocSri) +
+                "&typeFile=" + encodeURIComponent(typeFile) +
+                "&siteName=" + encodeURIComponent(siteName);
+
+        req.send(datos);
+    },
     DownloadFile(doc, typeFile, siteName, doctype_erpnext)
     {
         typeDocSri = '-';
@@ -589,6 +641,12 @@ const Website = {
         console.log(typeDocSri);
         console.log(typeFile);
         console.log(siteName);
+
+        if(typeFile == 'pdf')
+        {
+            document.Website.DownloadFileBlob(doc, typeFile, siteName, typeDocSri);
+            return;
+        }
 
         var btnProcess = $('div.dropdown[data-name="' + doc + '"]');
         //Oculta el botón
@@ -628,7 +686,8 @@ const Website = {
             },
             callback: function(r) 
             {
-                //console.log(r.message);
+                console.log(r.message);
+                console.log(r.message.length);
                 
                 var fileNameForDownload = doc + `.${typeFile}`;
 
@@ -638,6 +697,10 @@ const Website = {
                     var blob = new Blob([r.message], {
                         type: 'text/plain'
                     });
+
+                    //var blob = new Blob([r.message], {
+                    //    type: 'application/pdf'
+                    //});
                     
                     //var blob = r.message;
                     //var fileName = req.getResponseHeader("fileName") //if you have the fileName header available

@@ -101,6 +101,44 @@ def get_doc_json(doc_name, typeDocSri, typeFile, siteName):
 
 	return doc
 
+
+@frappe.whitelist()
+def get_doc_pdf(doc_name, typeDocSri, typeFile, siteName):
+
+	print(doc_name, typeDocSri, typeFile, siteName)
+
+	#El parametro doc aquí es el nombre del documento
+      
+	match typeDocSri:
+		case "FAC":
+			doc = build_doc_fac(doc_name)
+			print ("")
+		case "GRS":
+			doc = build_doc_grs(doc_name)
+		case "CRE":
+			doc = build_doc_cre(doc_name)
+			print(doc)
+	
+	if doc:		
+		doc_str = json.dumps(doc, default=str) 
+
+		headers = {}
+		
+		url_server_beebtech, server_timeout = get_api_url()
+		
+		print(url_server_beebtech)
+		print(server_timeout)
+
+		api_url = f"{url_server_beebtech}/Download/{typeFile}?documentName={doc_name}&tip_doc={typeDocSri}&sitename={siteName}"	
+		
+		response = requests.post(api_url, data=doc_str, verify=False, stream=True, headers= headers, timeout=server_timeout)
+		response.raise_for_status()		
+		frappe.local.response.filename = "archivo_descargado." + typeFile
+		frappe.local.response.filecontent = response.content
+		frappe.local.response.type = "download"
+
+	#return ""
+
 @frappe.whitelist()
 def get_doc(doc_name, typeDocSri, typeFile, siteName):
 
@@ -136,8 +174,13 @@ def get_doc(doc_name, typeDocSri, typeFile, siteName):
 		#response = requests.post(api_url, json=doc_str, verify=False, stream=True, headers= headers)
 		response = requests.post(api_url, data=doc_str, verify=False, stream=True, headers= headers, timeout=server_timeout)
 
+		#print(response.headers['Content-Type'])
 		#print(response.text)
+		print(response)
 		return response.text
+		#frappe.local.response.filename = "nombre_del_archivo.pdf"
+		#frappe.local.response.filecontent = response.content
+		#frappe.local.response.type = "download"
 
 	return ""
 
