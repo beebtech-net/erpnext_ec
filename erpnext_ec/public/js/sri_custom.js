@@ -590,32 +590,71 @@ const Website = {
             $(btnProcess).parent().find('.custom-animation').remove();
         };
         */
-        req.onload = function (event) {
-            
-            console.log(req);
-            console.log(req.length);
+        req.onreadystatechange = function (aEvt) {
+            if (req.readyState == 4) 
+            {
+               if(req.status == 200)
+                {
+                    console.log(req);
+                    console.log(req.length);
 
-            var fileNameForDownload = doc + `.${typeFile}`;
-            var disposition = req.getResponseHeader('Content-Disposition');
-            //console.log(disposition);
+                    var fileNameForDownload = doc + `.${typeFile}`;
+                    var disposition = req.getResponseHeader('Content-Disposition');
+                    //console.log(disposition);
 
-            if (disposition && disposition.indexOf('attachment') !== -1) {
-                var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-                var matches = filenameRegex.exec(disposition);
-                if (matches != null && matches[1]) {
-                    fileNameForDownload = matches[1].replace(/['"]/g, '');
+                    if (disposition && disposition.indexOf('attachment') !== -1) {
+                        var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                        var matches = filenameRegex.exec(disposition);
+                        if (matches != null && matches[1]) {
+                            fileNameForDownload = matches[1].replace(/['"]/g, '');
+                        }
+                    }
+
+                    var blob = req.response;
+                    //var fileName = req.getResponseHeader("fileName") //if you have the fileName header available
+                    
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = fileNameForDownload;
+                    link.click();
                 }
+                else
+                {
+                    frappe.show_alert({                    
+                        message: __(`Error al procesar descarga del documento ${doc}:`),
+                        indicator: 'red'
+                    }, 5);
+                }                
             }
+          };
 
-            var blob = req.response;
-            //var fileName = req.getResponseHeader("fileName") //if you have the fileName header available
-            var link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = fileNameForDownload;
-            link.click();
+        // req.onload = function (event) {
+            
+        //     console.log(req);
+        //     console.log(req.length);
+
+        //     var fileNameForDownload = doc + `.${typeFile}`;
+        //     var disposition = req.getResponseHeader('Content-Disposition');
+        //     //console.log(disposition);
+
+        //     if (disposition && disposition.indexOf('attachment') !== -1) {
+        //         var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+        //         var matches = filenameRegex.exec(disposition);
+        //         if (matches != null && matches[1]) {
+        //             fileNameForDownload = matches[1].replace(/['"]/g, '');
+        //         }
+        //     }
+
+        //     var blob = req.response;
+        //     //var fileName = req.getResponseHeader("fileName") //if you have the fileName header available
+            
+        //     var link = document.createElement('a');
+        //     link.href = window.URL.createObjectURL(blob);
+        //     link.download = fileNameForDownload;
+        //     link.click();
 
             
-        };
+        // };
 
         var datos = "doc_name=" + encodeURIComponent(doc) +
                 "&typeDocSri=" + encodeURIComponent(typeDocSri) +

@@ -132,10 +132,17 @@ def get_doc_pdf(doc_name, typeDocSri, typeFile, siteName):
 		api_url = f"{url_server_beebtech}/Download/{typeFile}?documentName={doc_name}&tip_doc={typeDocSri}&sitename={siteName}"	
 		
 		response = requests.post(api_url, data=doc_str, verify=False, stream=True, headers= headers, timeout=server_timeout)
-		response.raise_for_status()		
-		frappe.local.response.filename = "archivo_descargado." + typeFile
-		frappe.local.response.filecontent = response.content
-		frappe.local.response.type = "download"
+		response.raise_for_status()
+
+		print(response.status_code)
+
+		if (response.status_code == 200):
+			frappe.local.response.filename = "archivo_descargado." + typeFile
+			frappe.local.response.filecontent = response.content
+			frappe.local.response.type = "download"
+		else:
+			print("Error pos!")
+			raise SystemError("No se pudo descargar archivo." + doc_name)
 
 	#return ""
 

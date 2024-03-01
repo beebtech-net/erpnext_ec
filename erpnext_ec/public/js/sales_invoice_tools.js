@@ -298,7 +298,8 @@ function SendSalesInvoice(doc) {
             //var paymentsEntryApi = await frappe.db.get_list('Payment Entry Reference', { 'filters': { 'reference_name': doc.name }, fields: ['name'], order_by: null });
             // se reemplaza hasta solucionarlo
 
-            var paymentsEntryApi = await frappe.db.get_list('Payment Request', { 'filters': { 'reference_name': doc.name } });
+			var paymentsEntryApi = await frappe.db.get_list("Payment Entry Reference", {'fields': ['name','parent', 'total_amount']}, { 'filters': { 'reference_name': doc.name }});
+            //var paymentsEntryApi = await frappe.db.get_list('Payment Request', { 'filters': { 'reference_name': doc.name } });
 
             //console.log(paymentsEntryApi);
 
