@@ -48,18 +48,16 @@ app_include_css = [
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
-# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+doctype_js = {
+    "Sales Invoice" : "public/js/overrides/sales_invoice_form_sri.js",
+    "Delivery Note" : "public/js/overrides/delivery_note_form_sri.js"
+    }
+doctype_list_js = {
+    "Sales Invoice" : "public/js/overrides/sales_invoice_list_sri.js",
+    "Delivery Note" : "public/js/overrides/delivery_note_list_sri.js"
+    }
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
-
-#doctype_tree_js = {"Sales Invoice" : "/assets/erpnext_ec/js/sales_invoice_list.js"}
-#doctype_list_js = {"Sales Invoice" : "/assets/erpnext_ec/js/sales_invoice_list.js"}
-
-#doctype_js = {
-    #"Sales Invoice" : "/assets/erpnext_ec/js/sales_invoice_form.js",
-#    "sales-invoice" : "/assets/erpnext_ec/js/sales_invoice_list.js"
-#}
 
 # Svg Icons
 # ------------------

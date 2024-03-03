@@ -119,6 +119,7 @@
 		"print_hide_if_no_value": 0,
 		"columns": 0,
 		"is_custom_field": 1,
+		"no_copy": 1,
 		"doctype": "Custom Field",
 		"dt": "Delivery Note"
 	},

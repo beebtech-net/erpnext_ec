@@ -298,18 +298,18 @@ function SendSalesInvoice(doc) {
             //var paymentsEntryApi = await frappe.db.get_list('Payment Entry Reference', { 'filters': { 'reference_name': doc.name }, fields: ['name'], order_by: null });
             // se reemplaza hasta solucionarlo
 
-			var paymentsEntryApi = await frappe.db.get_list("Payment Entry Reference", {'fields': ['name','parent', 'total_amount']}, { 'filters': { 'reference_name': doc.name }});
-            //var paymentsEntryApi = await frappe.db.get_list('Payment Request', { 'filters': { 'reference_name': doc.name } });
-
+			var paymentsEntryRefApi = await frappe.db.get_list('Payment Entry Reference', { 'fields': '["*"]', 'filters': { 'reference_name': doc.name } });			
+            
             //console.log(paymentsEntryApi);
+			//console.log(paymentsEntryRefApi);
 
             var docApi = frappe.get_doc('Sales Invoice', doc.name);
             var data_alert = '<table>';
             //console.log(docApi);
             var documentIsReady = true;
 
-            if (paymentsApi.length == 0 && paymentsEntryApi.length == 0) {
-                data_alert += document.Website.CreateAlertItem(`No se ha definido ni solicitud de pago ni entrada de pago`);
+            if (paymentsApi.length == 0 && paymentsEntryRefApi.length == 0) {
+                data_alert += document.Website.CreateAlertItem(`No se han definido datos de pago (solicitud de pago/entrada de pago)`);
                 documentIsReady = false;
             }
 
@@ -466,8 +466,13 @@ function SendSalesInvoice(doc) {
 										message: __(`Documento ${doc.name} procesado <br>Nueva clave de acceso SRI: ` + newNumeroAutorizacion),
 										indicator: 'green'
 									}, 5);
+									
+									console.log('DATOS DE ERROR');
+									console.log(jsonResponse.error);
 
-									if(jsonResponse.error!==undefined && jsonResponse.error !== '')
+									//Se mostrará alerta de error en este nivel solamente si es que
+									// jsonResponse.error contiene información que deba ser mostrada
+									if(jsonResponse.error!==null && jsonResponse.error!==undefined && jsonResponse.error !== '')
 									{
 										var string_error = jsonResponse.error;
 										frappe.show_alert({
@@ -479,7 +484,7 @@ function SendSalesInvoice(doc) {
 									//bye bye!!
 									return;
 
-								} 
+								}
 								else 
 								{
 									//MOSTRAR EL MENSAJE DE ERROR MAS DETALLADO
@@ -494,6 +499,10 @@ function SendSalesInvoice(doc) {
 										string_error = jsonResponse.error;
 										string_mensaje = jsonResponse.data.autorizaciones.autorizacion[0].mensajes.mensaje[0].mensaje_;
 										string_informacionAdicional = jsonResponse.data.autorizaciones.autorizacion[0].mensajes.mensaje[0].informacionAdicional;										 
+
+										string_error = string_error == null ? '' : string_error;
+										string_mensaje = string_mensaje == null ? '' : string_mensaje;
+										string_informacionAdicional = string_informacionAdicional == null ? '' : string_informacionAdicional;
 									}
 									catch(ex_messages)
 									{

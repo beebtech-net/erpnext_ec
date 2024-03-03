@@ -58,3 +58,8 @@ flush privileges;
 
 bech get-app https://github.com/beebtech-net/erpnext_ec.git
 
+doc_data = frappe.get_last_doc('Sales Invoice', filters={'name':'ACC-SINV-2024-00008'})
+
+doc_data.db_set('secuencial',0)
+
+frappe.db.commit()

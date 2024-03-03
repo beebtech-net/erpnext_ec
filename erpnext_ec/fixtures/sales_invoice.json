@@ -45,6 +45,7 @@
 		"columns": 0,
 		"is_custom_field": 1,
 		"doctype": "Custom Field",
+		"no_copy": 1,
 		"dt": "Sales Invoice"
 	},
 	{
@@ -89,6 +90,7 @@
 		"columns": 0,
 		"is_custom_field": 1,
 		"doctype": "Custom Field",
+		"no_copy": 1,
 		"dt": "Sales Invoice"
 	},
 	{
@@ -131,6 +133,7 @@
 		"print_hide_if_no_value": 0,
 		"columns": 0,
 		"is_custom_field": 1,
+		"no_copy": 1,
 		"doctype": "Custom Field",
 		"dt": "Sales Invoice"
 	},
@@ -175,6 +178,7 @@
 		"print_hide_if_no_value": 0,
 		"columns": 0,
 		"is_custom_field": 1,
+		"no_copy": 1,
 		"doctype": "Custom Field",
 		"dt": "Sales Invoice"
 	},
@@ -219,6 +223,7 @@
 		"print_hide_if_no_value": 0,
 		"columns": 0,
 		"is_custom_field": 1,
+		"no_copy": 1,
 		"doctype": "Custom Field",
 		"dt": "Sales Invoice"
 	},
@@ -262,6 +267,7 @@
 		"print_hide_if_no_value": 0,
 		"columns": 0,
 		"is_custom_field": 1,
+		"no_copy": 1,
 		"doctype": "Custom Field",
 		"dt": "Sales Invoice"
 	},
@@ -306,6 +312,7 @@
 		"print_hide_if_no_value": 0,
 		"columns": 0,
 		"is_custom_field": 1,
+		"no_copy": 1,
 		"doctype": "Custom Field",
 		"dt": "Sales Invoice"
 	},
@@ -350,6 +357,7 @@
 		"print_hide_if_no_value": 0,
 		"columns": 0,
 		"is_custom_field": 1,
+		"no_copy": 1,
 		"doctype": "Custom Field",
 		"dt": "Sales Invoice"
 	},
@@ -441,6 +449,7 @@
 		"print_hide_if_no_value": 0,
 		"columns": 0,
 		"is_custom_field": 1,
+		"no_copy": 1,
 		"doctype": "Custom Field",
 		"dt": "Sales Invoice"
 	},
@@ -484,6 +493,7 @@
 		"print_hide_if_no_value": 0,
 		"columns": 0,
 		"is_custom_field": 1,
+		"no_copy": 1,
 		"doctype": "Custom Field",
 		"dt": "Sales Invoice"
 	},
@@ -528,7 +538,7 @@
 		"print_hide": 0,
 		"print_hide_if_no_value": 0,
 		"columns": 0,
-		"is_custom_field": 1,
+		"is_custom_field": 1,		
 		"doctype": "Custom Field",
 		"dt": "Sales Invoice"
 	},
@@ -617,6 +627,7 @@
 		"print_hide_if_no_value": 0,
 		"columns": 0,
 		"is_custom_field": 1,
+		"no_copy": 1,
 		"doctype": "Custom Field",
 		"dt": "Sales Invoice"
 	}

@@ -572,10 +572,10 @@ const Website = {
 
         d.show();
     },
-    DownloadFileBlob(doc, typeFile, siteName, typeDocSri)
+    DownloadFileBlob(doc, typeFile, siteName, typeDocSri, btnProcess)
     {
         //var url = `${btApiServer}/api/Download/${typeFile}/${doc}?tip_doc=FAC&sitename=${sitename}`;
-        var url = `/api/method/erpnext_ec.utilities.sri_ws.get_doc_pdf`;
+        var url = `/api/method/erpnext_ec.utilities.sri_ws.get_doc_blob`;
         
         var req = new XMLHttpRequest();
         req.open("POST", url, true);
@@ -595,8 +595,8 @@ const Website = {
             {
                if(req.status == 200)
                 {
-                    console.log(req);
-                    console.log(req.length);
+                    //console.log(req);
+                    //console.log(req.length);
 
                     var fileNameForDownload = doc + `.${typeFile}`;
                     var disposition = req.getResponseHeader('Content-Disposition');
@@ -617,6 +617,11 @@ const Website = {
                     link.href = window.URL.createObjectURL(blob);
                     link.download = fileNameForDownload;
                     link.click();
+
+                    frappe.show_alert({                        
+                        message: __(`Documento ${typeFile} ${doc} descargado.`),
+                        indicator: 'green'
+                    }, 5);
                 }
                 else
                 {
@@ -624,7 +629,10 @@ const Website = {
                         message: __(`Error al procesar descarga del documento ${doc}:`),
                         indicator: 'red'
                     }, 5);
-                }                
+                }
+
+                $(btnProcess).show();
+                $(btnProcess).parent().find('.custom-animation').remove();     
             }
           };
 
@@ -664,6 +672,35 @@ const Website = {
         req.send(datos);
     },
     DownloadFile(doc, typeFile, siteName, doctype_erpnext)
+    {
+        typeDocSri = '-';
+
+        if(doctype_erpnext == 'Sales Invoice')
+            typeDocSri = 'FAC';
+
+        if(doctype_erpnext == 'Delivery Note')
+            typeDocSri = 'GRS';
+
+        if(doctype_erpnext == 'Purchase Withholding Sri Ec')
+            typeDocSri = 'CRE';
+        
+        console.log(doc);
+        console.log(typeDocSri);
+        console.log(typeFile);
+        console.log(siteName);
+        
+        var btnProcess = $('div.dropdown[data-name="' + doc + '"]');
+        //Oculta el botón
+        $(btnProcess).hide();
+        //Muestra animación de carga
+        $(btnProcess).after(document.Website.loadingAnimation);
+
+        document.Website.DownloadFileBlob(doc, typeFile, siteName, typeDocSri, btnProcess);
+
+              
+        
+    },
+    DownloadFile_Obsolete(doc, typeFile, siteName, doctype_erpnext)
     {
         typeDocSri = '-';
 

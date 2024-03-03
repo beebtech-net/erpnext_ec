@@ -17,7 +17,7 @@
     "in_list_view": 1,
     "in_preview": 1,
     "label": "Url Server Beebtech",
-    "default":"https://192.168.204.66:7037/api/v2"
+    "default":"https://192.168.56.1:7037/api/v2"
   },
   {
     "fieldname": "usuario",
