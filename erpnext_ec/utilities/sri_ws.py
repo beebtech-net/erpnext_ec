@@ -30,10 +30,14 @@ from dateutil import parser
 from erpnext_ec.utilities.doc_builder_fac import build_doc_fac 
 from erpnext_ec.utilities.doc_builder_grs import build_doc_grs
 from erpnext_ec.utilities.doc_builder_cre import build_doc_cre
+from erpnext_ec.utilities.email_tool import sendmail
 
 @frappe.whitelist()
-def send_email(doc, typeDocSri, doctype_erpnext, siteName, email_to):	
+def add_email_quote(doc_name, recipients, msg, title):
+
 	#var url = `${btApiServer}/api/Tool/AddToEmailQuote/${doc}?tip_doc=FAC&sitename=${sitenameVar}&email_to=${values.email_to}`;
+	sendmail(doc_name, recipients, msg, title, attachments = None)
+
 	pass
 
 

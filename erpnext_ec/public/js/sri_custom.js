@@ -511,14 +511,15 @@ const Website = {
             }, 500);
 
     },
-    SendEmail(doc) {
+    SendEmail(doc_name) {
         let d = new frappe.ui.Dialog({
             title: 'Enviar email',
             fields: [
                 {
                     label: 'Email',
                     fieldname: 'email_to',
-                    fieldtype: 'Data'
+                    fieldtype: 'Data',
+                    default_value: 'ronald.chonillo@gmail.com'
                 },
                 {
                     label: 'Copia (cc)',
@@ -528,43 +529,56 @@ const Website = {
             ],
             primary_action_label: 'Enviar',
             primary_action(values) {
-                console.log(doc);
+                console.log(doc_name);
                 //console.log(values);
                 //console.log(values.email_to);
                 //frappe.utils.validate_type('ronald_chonillo@gmail.com', 'email');
                 //show_alert with indicator
                 var sitenameVar = frappe.boot.sitename;
-                var url = `${btApiServer}/api/Tool/AddToEmailQuote/${doc}?tip_doc=FAC&sitename=${sitenameVar}&email_to=${values.email_to}`;
+                //var url = `${btApiServer}/api/Tool/AddToEmailQuote/${doc}?tip_doc=FAC&sitename=${sitenameVar}&email_to=${values.email_to}`;
+                var url = `/api/method/erpnext_ec.utilities.sri_ws.add_email_quote`;
                 var req = new XMLHttpRequest();
                 req.open("POST", url, true);
-                //req.responseType = "blob";
-                /*
-                req.loadend = function (event) {
-                    console.log('Terminado');
-                    $(btnProcess).show();
-                    $(btnProcess).parent().find('.custom-animation').remove();
+                req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                req.setRequestHeader("X-Frappe-CSRF-Token", frappe.csrf_token);                
+
+                req.onreadystatechange = function (aEvt) 
+                {
+                    if (req.readyState == 4) 
+                    {
+                       if(req.status == 200)
+                        {
+                            console.log('Terminado');
+                            //$(btnProcess).show();
+                            //$(btnProcess).parent().find('.custom-animation').remove();
+
+                            frappe.show_alert({
+                                message: __(`Documento ${doc_name} fue agregado a la cola de envío`),
+                                indicator: 'green'
+                            }, 3);
+                        }
+                        else
+                        {
+                            frappe.show_alert({
+                                message: __(`Error al procesar cola de email para el documento ${doc_name}:` + ":" + "-"),
+                                indicator: 'red'
+                            }, 5);
+                        }    
+                    }
                 };
-                */
-                req.onload = function (event) {
 
-                    console.log('Terminado');
-                    //$(btnProcess).show();
-                    //$(btnProcess).parent().find('.custom-animation').remove();
 
-                    frappe.show_alert({
-                        message: __(`Documento ${doc} fue agregado a la cola de envío`),
-                        indicator: 'green'
-                    }, 3);
+                //frappe.show_alert({
+                //    message: __(`Documento ${doc} se agregará la cola de envío`),
+                //    indicator: 'green'
+                //}, 2);
 
-                };
+                var datos = "doc_name=" + encodeURIComponent(doc) +
+                "&recipients=" + encodeURIComponent([values.email_to]) +
+                "&msg=" + encodeURIComponent('Hola') +
+                "&title=" + encodeURIComponent('Mensaje');
 
-                frappe.show_alert({
-                    message: __(`Documento ${doc} se agregará la cola de envío`),
-                    indicator: 'green'
-                }, 2);
-
-                req.send();
-
+                req.send(datos);
 
                 d.hide();
             }
