@@ -35,8 +35,9 @@ from erpnext_ec.utilities.email_tool import sendmail
 @frappe.whitelist()
 def add_email_quote(doc_name, recipients, msg, title):
 
+	doc_data = build_doc_fac(doc_name)
 	#var url = `${btApiServer}/api/Tool/AddToEmailQuote/${doc}?tip_doc=FAC&sitename=${sitenameVar}&email_to=${values.email_to}`;
-	sendmail(doc_name, recipients, msg, title, attachments = None)
+	sendmail(doc_data, recipients, msg, title, attachments = None)
 
 	pass
 
@@ -318,7 +319,7 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 
 	#print(url_server_beebtech)
 
-	is_simulation_mode = False
+	is_simulation_mode = True
 	
 	if(is_simulation_mode):
 		#Modo de simulación

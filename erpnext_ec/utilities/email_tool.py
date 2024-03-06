@@ -11,4 +11,16 @@ def sendmail(doc, recipients, msg, title, attachments = None):
 
     if attachments: email_args['attachments'] = attachments
 
-    frappe.queue(method= frappe.sendmail, queue = 'short', timeout = 60000, **email_args)
+    frappe.enqueue(method= frappe.sendmail, queue = 'short', timeout = 60000, **email_args)
+
+    # frappe.sendmail(
+    # recipients=recipients,
+    # subject=frappe._('Birthday Reminder'),
+    # template='birthday_reminder',
+    # args=dict(
+    #     reminder_text=reminder_text,
+    #     birthday_persons=birthday_persons,
+    #     message=message,
+    # ),
+    # header=_('Birthday Reminder 🎂')
+    #)

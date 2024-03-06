@@ -532,7 +532,7 @@ const Website = {
                 console.log(doc_name);
                 //console.log(values);
                 //console.log(values.email_to);
-                //frappe.utils.validate_type('ronald_chonillo@gmail.com', 'email');
+                frappe.utils.validate_type('ronald.chonillo@gmail.com', 'email');
                 //show_alert with indicator
                 var sitenameVar = frappe.boot.sitename;
                 //var url = `${btApiServer}/api/Tool/AddToEmailQuote/${doc}?tip_doc=FAC&sitename=${sitenameVar}&email_to=${values.email_to}`;
@@ -542,9 +542,9 @@ const Website = {
                 req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 req.setRequestHeader("X-Frappe-CSRF-Token", frappe.csrf_token);                
 
-                req.onreadystatechange = function (aEvt) 
+                req.onreadystatechange = function (aEvt)
                 {
-                    if (req.readyState == 4) 
+                    if (req.readyState == 4)
                     {
                        if(req.status == 200)
                         {
@@ -573,7 +573,7 @@ const Website = {
                 //    indicator: 'green'
                 //}, 2);
 
-                var datos = "doc_name=" + encodeURIComponent(doc) +
+                var datos = "doc_name=" + encodeURIComponent(doc_name) +
                 "&recipients=" + encodeURIComponent([values.email_to]) +
                 "&msg=" + encodeURIComponent('Hola') +
                 "&title=" + encodeURIComponent('Mensaje');
