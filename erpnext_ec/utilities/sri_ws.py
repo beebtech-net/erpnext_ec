@@ -32,13 +32,82 @@ from erpnext_ec.utilities.doc_builder_grs import build_doc_grs
 from erpnext_ec.utilities.doc_builder_cre import build_doc_cre
 from erpnext_ec.utilities.email_tool import sendmail
 
+from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
+from email.mime.text import MIMEText
+
 @frappe.whitelist()
-def add_email_quote(doc_name, recipients, msg, title):
+def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnext):
 
-	doc_data = build_doc_fac(doc_name)
+	doc_data = []
+	template_name = ''	
+	template = ''
+	print_format_name = ''
+
+	match typeDocSri:
+		case "FAC":
+			doc_data = build_doc_fac(doc_name)
+			template_name = 'Factura SRI Body'
+			print_format_name = 'Factura SRI'
+		case "GRS":
+			doc_data = build_doc_grs(doc_name)
+		case "CRE":
+			doc_data = build_doc_cre(doc_name)
+			
+	templates = frappe.get_list('Email Template', fields = ['*'], filters = { 'name': template_name })
+
+	if(templates):
+		template = templates[0].response_html
+
+	#print(template)
+
+	msg_template = frappe.render_template(template, doc_data) 
+	
+	#print(msg_template)
+
+	#build attachments
+	xml_responses = frappe.get_list('Xml Responses', fields = ['*'], filters = { 'doc_ref': doc_name, 'tip_doc': typeDocSri, 'sri_status': 'AUTORIZADO' })
+
+	attach_file_name = doc_data.estab + doc_data.ptoemi + f'{doc_data.secuencial:09d}'
+
+	attachments = []	
+	#Attach Zip with XMl
+	if(xml_responses):
+		
+		attach_file_name_zip = attach_file_name + '.zip' #doc_data.numeroautorizacion + '.zip'
+		attach_file_name_xml = attach_file_name + '.xml' #doc_data.numeroautorizacion + '.xml'
+		
+		xml_data = xml_responses[0].xmldata
+		import io
+		import zipfile
+		#file_like_object = io.BytesIO(b"{xml_data}")
+		archive = io.BytesIO()
+		with zipfile.ZipFile(archive, 'w') as zip_archive:
+			zip_archive.writestr( attach_file_name_xml, xml_data)
+			#with zip_archive.open('authorized.xml', 'w') as file1:
+				#file1.write(file_like_object)
+				#file1.write(b"{xml_data}")
+				#print(archive.getvalue())
+		
+		attachments.append({"fname": attach_file_name_zip, "fcontent": archive.getvalue()})
+	
+	#Attach PDF
+	attach_file_name_pdf = attach_file_name
+	doc_data.doctype = doctype_erpnext
+	print(doc_data)
+
+	#pdf_attachment = [frappe.attach_print(doc_data.doctype, doc_data.name, file_name=attach_file_name_pdf, print_format = print_format_name, print_letterhead=True)]
+	pdf_attachment = [frappe.attach_print(doc_data.doctype, doc_data.name, file_name=attach_file_name_pdf, print_format = print_format_name)]
+	
+	if(pdf_attachment):
+		attachments.append(pdf_attachment[0])
+
+
+
+	#my_attachments = [frappe.attach_print(self.doctype, self.name, file_name=self.name)]
+
 	#var url = `${btApiServer}/api/Tool/AddToEmailQuote/${doc}?tip_doc=FAC&sitename=${sitenameVar}&email_to=${values.email_to}`;
-	sendmail(doc_data, recipients, msg, title, attachments = None)
-
+	sendmail(doc_data, recipients, 'TITULOOO', msg_template, attachments)	        
 	pass
 
 

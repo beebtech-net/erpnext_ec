@@ -519,14 +519,25 @@ const Website = {
                     label: 'Email',
                     fieldname: 'email_to',
                     fieldtype: 'Data',
-                    default_value: 'ronald.chonillo@gmail.com'
+                    reqd: 1,
+                    default: 'ronald.chonillo@gmail.com'
                 },
                 {
                     label: 'Copia (cc)',
                     fieldname: 'email_cc',
                     fieldtype: 'Data'
-                }
-            ],
+                },
+                {
+                    label: 'Envío inmediato',
+                    fieldname: 'no_delayed',
+                    fieldtype: 'Check'
+                },  
+                {
+                    label: 'Este email se enviará con el XML y el PDF adjuntos',
+                    fieldname: 'info',
+                    fieldtype: 'Heading',                    
+                },
+            ],            
             primary_action_label: 'Enviar',
             primary_action(values) {
                 console.log(doc_name);
@@ -576,13 +587,22 @@ const Website = {
                 var datos = "doc_name=" + encodeURIComponent(doc_name) +
                 "&recipients=" + encodeURIComponent([values.email_to]) +
                 "&msg=" + encodeURIComponent('Hola') +
-                "&title=" + encodeURIComponent('Mensaje');
+                "&title=" + encodeURIComponent('Mensaje') +
+                "&typeDocSri=" + get_current_doc_type()[1] +
+                "&doctype_erpnext=" + get_current_doc_type()[0];
 
                 req.send(datos);
 
                 d.hide();
             }
         });
+        
+        //console.log(d);
+        
+        html_current = $(d.modal_body[0]).find('.frappe-control[data-fieldname="info"]').css('font-size', '1em').css('margin-bottom', '10px').html();
+        html_current = html_current.replace('<h4>','<h5>');
+        html_current = html_current.replace('</h4>','</h5>');
+        $(d.modal_body[0]).find('.frappe-control[data-fieldname="info"]').html(html_current);
 
         d.show();
     },
