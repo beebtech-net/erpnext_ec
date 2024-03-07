@@ -224,7 +224,9 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                            	<img src="/assets/erpnext/images/erpnext-logo.svg" width="100px" />                                               <!--<img src="https://app.beebtech.net:2053/resources/img/logo_beebtech.png" width="150px"/>-->
+                                            	<img src="/assets/erpnext/images/erpnext-logo.svg" width="100px" />
+                                                <img src="{{ frappe.db.get_value("Company", doc.company, "company_logo") or "" }}" width="200px" />
+                                                <!--<img src="https://app.beebtech.net:2053/resources/img/logo_beebtech.png" width="150px"/>-->
                                             </td>
                                         </tr>
                                     </tbody>
