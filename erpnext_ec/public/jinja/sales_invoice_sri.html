@@ -55,24 +55,6 @@
         background-color: #eaeaea;
     }
 
-    p {
-        page-break-after: always;
-    }
-
-    .footer {     
-        position: running(footer);
-    }
-
-    @page {
-            @bottom-center {
-                content: element(footer);
-            }
-        }
-
-    .pagenum:before {
-        content: counter(page);
-    }
-
     a {
         color: blue !important;
         text-decoration: underline;
@@ -211,10 +193,53 @@
     */
 
     @media print { body { -webkit-print-color-adjust: exact; } }
+    
+.page-header, .page-header-space {
+    height: 230px; /* Max is 230px */
+    margin: 0;
+}
+
+.page-footer, .page-footer-space {
+    height: 230px; /* Max is 230px */
+    margin: 0;
+}
+
+.page-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  border-top: 1px solid; /* for demo */
+}
+
+.page-header {
+  position: fixed;
+  top: 0mm;
+  width: 100%;
+  border-bottom: 1px solid; /* for demo */
+}
+
+.page {
+  page-break-after: always;
+}
+
+@page {
+    /* this affects the margin in the printer settings */ 
+    /*margin: 20mm 0mm 30mm 0mm */
+    /*margin: 0mm 0mm 0mm 0mm */
+}
+
+
 
 </style>
 
-        <table style="font-size: 8pt;width:100% cellspacing="0">
+{% set doc_build = build_doc_fac(doc.name) %}
+
+<div class="page-header">
+    Holis
+</div>
+
+<div class="page">
+        <table style="font-size: 8pt;width:100%;height:100%" cellspacing="0">
             <tr>
                 <td align="center" valign="middle" style="width: 50%;vertical-align:bottom">
                     <table style="width: 100%;" cellspacing="0">
@@ -224,9 +249,9 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                            	<img src="/assets/erpnext/images/erpnext-logo.svg" width="100px" />
-                                                <img src="{{ frappe.db.get_value("Company", doc.company, "company_logo") or "" }}" width="200px" />
-                                                <!--<img src="https://app.beebtech.net:2053/resources/img/logo_beebtech.png" width="150px"/>-->
+                                            	<!--<img src="/assets/erpnext/images/erpnext-logo.svg" width="200px" />-->
+                                            	<img src="{{ frappe.db.get_value("Company", doc.company, "company_logo") or "" }}" width="200px" />
+                                            	<!--<img src="https://app.beebtech.net:2053/resources/img/logo_beebtech.png" width="150px"/>-->
                                             </td>
                                         </tr>
                                     </tbody>
@@ -243,7 +268,7 @@
                                         <td align="left"><strong>R.U.C.:</strong>&nbsp;&nbsp;&nbsp; {{ frappe.db.get_value("Company", {'name': doc.company}, "tax_id") or "" }}</td>
                                     </tr>
                                     <tr>
-                                        <td align="left"><strong>Matriz:</strong> dirMatriz</td>
+                                        <td align="left"><strong>Matriz:</strong> {{doc_build.DireccionMatriz}}</td>
                                     </tr>
                                     
                                     <tr>
@@ -295,7 +320,7 @@
                             <td align="left"><strong>N&Uacute;MERO DE AUTORIZACI&Oacute;N</strong></td>
                         </tr>
                         <tr>
-                            <td align="left"><strong>1201202401091982695800120010020000001531234567817</strong></td>
+                            <td align="left"><strong>{{doc_build.numeroautorizacion}}</strong></td>
                         </tr>
                         <tr>                           
                             <td align="" style="font-size:9px">&nbsp;</td>
@@ -307,7 +332,7 @@
                             <td style="font-size:9px"><strong>Fecha y hora de autorizaci&oacute;n:</strong></td>                            
                          </tr>
                          <tr>                           
-                            <td align="" style="font-size:9px"><strong>fechaAutorizacion</strong></td>
+                            <td align="" style="font-size:9px"><strong>{{doc_build.fechaautorizacion}}</strong></td>
                          </tr>
                          <tr>                           
                             <td align="" style="font-size:9px">&nbsp;</td>
@@ -324,17 +349,14 @@
                         </tr>
                         <tr>
                             <td align="center" style="width:80%">
-                                <!--<img src="data:image/jpeg;base64,@Model.claveAccesoB64" width="300" height="50" />-->
                                 <div class="barcode-container">
-                                    <div class="barcode">1201202401091982695800120010020000001531234567817</div>
-                                    
-                                    
+                                    <div class="barcode">{{doc_build.numeroautorizacion}}</div>
                                 </div>
                             </td>
                         </tr>
                         <tr>
-                            <td align="center" style="font-size: .9em;font-weight: bold;font-family:helvetica;">
-                                claveAcceso
+                            <td align="center" style="font-size: .7em;font-weight: bold;font-family:helvetica;">
+                                {{doc_build.numeroautorizacion}}
                             </td>
                         </tr>
                     </table>
@@ -346,49 +368,40 @@
 
     <table class="gray-box" style="width:100%;" cellpadding="0" cellspacing="0">
         <tr>            
-            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Raz&oacute;n Social: razonSocialComprador</strong></td>    
-            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>RUC/CI: identificacionComprador</strong></td>
+            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Raz&oacute;n Social: {{ doc_build.RazonSocial }}</strong></td>    
+            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>RUC/CI: {{doc_build.customer_tax_id}}</strong></td>
         </tr>
         <tr>            
-            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Direcci&oacute;n: direccionComprador</strong></td>    
-            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Tel&eacute;fono: +593 cli_tel_top</strong></td>
+            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Direcci&oacute;n: {{doc_build.direccionComprador}}</strong></td>    
+            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Tel&eacute;fono: +593 {{doc_build.customer_phone}}</strong></td>
         </tr>
         <tr>            
-            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Fec. Emi.: fechaEmision</strong></td>    
-            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Email: email</strong></td>
+            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Fec. Emi.: {{doc_build.posting_date}}</strong></td>    
+            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Email: {{doc_build.customer_email_id}}</strong></td>
         </tr>        
     </table>
 
-        <table id="tabdetalle" style="" cellspacing="0">
+        <table id="tabdetalle" style="width:100%;" style="" cellspacing="0">
             <tbody>
                 <tr>
-                    <th style="width:50px;">Cod.</th>
-                    <th style="width:50px;">Cant.</th>
-                    <th style="width:400px;">Descripci&oacute;n</th>
-                    <th style="width:60px;">P. Un.</th>
-                    <th style="width:40px;">Desc.</th>
-                    <th style="width:60px;">Total</th>
+                    <th style="min-width:50px;">Cod.</th>
+                    <th style="min-width:50px;">Cant.</th>
+                    <th style="min-width:400px;">Descripci&oacute;n</th>
+                    <th style="min-width:70px;">P. Un.</th>
+                    <th style="min-width:70px;">Desc.</th>
+                    <th style="min-width:70px;">Total</th>
                 </tr>
                 
                 {% for item in doc.items %}
-        		<tr>
-        			<td>
-        				{{ item.item_name }}
-        			</td>
-        			<td class="text-right">{{ item.qty }}<br>@ {{ item.get_formatted("rate") }}</td>
-        			<td class="text-right">{{ item.get_formatted("amount") }}</td>
-        		</tr>
-        		{% endfor %}
-		
-                    <tr>
-                        <td style="text-align: center;">codigo</td>
-                        <td style="text-align: center;">cantidad</td>
-                        <td style="padding-left:3px;">descripcion</td>
-                        <td style="text-align: right;padding-right:3px;">precioUnitarioTotal</td>
-                        <td style="text-align: right;padding-right:3px;">dblItemDiscount</td>
-                        <td style="text-align: right;padding-right:3px;">$itemTotal</td>
-                    </tr>
-
+            		<tr>
+            		    <td>{{ item.item_code }}</td>
+            		    <td class="text-right">{{ item.qty }}</td>
+            			<td>{{ item.item_name }}</td>
+            			<td class="text-right">{{ item.get_formatted('price_list_rate') }}</td>
+            			<td class="text-right">{{ item.get_formatted('discount_amount') }}</td>
+            			<td class="text-right">{{ item.get_formatted('amount') }}</td>
+            		</tr>
+                {% endfor %}
             </tbody>
         </table>
 
@@ -396,38 +409,36 @@
             <tbody>
                 <tr>
                     <td style="width:50%">
-                        
                         <table class="infoAdicional">
                             <tbody>
                                 <tr>
                                     <td class="subsection-title" colspan="2">Pagos</td>
-                                </tr>                           
-                            
-                            
-                                <tr>
-                                    <td style="text-align: center;">F. Pago</td>
-                                    <td style="text-align: center;font-size: 9px;">formasPago</td>
                                 </tr>
-                                <tr>
-                                    <td style="text-align: center;">Total</td>
-                                    <td style="text-align: center;">total</td>
-                                </tr>
-                            
+                                {% for payment in doc_build.paymentsItems %}
+                                    <tr>
+                                        <td style="text-align: center;">F. Pago</td>
+                                        <td style="text-align: center;font-size: 9px;">{{payment.formaPago}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center;">Total</td>
+                                        <td style="text-align: center;">{{payment.total}}</td>
+                                    </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                         
-
                         <table class="infoAdicional">
                             <tbody>
                                 <tr>
                                     <td class="subsection-title" colspan="2">Informaci&oacute;n Adicional</td>
                                 </tr>                           
                             
-                            
-                                <tr>
-                                    <td style="text-align: center;">jsonItem.Name</td>
-                                    <td style="text-align: center;">jsonItem.Value</td>
-                                </tr>
+                                {% for jsonItem in doc_build.infoAdicional %}
+                                    <tr>
+                                        <td style="text-align: center;">{{jsonItem.nombre}}</td>
+                                        <td style="text-align: center;">{{jsonItem.valor}}</td>
+                                    </tr>
+                                {% endfor %}
                             
                             
                             </tbody>
@@ -486,9 +497,8 @@
                 </tr>
             </tbody>
         </table>
- 
-    <div class="footer">
-            <div style="display:none;">Consulte sus facturas en <a href="https://beebtech.net/">https://beebtech.net</a></div>
-            <br>
-            P&aacute;gina: <span class="pagenum"></span>
-    </div>
+ </div>
+    
+    <div class="page-footer">
+		<div style="">Consulte sus facturas en <a href="https://beebtech.net/">https://beebtech.net</a></div>
+	</div>

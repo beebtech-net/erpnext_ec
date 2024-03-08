@@ -85,10 +85,15 @@ doctype_list_js = {
 # ----------
 
 # add methods and filters to jinja environment
-# jinja = {
-# 	"methods": "erpnext_ec.utils.jinja_methods",
-# 	"filters": "erpnext_ec.utils.jinja_filters"
-# }
+jinja = {
+ 	#"methods": "erpnext_ec.utils.jinja_methods",
+    "methods": [
+                "erpnext_ec.utilities.doc_builder_fac",
+                "erpnext_ec.utilities.doc_builder_cre",
+                "erpnext_ec.utilities.doc_builder_grs",
+                ]
+ 	#"filters": "erpnext_ec.utils.jinja_filters"
+ }
 
 # Installation
 # ------------

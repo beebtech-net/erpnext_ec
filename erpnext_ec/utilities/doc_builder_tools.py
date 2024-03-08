@@ -82,7 +82,7 @@ def get_payments_sri(doc_name):
     sri_validated_message = ''
       
     paymentsEntryApi = frappe.get_list('Payment Entry Reference', filters = { 'reference_name': doc_name })
-    # print(paymentsEntryApi)
+    #print(paymentsEntryApi)
 
     if not paymentsEntryApi:
         paymentsApi = frappe.get_list('Payment Request', filters = { 'reference_name': doc_name })
@@ -166,7 +166,11 @@ def get_full_customer_sri(def_customer):
         doc = docs[0]
         #print(doc)
         customer_sri['customer_tax_id'] = doc.tax_id
-        customer_sri['customer_name'] = doc.nombrecomercial
+        if(doc.nombrecomercial):
+            customer_sri['customer_name'] = doc.nombrecomercial
+        else:
+            customer_sri['customer_name'] = doc.name
+
         customer_sri['tipoIdentificacionComprador'] = doc.typeidtax
         customer_sri['customer_email_id']  = ''
         customer_sri['customer_phone']  = ''

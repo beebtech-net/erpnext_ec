@@ -40,7 +40,7 @@ from email.mime.text import MIMEText
 def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnext):
 
 	doc_data = []
-	template_name = ''	
+	template_name = ''	#email body template
 	template = ''
 	print_format_name = ''
 

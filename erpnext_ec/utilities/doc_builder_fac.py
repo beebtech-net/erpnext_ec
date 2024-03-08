@@ -6,6 +6,7 @@ from types import SimpleNamespace
 from erpnext_ec.utilities.doc_builder_tools import *
 
 #Factura de Venta
+@frappe.whitelist()
 def build_doc_fac(doc_name):
 	# DireccionMatriz = ''
 	# dirEstablecimiento = ''
@@ -44,13 +45,15 @@ def build_doc_fac(doc_name):
 
 		#Datos completos del cliente
 		customer_full = get_full_customer_sri(doc.customer)
-		doc.customer_tax_id = customer_full['customer_tax_id']
+		doc.customer_tax_id = customer_full['customer_tax_id']		
 		doc.RazonSocial = customer_full['customer_name']
 		doc.tipoIdentificacionComprador = customer_full['tipoIdentificacionComprador']
 		doc.direccionComprador = customer_full['direccionComprador']
 		customer_phone = customer_full['customer_phone']
 		customer_email_id = customer_full['customer_email_id']
 
+		doc.customer_phone = customer_phone
+		doc.customer_email_id = customer_email_id
 
 		# 		if customerAddress:
 		# 			emailComprador = customerAddress[0].email_id
@@ -71,9 +74,13 @@ def build_doc_fac(doc_name):
 
 		doc.paymentsItems = get_payments_sri(doc.name)
 
+		for paym in  doc.paymentsItems:
+			print(paym)
+
 		doc.infoAdicional = build_infoAdicional_sri(doc_name, customer_email_id, customer_phone)
 
 		# print(doc.infoAdicional)
+		
 
 		#Simulando error
 		sri_validated = 'error'
