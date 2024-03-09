@@ -414,14 +414,14 @@
                                 <tr>
                                     <td class="subsection-title" colspan="2">Pagos</td>
                                 </tr>
-                                {% for payment in doc_build.paymentsItems %}
+                                {% for payment in doc_build.pagos %}
                                     <tr>
                                         <td style="text-align: center;">F. Pago</td>
-                                        <td style="text-align: center;font-size: 9px;">{{payment.formaPago}}</td>
+                                        <td style="text-align: center;font-size: 9px;">{{payment.formaPagoDescripcion}}</td>
                                     </tr>
                                     <tr>
                                         <td style="text-align: center;">Total</td>
-                                        <td style="text-align: center;">{{payment.total}}</td>
+                                        <td style="text-align: center;">{{frappe.format(payment.total,'Currency')}}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -468,11 +468,11 @@
                                 </tr>
                                 <tr>
                                     <td class="summary-title">SUBTOTAL SIN IMPUESTOS</td>
-                                    <td class="summary-data">$ totalSinImpuestos</td>
+                                    <td class="summary-data">{{doc.get_formatted('total')}}</td>
                                 </tr>
                                 <tr>
                                     <td class="summary-title">TOTAL DESCUENTO</td>
-                                    <td class="summary-data">$ totalDescuento</td>
+                                    <td class="summary-data">{{doc.get_formatted('discount_amount')}}</td>
                                 </tr>
                                 <tr>
                                     <td class="summary-title">ICE</td>
@@ -489,7 +489,7 @@
 
                                 <tr>
                                     <td class="summary-title-bottom"><strong>VALOR A PAGAR $</strong></td>
-                                    <td class="summary-data-bottom"><strong>$ importeTotal</strong></td>
+                                    <td class="summary-data-bottom"><strong>{{doc.get_formatted('grand_total')}}</strong></td>
                                 </tr>
                             </tbody>
                         </table>
