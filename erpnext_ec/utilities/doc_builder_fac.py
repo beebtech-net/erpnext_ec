@@ -73,9 +73,10 @@ def build_doc_fac(doc_name):
 		# 		sri_validated_message += 'No se ha definido ni solicitud de pago ni entrada de pago-'
 
 		doc.paymentsItems = get_payments_sri(doc.name)
+		doc.pagos = build_pagos(doc.paymentsItems)
 
-		for paym in  doc.paymentsItems:
-			print(paym)
+		#for paym in  doc.paymentsItems:
+		#	print(paym)
 
 		doc.infoAdicional = build_infoAdicional_sri(doc_name, customer_email_id, customer_phone)
 

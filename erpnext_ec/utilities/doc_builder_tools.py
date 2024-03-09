@@ -81,22 +81,50 @@ def get_payments_sri(doc_name):
     sri_validated = ''
     sri_validated_message = ''
       
-    paymentsEntryApi = frappe.get_list('Payment Entry Reference', filters = { 'reference_name': doc_name })
-    #print(paymentsEntryApi)
+    #paymentsEntryApi = frappe.get_list('Payment Entry Reference', filters = { 'reference_name': doc_name }, 
+    #                                   fields = ['name', 'reference_doctype','reference_name','payment_term','parent','parentfield','parenttype','allocated_amount'])
+    
+    paymentsEntryReferenceApi = frappe.get_all('Payment Entry Reference', fields='*', filters = { 'reference_name': doc_name })
 
-    if not paymentsEntryApi:
-        paymentsApi = frappe.get_list('Payment Request', filters = { 'reference_name': doc_name })
+    print(paymentsEntryReferenceApi)
+
+    if not paymentsEntryReferenceApi:
+        #paymentsApi = frappe.get_list('Payment Request', filters = { 'reference_name': doc_name })
+        paymentsApi = frappe.get_all('Payment Request', fields='*', filters = { 'reference_name': doc_name })
         # print(paymentsApi)
 
-        if not paymentsApi and  not paymentsEntryApi:
+        if not paymentsApi and  not paymentsEntryReferenceApi:
             sri_validated = 'error'
             sri_validated_message += 'No se ha definido ni solicitud de pago ni entrada de pago-'
         else:
             return paymentsApi
     else:
-        return paymentsEntryApi
-    
+        
+        paymentResults = []
+
+        for paymentEntryReference in paymentsEntryReferenceApi:
+            paymentEntries = frappe.get_all('Payment Entry', fields='*', filters = { 'name': paymentEntryReference.parent })
+            if(paymentEntries):
+                for paymentEntry in paymentEntries:
+                    paymentResults.append(paymentEntry)
+            else:
+                paymentResults.append(paymentEntryReference)        
+        
+        return paymentResults    
     return None
+
+#devolver formaPago, total
+def build_pagos(paymentResults):
+    pagos = []
+    for paymentEntry in paymentResults:
+        mode_of_payment = frappe.get_all('Mode of Payment', fields='*', filters = { 'name': paymentEntry.mode_of_payment })
+        if(mode_of_payment):
+            pago_item = {}
+            pago_item['formaPago'] = mode_of_payment[0].formapago
+            pago_item['formaPagoDescripcion'] = mode_of_payment[0].name
+            pago_item['total'] = paymentEntry.paid_amount
+            pagos.append(pago_item)
+    return pagos
 
 def get_full_company_sri(def_company):
     # Variable de retorno

@@ -119,13 +119,13 @@ def get_info_doc(doc_name, typeDocSri, doctype_erpnext, siteName):
 	info_doc = {}
 	xml_responses = get_responses(doc_name, typeDocSri, doctype_erpnext, siteName)
 	
-	for xml_response_item in xml_responses:
-		print(xml_response_item.xmldata)
+	#for xml_response_item in xml_responses:
+	#	print(xml_response_item.xmldata)
 
 	doc_json = get_doc_json(doc_name, typeDocSri, doctype_erpnext, siteName)
 	info_doc['responses'] = xml_responses
 	info_doc['doc_json'] = doc_json
-	print(info_doc)
+	#print(info_doc)
 	return info_doc
 
 @frappe.whitelist()
@@ -134,7 +134,7 @@ def get_responses(doc_name, typeDocSri, doctype_erpnext, siteName):
 	#var url = `${btApiServer}/api/SriProcess/getresponses/${doc}?tip_doc=${tip_doc}&sitename=${sitenamePar}`;
 	#xml_responses = frappe.get_list(doctype='Xml Responses', fields='*')
 	xml_responses = frappe.get_all('Xml Responses', filters={'doc_ref': doc_name, 'tip_doc': typeDocSri }, fields=['*'], order_by='creation')
-	print(xml_responses)
+	#print(xml_responses)
 	return xml_responses
 
 def get_api_url():
@@ -159,19 +159,19 @@ def get_api_url():
 def get_doc_json(doc_name, typeDocSri, typeFile, siteName):
 
 	doc = None
-	print(doc_name, typeDocSri, typeFile, siteName)
+	#print(doc_name, typeDocSri, typeFile, siteName)
 
 	#El parametro doc aquí es el nombre del documento
       
 	match typeDocSri:
 		case "FAC":
 			doc = build_doc_fac(doc_name)
-			print ("")
+			#print ("")
 		case "GRS":
 			doc = build_doc_grs(doc_name)
 		case "CRE":
 			doc = build_doc_cre(doc_name)
-			print(doc)
+			#print(doc)
 
 	return doc
 
@@ -433,8 +433,8 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 		#print(response.text);
 		#print(response.status_code);
 			
-		print(response)
-		print(response.text)
+		#print(response)
+		#print(response.text)
 
 		print('Numero de respuesta')		
 		
