@@ -55,9 +55,10 @@ doctype_js = {
     }
 doctype_list_js = {
     "Sales Invoice" : "public/js/overrides/sales_invoice_list_sri.js",
+    "Purchase Invoice" : "public/js/overrides/purchase_invoice_list_sri.js",
     "Delivery Note" : "public/js/overrides/delivery_note_list_sri.js",
 
-    
+
     "Print Format" : "public/js/overrides/print_format_list_sri.js",
     }
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
