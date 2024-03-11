@@ -81,7 +81,7 @@ def build_doc_fac(doc_name):
 		doc.infoAdicional = build_infoAdicional_sri(doc_name, customer_email_id, customer_phone)
 
 		# print(doc.infoAdicional)
-		
+		#doc.taxes_full = get_full_taxes(doc.taxes)		
 
 		#Simulando error
 		sri_validated = 'error'

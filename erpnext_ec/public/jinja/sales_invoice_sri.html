@@ -195,12 +195,12 @@
     @media print { body { -webkit-print-color-adjust: exact; } }
     
 .page-header, .page-header-space {
-    height: 230px; /* Max is 230px */
+    height: 15px; /* Max is 230px */
     margin: 0;
 }
 
 .page-footer, .page-footer-space {
-    height: 230px; /* Max is 230px */
+    height: 20px; /* Max is 230px */
     margin: 0;
 }
 
@@ -209,6 +209,7 @@
   bottom: 0;
   width: 100%;
   border-top: 1px solid; /* for demo */
+  border-color: #eaeaea;
 }
 
 .page-header {
@@ -216,10 +217,13 @@
   top: 0mm;
   width: 100%;
   border-bottom: 1px solid; /* for demo */
+  border-color: #eaeaea;
+  margin-bottom:5px;
 }
 
 .page {
   page-break-after: always;
+  margin-top:5px;
 }
 
 @page {
@@ -228,14 +232,12 @@
     /*margin: 0mm 0mm 0mm 0mm */
 }
 
-
-
 </style>
 
 {% set doc_build = build_doc_fac(doc.name) %}
 
 <div class="page-header">
-    Holis
+    <p></p>
 </div>
 
 <div class="page">
@@ -397,7 +399,13 @@
             		    <td>{{ item.item_code }}</td>
             		    <td class="text-right">{{ item.qty }}</td>
             			<td>{{ item.item_name }}</td>
-            			<td class="text-right">{{ item.get_formatted('price_list_rate') }}</td>
+            			
+            			{% if item.price_list_rate > 0 %}
+            			    <td class="text-right">{{ item.get_formatted('price_list_rate') }}</td>
+            			{% else %}
+            			    <td class="text-right">{{ item.get_formatted('net_rate') }}</td>
+            			{% endif %}
+            			
             			<td class="text-right">{{ item.get_formatted('discount_amount') }}</td>
             			<td class="text-right">{{ item.get_formatted('amount') }}</td>
             		</tr>
@@ -445,18 +453,34 @@
                         </table>                        
                     </td>
                     
+                    {% set SubTotalIva12 = {'total': 0} %}
+                    {% set SubTotalIva0 = {'total': 0} %}
+                    
+                    {%- for tax_item in doc_build.taxes %}
+                  
+                        {% if tax_item.codigoPorcentaje == 0 %}
+                            {% if SubTotalIva0.update({'total': SubTotalIva0.total + doc.total}) %}{% endif %}
+                        {% endif %}
+                        
+                        {% if tax_item.codigoPorcentaje == 2 %}
+                            {%- set SubTotalIva0 = 0 -%}
+                            {% if SubTotalIva12.update({'total': SubTotalIva12.total + tax_item.total}) %}{% endif %} 
+                        {% endif %}
+                        
+                    {%- endfor %}
+
                     
                     <td style="width:50%" valign="top">
                         <table cellpadding="1" cellspacing="0" style="width:100%">
                             <tbody>
                                 <tr>
                                     <td class="summary-title-top">SUBTOTAL IVA 12 %</td>
-                                    <td class="summary-data-top">$ DblSubTotalIva12</td>
+                                    <td class="summary-data-top">{{frappe.format(SubTotalIva12.total,'Currency')}}</td>
                                 </tr>
                                     
                                 <tr>
                                     <td class="summary-title">SUBTOTAL 0%</td>
-                                    <td class="summary-data">$ DblSubTotalIva0</td>
+                                    <td class="summary-data">{{frappe.format(SubTotalIva0.total,'Currency')}}</td>
                                 </tr> 
                                 <tr>
                                     <td class="summary-title">SUBTOTAL No objeto de IVA</td>
@@ -478,15 +502,14 @@
                                     <td class="summary-title">ICE</td>
                                     <td class="summary-data">$ 0.00</td>
                                 </tr>
-                               
-                               
                                 
+                                {% for tax_item in doc.taxes %}
                                     <tr>
-                                        <td class="summary-title">IVA itemTaxes %</td>
-                                        <td class="summary-data">$ itemTaxes</td>
+                                        <td class="summary-title">IVA {{tax_item.rate}} %</td>
+                                        <td class="summary-data">{{tax_item.get_formatted('tax_amount')}}</td>
                                     </tr>
+                                {% endfor %}
                                 
-
                                 <tr>
                                     <td class="summary-title-bottom"><strong>VALOR A PAGAR $</strong></td>
                                     <td class="summary-data-bottom"><strong>{{doc.get_formatted('grand_total')}}</strong></td>
@@ -500,5 +523,5 @@
  </div>
     
     <div class="page-footer">
-		<div style="">Consulte sus facturas en <a href="https://beebtech.net/">https://beebtech.net</a></div>
+		<div style="margin-top:10px">Powered by <a href="https://beebtech.net/">https://beebtech.net</a></div>
 	</div>

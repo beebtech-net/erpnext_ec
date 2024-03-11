@@ -47,7 +47,6 @@ def normalize_string(source_str):
         normalized_str = source_str  # Considera devolver la cadena original o manejar de otra manera
     return normalized_str
 
-
 def build_infoAdicional_sri(doc_name, customer_email_id, customer_phone):
 
     commentsApi = frappe.get_all('Comment', filters = { 'reference_name': doc_name }, fields='*' );
@@ -86,7 +85,7 @@ def get_payments_sri(doc_name):
     
     paymentsEntryReferenceApi = frappe.get_all('Payment Entry Reference', fields='*', filters = { 'reference_name': doc_name })
 
-    print(paymentsEntryReferenceApi)
+    #print(paymentsEntryReferenceApi)
 
     if not paymentsEntryReferenceApi:
         #paymentsApi = frappe.get_list('Payment Request', filters = { 'reference_name': doc_name })
@@ -344,14 +343,16 @@ def get_full_taxes(doc_name):
         accountApi = frappe.get_doc('Account', taxItem.account_head)
         # print('CUENTAAAAAAAAAAAAA')
         # print(accountApi)
-        # print(accountApi.sricode)
-        # print(accountApi.sricodeper)
+        #print(accountApi.sricode)
+        #print(accountApi.sricodeper)
+        #print(taxItem)
 
         if accountApi.sricode:
             taxItem.sricode =  int(accountApi.sricode)
               
         if accountApi.sricodeper:
             taxItem.codigoPorcentaje = int(accountApi.sricodeper)
+            #taxItem.codigoPorcentaje = accountApi.sricodeper
 
     return impuestos
 
