@@ -42,6 +42,10 @@ def build_doc_fac(doc_name):
 		doc.DireccionMatriz = company_full['dirMatriz']
 		doc.dirEstablecimiento = company_full['dirMatriz'] # TODO: temporal, la dirección del establecimiento debe ser definida
 		doc.contribuyenteRimpe = company_full['contribuyenteRimpe']
+		doc.obligadoContabilidad = company_full['obligadoContabilidad']
+		doc.agenteRetencion = company_full['agenteRetencion']
+		doc.contribuyenteEspecial = company_full['contribuyenteEspecial']
+		doc.ambiente = company_full['ambiente']
 
 		#Datos completos del cliente
 		customer_full = get_full_customer_sri(doc.customer)

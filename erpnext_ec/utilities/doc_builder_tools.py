@@ -141,6 +141,9 @@ def get_full_company_sri(def_company):
         compania_sri['ruc'] = doc.tax_id
         compania_sri['obligadoContabilidad'] = doc.obligadocontabilidad
         compania_sri['contribuyenteRimpe'] = doc.contribuyenterimpe
+        compania_sri['agenteRetencion'] = doc.agenteretencion
+        compania_sri['contribuyenteEspecial'] = doc.contribuyenteespecial
+        compania_sri['ambiente'] = doc.sri_active_environment        
         
         company_address_primary = None
         company_address_first = None

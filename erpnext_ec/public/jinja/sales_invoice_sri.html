@@ -1,6 +1,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
 <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39&family=Poppins&display=swap" rel="stylesheet">
+<link href="/assets/erpnext_ec/css/google-fonts-local.css" rel="stylesheet">
 
 <style>
     body {
@@ -14,16 +16,17 @@
     .barcode-container {
         display: flex;
         flex-direction: column;
+        padding-bottom: 15px;
     }
     
     .barcode{
         font-family: 'Libre Barcode 39', cursive;
-        font-size: 13px;
+        font-size: 16px;
         font-weight: 100;
         /*border: 1px solid #ccc;*/ /* Agrega bordes para visualización */
-        padding: 3px; /* Añade relleno para mejor aspecto visual */
+        padding: 5px; /* Añade relleno para mejor aspecto visual */
         margin: 0px; /* Añade márgenes entre los elementos */
-        transform: scaleY(4); /* Ajusta el valor según la longitud deseada */
+        transform: scaleY(6); /* Ajusta el valor según la longitud deseada */
         transform-origin: top; /* Establece el punto de origen en la parte superior */
         white-space: nowrap; /* Evita que el texto se divida en varias líneas */
     }
@@ -44,16 +47,29 @@
 
     .gray-box {
         font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-        height: 1in;
-        margin: 2pt;
-        border: 0.0em solid;                        
+        /*height: 1in;*/
+        border: 0.0em solid;
         font-size: 8pt;
+        
+        /*margin: 2pt;
         padding-left: 8px;
         padding-right: 8px;
         padding-top: 2px;
-        padding-bottom: 4px;
+        padding-bottom: 4px;*/
+        
         background-color: #eaeaea;
     }
+    
+    .table-compressed
+    {
+        /*padding: 2px !important;*/
+    }
+    
+    .table-compressed td, .table-compressed th 
+    {
+        padding: 6px !important; 
+    }
+    
 
     a {
         color: blue !important;
@@ -94,7 +110,7 @@
         font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
         border-collapse: collapse;
         font-size: 1.3em;
-        margin: 10px;
+        margin-bottom: 10px;
     }
 
         .infoAdicional td, .infoAdicional th {
@@ -222,6 +238,8 @@
 }
 
 .page {
+    font-family: sans-serif;
+    font-size: 10pt;
   page-break-after: always;
   margin-top:5px;
 }
@@ -244,16 +262,15 @@
         <table style="font-size: 8pt;width:100%;height:100%" cellspacing="0">
             <tr>
                 <td align="center" valign="middle" style="width: 50%;vertical-align:bottom">
-                    <table style="width: 100%;" cellspacing="0">
+                    <table style="width: 100%;" cellspacing="0" cellpadding="0" >
                         <tr>
                             <td>
-                                <table style="height:150px">
+                                <table class="table-compressed">
                                     <tbody>
                                         <tr>
                                             <td>
-                                            	<!--<img src="/assets/erpnext/images/erpnext-logo.svg" width="200px" />-->
-                                            	<img src="{{ frappe.db.get_value("Company", doc.company, "company_logo") or "" }}" width="200px" />
-                                            	<!--<img src="https://app.beebtech.net:2053/resources/img/logo_beebtech.png" width="150px"/>-->
+                                            	<!--<img src="/assets/erpnext/images/erpnext-logo.svg" width="220px" />-->
+                                            	<img src="{{ frappe.db.get_value("Company", doc.company, "company_logo") or "" }}" width="220px" />
                                             </td>
                                         </tr>
                                     </tbody>
@@ -261,8 +278,8 @@
                             </td>
                         </tr>
                         <tr>
-                            <td style="vertical-align:bottom">
-                                <table class="gray-box" style="width:100%;" cellpadding="0" cellspacing="0">
+                            <td style="vertical-align:bottom;background-color:#e4e4e4;padding:0">
+                                <table class="gray-box table-compressed" style="width:100%;" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
                                         <td height="40px" valign="top" style="width:310px;font-size: 10pt;"><strong>{{ doc.company }}</strong></td>
                                     </tr>
@@ -273,46 +290,50 @@
                                         <td align="left"><strong>Matriz:</strong> {{doc_build.DireccionMatriz}}</td>
                                     </tr>
                                     
+                                    {% if doc_build.contribuyenteEspecial %}
                                     <tr>
-                                        <td align="left"><strong>CONTRIBUYENTE ESPECIAL:</strong>
-                                        
-                                            <span align="left"><strong>NO</strong></span>
-                                        
+                                        <td align="left"><strong>CONTRIBUYENTE ESPECIAL No:</strong>
+                                            <span align="left"><strong>{{doc_build.contribuyenteEspecial}}</strong></span>
                                         </td>
                                     </tr>
+                                    {% endif %}
                                     <tr>
                                     
                                     </tr>
+                                    {% if doc_build.obligadoContabilidad %}
                                     <tr>
-                                        <td align="left"><strong>OBLIGADO A LLEVAR CONTABILIDAD: obligadoContabilidad</strong></td>
+                                        <td align="left"><strong>OBLIGADO A LLEVAR CONTABILIDAD: SI</strong></td>
                                     </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td align="left"><strong>OBLIGADO A LLEVAR CONTABILIDAD: NO</strong></td>
+                                    </tr>
+                                    {% endif %}
                                     
-                                    
+                                    {% if doc_build.contribuyenteRimpe %}
                                     <tr>
                                         <td align="left"><strong>CONTRIBUYENTE RÉGIMEN RIMPE</strong></td>
                                     </tr>
+                                    {% endif %}
                                     
+                                    {% if doc_build.agenteRetencion %}
                                     <tr>
-                                        <td align="left"><strong>Agente de Retenci&oacute;n Resoluci&oacute;n No.</strong></td>
+                                        <td align="left"><strong>Agente de Retenci&oacute;n Resoluci&oacute;n No. {{doc_build.agenteRetencion}}</strong></td>
                                     </tr>
-                                    <tr>
-                                        <td align="left"><strong>agenteRetencion</strong></td>
-                                    </tr>
-                                    
+                                    {% endif %}
                                 </table>
                             </td>
-
                         </tr>
                     </table>
                 </td>
                 <td style="width:50%">
-                    <table cellspacing="0" class="gray-box" style="width:100%;">
+                    <table class="gray-box table-compressed" style="width:100%;height:100%;" cellpadding="0" cellspacing="0" border="0">
                         <tr>
                             <td>
                                 <table style="font-size: 8pt;width:100%" padding="0" cellspacing="0">
                                     <tr>
                                         <td><strong>FACTURA:</strong></td>
-                                        <td valign="top" align="right"><strong>No.</strong>estab-ptoEmi-secuencial</td>
+                                        <td valign="top" align="right"><strong>No.</strong>{{doc.estab}}-{{doc.ptoemi}}-{{'%09d' % doc.secuencial}}</td>
                                     </tr>                                    
                                 </table>
                             </td>
@@ -322,15 +343,12 @@
                             <td align="left"><strong>N&Uacute;MERO DE AUTORIZACI&Oacute;N</strong></td>
                         </tr>
                         <tr>
-                            <td align="left"><strong>{{doc_build.numeroautorizacion}}</strong></td>
+                            <td align="left"><strong style="letter-spacing: -1px;">{{doc_build.numeroautorizacion}}</strong></td>
                         </tr>
                         <tr>                           
                             <td align="" style="font-size:9px">&nbsp;</td>
-                         </tr>
-                        <tr>
-                            <td class="written_field" style="padding-left: 2.5in;font-size:.1em;">&nbsp;</td>
                         </tr>
-                         <tr>
+                        <tr>
                             <td style="font-size:9px"><strong>Fecha y hora de autorizaci&oacute;n:</strong></td>                            
                          </tr>
                          <tr>                           
@@ -341,8 +359,11 @@
                          </tr>
                         <tr>
                             <td align="left"><strong>AMBIENTE:</strong>
-                                                            <span>PRODUCCI&Oacute;N</span>
-                                                    
+                                {% if doc_build.ambiente == 2 %}
+                                    <span>PRODUCCI&Oacute;N</span>
+                                {% else %}
+                                    <span>PRUEBAS</span>
+                                {% endif %}
                             </td>
                         </tr>
                         <td style="font-size:9px" colspan="2"><strong>EMISI&Oacute;N:</strong>&nbsp;&nbsp;&nbsp;NORMAL</td>
@@ -350,7 +371,7 @@
                             <td align="center" style="font-size:9px">CLAVE DE ACCESO</td>
                         </tr>
                         <tr>
-                            <td align="center" style="width:80%">
+                            <td align="center" style="width:100%">
                                 <div class="barcode-container">
                                     <div class="barcode">{{doc_build.numeroautorizacion}}</div>
                                 </div>
@@ -364,56 +385,64 @@
                     </table>
                 </td>
             </tr>
+        </table>
+
+
+        <table style="width:100%" cellspacing="0" cellpading="0">
             <tr>
+                <td style="padding-bottom: 0px !important;">
+                    <table class="gray-box" style="width:100%;" cellpadding="0" cellspacing="0">
+                        <tr>            
+                            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Raz&oacute;n Social: {{ doc_build.RazonSocial }}</strong></td>    
+                            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>RUC/CI: {{doc_build.customer_tax_id}}</strong></td>
+                        </tr>
+                        <tr>            
+                            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Direcci&oacute;n: {{doc_build.direccionComprador}}</strong></td>    
+                            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Tel&eacute;fono: +593 {{doc_build.customer_phone}}</strong></td>
+                        </tr>
+                        <tr>            
+                            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Fec. Emi.: {{doc_build.posting_date}}</strong></td>    
+                            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Email: {{doc_build.customer_email_id}}</strong></td>
+                        </tr>        
+                    </table>
+                </td>
             </tr>
-        </table>
+            <tr>
+                <td style="padding-top: 0px !important;">
+                    <table id="tabdetalle" style="width:100%;" style="" cellspacing="0">
+                        <tbody>
+                            <tr>
+                                <th style="min-width:50px;">Cod.</th>
+                                <th style="min-width:50px;">Cant.</th>
+                                <th style="min-width:400px;">Descripci&oacute;n</th>
+                                <th style="min-width:70px;">P. Un.</th>
+                                <th style="min-width:70px;">Desc.</th>
+                                <th style="min-width:70px;">Total</th>
+                            </tr>
+                            
+                            {% for item in doc.items %}
+                        		<tr>
+                        		    <td>{{ item.item_code }}</td>
+                        		    <td class="text-right">{{ item.qty }}</td>
+                        			<td>{{ item.item_name }}</td>
+                        			
+                        			{% if item.price_list_rate > 0 %}
+                        			    <td class="text-right">{{ item.get_formatted('price_list_rate') }}</td>
+                        			{% else %}
+                        			    <td class="text-right">{{ item.get_formatted('net_rate') }}</td>
+                        			{% endif %}
+                        			
+                        			<td class="text-right">{{ item.get_formatted('discount_amount') }}</td>
+                        			<td class="text-right">{{ item.get_formatted('amount') }}</td>
+                        		</tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>        
 
-    <table class="gray-box" style="width:100%;" cellpadding="0" cellspacing="0">
-        <tr>            
-            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Raz&oacute;n Social: {{ doc_build.RazonSocial }}</strong></td>    
-            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>RUC/CI: {{doc_build.customer_tax_id}}</strong></td>
-        </tr>
-        <tr>            
-            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Direcci&oacute;n: {{doc_build.direccionComprador}}</strong></td>    
-            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Tel&eacute;fono: +593 {{doc_build.customer_phone}}</strong></td>
-        </tr>
-        <tr>            
-            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Fec. Emi.: {{doc_build.posting_date}}</strong></td>    
-            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Email: {{doc_build.customer_email_id}}</strong></td>
-        </tr>        
-    </table>
-
-        <table id="tabdetalle" style="width:100%;" style="" cellspacing="0">
-            <tbody>
-                <tr>
-                    <th style="min-width:50px;">Cod.</th>
-                    <th style="min-width:50px;">Cant.</th>
-                    <th style="min-width:400px;">Descripci&oacute;n</th>
-                    <th style="min-width:70px;">P. Un.</th>
-                    <th style="min-width:70px;">Desc.</th>
-                    <th style="min-width:70px;">Total</th>
-                </tr>
-                
-                {% for item in doc.items %}
-            		<tr>
-            		    <td>{{ item.item_code }}</td>
-            		    <td class="text-right">{{ item.qty }}</td>
-            			<td>{{ item.item_name }}</td>
-            			
-            			{% if item.price_list_rate > 0 %}
-            			    <td class="text-right">{{ item.get_formatted('price_list_rate') }}</td>
-            			{% else %}
-            			    <td class="text-right">{{ item.get_formatted('net_rate') }}</td>
-            			{% endif %}
-            			
-            			<td class="text-right">{{ item.get_formatted('discount_amount') }}</td>
-            			<td class="text-right">{{ item.get_formatted('amount') }}</td>
-            		</tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <table border="0" cellpadding="0" cellspacing="0" style="width: 86%">
+        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%">
             <tbody>
                 <tr>
                     <td style="width:50%">
@@ -496,7 +525,7 @@
                                 </tr>
                                 <tr>
                                     <td class="summary-title">TOTAL DESCUENTO</td>
-                                    <td class="summary-data">{{doc.get_formatted('discount_amount')}}</td>
+                                <td class="summary-data">{{doc.get_formatted('discount_amount')}}</td>
                                 </tr>
                                 <tr>
                                     <td class="summary-title">ICE</td>
@@ -522,6 +551,6 @@
         </table>
  </div>
     
-    <div class="page-footer">
-		<div style="margin-top:10px">Powered by <a href="https://beebtech.net/">https://beebtech.net</a></div>
-	</div>
+<div class="page-footer">
+    <div style="margin-top:10px">Powered by <a href="https://beebtech.net/" target="_blank">https://beebtech.net</a></div>
+</div>
