@@ -1,6 +1,6 @@
 {
  "actions": [],
- "autoname": "format:EXP-{YYYY}-{#####}",
+ "autoname": "format:SSQ-{YYYY}-{#####}",
  "creation": "2023-12-21 01:27:30.810619",
  "doctype": "DocType", 
  "document_type": "Document",
