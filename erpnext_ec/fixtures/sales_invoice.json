@@ -508,7 +508,7 @@
 		"inser_after": "sri_response",
 		"doctype": "Custom Field",
 		"dt": "Sales Invoice",
-		"read_only": 1
+		"read_only": 0
 	},
 	{
 		"name": "Sales Invoice-ptoemi",
@@ -536,8 +536,7 @@
 		"options": "Sri Ptoemi",
 		"fetch_if_empty": 0,
 		"permlevel": 0,
-		"hidden": 0,
-		"read_only": 1,
+		"hidden": 0,		
 		"collapsible": 0,
 		"allow_bulk_edit": 0,
 		"ignore_user_permissions": 0,
@@ -552,7 +551,8 @@
 		"print_hide_if_no_value": 0,
 		"columns": 0,
 		"doctype": "Custom Field",
-		"dt": "Sales Invoice"		
+		"dt": "Sales Invoice",
+		"read_only": 0
 	},
 	{
 		"name": "Sales Invoice-secuencial",
