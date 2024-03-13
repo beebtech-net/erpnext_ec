@@ -25,9 +25,11 @@ function UploadFromSriBuild(listview)
                         default: 'ronald.chonillo@gmail.com'
                     },
                     {
-                        label: 'Copia (cc)',
-                        fieldname: 'email_cc',
-                        fieldtype: 'Attach'
+                        label: 'Adjuntos',
+                        fieldname: 'attach_content',
+                        fieldtype: 'Attach',
+                        max_attachments: 20,
+                        allow_multiple: true
                     },
                     {
                         label: 'Envío inmediato',
