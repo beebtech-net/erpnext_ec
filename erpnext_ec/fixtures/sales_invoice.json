@@ -592,7 +592,8 @@
 		"print_hide": 0,
 		"print_hide_if_no_value": 0,
 		"columns": 0,		
-		"no_copy": 1,		
+		"no_copy": 1,
+		"doctype": "Custom Field",
 		"dt": "Sales Invoice"
 	}
 ]
