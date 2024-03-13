@@ -3,7 +3,7 @@ name = "erpnext_ec"
 authors = [
     { name = "BeebTech", email = "ronald.chonillo@gmail.com"}
 ]
-description = "Erpnext Ecuador"
+description = "ErpNext Ecuador"
 requires-python = ">=3.6"
 readme = "README.md"
 dynamic = ["version"]
@@ -11,13 +11,25 @@ dependencies = [
     # "frappe~=15.0.0" # Installed and managed by bench.
 ]
 
+[tool.black]
+line-length = 99
+
+[tool.isort]
+line_length = 99
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+indent = "\t"
+
 [build-system]
-requires = ["flit_core >=3.4,<4"]
-build-backend = "flit_core.buildapi"
+#requires = ["flit_core >=3.4,<4"]
+#build-backend = "flit_core.buildapi"
 
 # These dependencies are only installed when developer mode is enabled
 [tool.bench.dev-dependencies]
 # package_name = "~=1.1.0"
 
 [tool.bench.frappe-dependencies]
-frappe = ">=13.10.0,<16.0.0"
+frappe = ">=12.0.0,<16.0.0"
