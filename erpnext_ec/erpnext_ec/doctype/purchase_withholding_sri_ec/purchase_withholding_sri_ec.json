@@ -40,8 +40,7 @@
     "reqd": 1
    },
    {
-    "idx": 2,
-    "name": "Purchase-Withholding-supplier",
+    "idx": 2,    
     "parent": "Customize Form",
     "parentfield": "fields",
     "parenttype": "Customize Form",    
@@ -79,9 +78,7 @@
     "hide_days": 0,
     "print_hide": 0,
     "print_hide_if_no_value": 0,
-    "columns": 0,
-    "is_custom_field": 1,
-    "doctype": "Custom Field"    
+    "columns": 0
 },
    {
 		"name": "Sales Invoice-info-trib",
