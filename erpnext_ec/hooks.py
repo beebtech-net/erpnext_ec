@@ -89,6 +89,7 @@ doctype_list_js = {
 # Jinja
 # ----------
 
+#Frappe >=14
 # add methods and filters to jinja environment
 #jinja = {
  	#"methods": "erpnext_ec.utils.jinja_methods",
@@ -100,9 +101,10 @@ doctype_list_js = {
  	#"filters": "erpnext_ec.utils.jinja_filters"
 # }
 
+#Frappe <=13
 jenv = {
         "methods": [
-                "doc_builder_fac:erpnext_ec.utilities.doc_builder_fac"
+                "jinja_doc_builder_fac:erpnext_ec.utilities.doc_builder_fac"
         ]
 }
 

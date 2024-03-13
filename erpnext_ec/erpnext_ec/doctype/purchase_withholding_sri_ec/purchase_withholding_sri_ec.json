@@ -268,8 +268,7 @@
       "print_hide_if_no_value": 0,
       "columns": 0,
       "is_custom_field": 1,
-      "doctype": "Custom Field",
-      "dt": "Sales Invoice"
+      "doctype": "Custom Field"      
   },
   {
       "name": "Purchase-Withholding-ptoemi",
@@ -313,8 +312,7 @@
       "print_hide_if_no_value": 0,
       "columns": 0,
       "is_custom_field": 1,
-      "doctype": "Custom Field",
-      "dt": "Sales Invoice"
+      "doctype": "Custom Field"      
   },
   
 
