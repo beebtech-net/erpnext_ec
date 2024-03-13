@@ -305,11 +305,8 @@
       "hide_days": 0,
       "print_hide": 0,
       "print_hide_if_no_value": 0,
-      "columns": 0,
-      "is_custom_field": 1,
-      "doctype": "Custom Field"      
-  },
-  
+      "columns": 0
+  },  
 
 {
   "name": "Sales Invoice-info-comp-withhold",
@@ -453,8 +450,7 @@
   "hide_days": 0,
   "print_hide": 0,
   "print_hide_if_no_value": 0,
-  "columns": 0,
-  "is_custom_field": 1
+  "columns": 0
 },
 {
   "default": "Draft",
