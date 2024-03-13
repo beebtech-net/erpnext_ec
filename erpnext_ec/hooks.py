@@ -102,7 +102,7 @@ jinja = {
 
 jenv = {
         "methods": [
-                "doc_builder_fac:erpnext_ec.utilities.doc_builder_fac",
+                "erpnext_ec.utilities.doc_builder_fac",
         ]
 }
 
