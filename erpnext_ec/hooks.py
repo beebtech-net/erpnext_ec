@@ -100,6 +100,12 @@ jinja = {
  	#"filters": "erpnext_ec.utils.jinja_filters"
  }
 
+jenv = {
+        "methods": [
+                "doc_builder_fac:erpnext_ec.utilities.doc_builder_fac",
+        ]
+}
+
 # Installation
 # ------------
 
