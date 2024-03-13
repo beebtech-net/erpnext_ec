@@ -46,22 +46,7 @@
     "enable_auto_reply": 0,
     "uidnext": 0,
     "no_failed": 0,
-    "doctype": "Email Account",
-    "imap_folder": [
-        {
-            "name": "c761c24289",
-            "owner": "Administrator",
-            "creation": "2024-01-18 12:02:22.881500",
-            "modified": "2024-01-18 16:38:52.289269",
-            "modified_by": "Administrator",
-            "docstatus": 0,
-            "idx": 1,
-            "folder_name": "INBOX",
-            "parent": "Factura Electr\u00f3nica",
-            "parentfield": "imap_folder",
-            "parenttype": "Email Account",
-            "doctype": "IMAP Folder"
-        }
+    "doctype": "Email Account"    
     ]
 }
 ]
