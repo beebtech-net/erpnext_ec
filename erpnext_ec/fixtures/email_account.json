@@ -46,7 +46,6 @@
     "enable_auto_reply": 0,
     "uidnext": 0,
     "no_failed": 0,
-    "doctype": "Email Account"    
-    ]
-}
+    "doctype": "Email Account"   
+    }
 ]
