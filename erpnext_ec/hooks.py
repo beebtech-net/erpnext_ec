@@ -102,11 +102,11 @@ doctype_list_js = {
 # }
 
 #Frappe <=13
-jenv = {
-        "methods": [
-                "jinja_doc_builder_fac:erpnext_ec.utilities.doc_builder_fac"
-        ]
-}
+#jenv = {
+#        "methods": [
+#                "jinja_doc_builder_fac:erpnext_ec.utilities.doc_builder_fac"
+#        ]
+#}
 
 # Installation
 # ------------
