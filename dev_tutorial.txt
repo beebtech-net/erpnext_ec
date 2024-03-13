@@ -56,10 +56,13 @@ CREATE USER 'root'@'%' IDENTIFIED BY 'root';
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
 flush privileges;
 
-bech get-app https://github.com/beebtech-net/erpnext_ec.git
+bench get-app https://github.com/beebtech-net/erpnext_ec.git
 
 doc_data = frappe.get_last_doc('Sales Invoice', filters={'name':'ACC-SINV-2024-00008'})
 
 doc_data.db_set('secuencial',0)
 
 frappe.db.commit()
+
+#comando independiente posterior a la descarga
+/opt/bench/frappe-bench/env/bin/python -m pip install --quiet --upgrade -e /opt/bench/frappe-bench/apps/erpnext_ec

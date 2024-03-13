@@ -4,7 +4,7 @@ authors = [
     { name = "BeebTech", email = "ronald.chonillo@gmail.com"}
 ]
 description = "Erpnext Ecuador"
-requires-python = ">=3.10"
+requires-python = ">=3.6"
 readme = "README.md"
 dynamic = ["version"]
 dependencies = [
