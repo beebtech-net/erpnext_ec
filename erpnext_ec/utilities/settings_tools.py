@@ -199,8 +199,7 @@ def load_sri_sequences(company):
 	pass
 
 def get_last_sequencial_found(company_id, sri_type_doc_lnk, sri_environment_lnk):
-	match sri_type_doc_lnk:
-		case "FAC":
+	if sri_type_doc_lnk == "FAC":
 			#'sri_environment_lnk': sri_environment_lnk,
 			# TODO: Agregar "ambiente" en las tablas
 			docs_found = frappe.get_list("Sales Invoice",  fields=[f"MAX(secuencial) as max_secuencial"], filters={        	
@@ -210,8 +209,8 @@ def get_last_sequencial_found(company_id, sri_type_doc_lnk, sri_environment_lnk)
 			#print(docs_found)
 			#print(docs_found[0].max_secuencial)
 			return docs_found[0].max_secuencial			
-		#case "GRS":
-		#case "CRE":
+		#elif sri_type_doc_lnk ==  "GRS":
+		#elif sri_type_doc_lnk ==  "CRE":
 			
 			 
 	

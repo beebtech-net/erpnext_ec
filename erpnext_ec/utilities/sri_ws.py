@@ -44,14 +44,25 @@ def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnex
 	template = ''
 	print_format_name = ''
 
-	match typeDocSri:
-		case "FAC":
+	#Python 3.6 incompatible
+	# match typeDocSri:
+	# 	case "FAC":
+	# 		doc_data = build_doc_fac(doc_name)
+	# 		template_name = 'Factura SRI Body'
+	# 		print_format_name = 'Factura SRI'
+	# 	case "GRS":
+	# 		doc_data = build_doc_grs(doc_name)
+	# 	case "CRE":
+	# 		doc_data = build_doc_cre(doc_name)
+
+	#Python 3.6 compatible
+	if typeDocSri == "FAC":
 			doc_data = build_doc_fac(doc_name)
 			template_name = 'Factura SRI Body'
 			print_format_name = 'Factura SRI'
-		case "GRS":
+	elif typeDocSri == "GRS":
 			doc_data = build_doc_grs(doc_name)
-		case "CRE":
+	elif typeDocSri == "CRE":
 			doc_data = build_doc_cre(doc_name)
 			
 	templates = frappe.get_list('Email Template', fields = ['*'], filters = { 'name': template_name })
@@ -162,16 +173,27 @@ def get_doc_json(doc_name, typeDocSri, typeFile, siteName):
 	#print(doc_name, typeDocSri, typeFile, siteName)
 
 	#El parametro doc aquí es el nombre del documento
-      
-	match typeDocSri:
-		case "FAC":
+    
+	#Python 3.6 incompatible
+	# match typeDocSri:
+	# 	case "FAC":
+	# 		doc = build_doc_fac(doc_name)
+	# 		#print ("")
+	# 	case "GRS":
+	# 		doc = build_doc_grs(doc_name)
+	# 	case "CRE":
+	# 		doc = build_doc_cre(doc_name)
+	# 		#print(doc)
+	
+	#Python 3.6 compatible	
+	if typeDocSri == "FAC":
 			doc = build_doc_fac(doc_name)
 			#print ("")
-		case "GRS":
+	elif typeDocSri == "GRS":
 			doc = build_doc_grs(doc_name)
-		case "CRE":
+	elif typeDocSri == "CRE":
 			doc = build_doc_cre(doc_name)
-			#print(doc)
+			#print(doc)	
 
 	return doc
 
@@ -183,13 +205,12 @@ def get_doc_blob(doc_name, typeDocSri, typeFile, siteName):
 
 	#El parametro doc aquí es el nombre del documento
       
-	match typeDocSri:
-		case "FAC":
+	if typeDocSri == "FAC":
 			doc = build_doc_fac(doc_name)
 			print ("")
-		case "GRS":
+	elif typeDocSri == "GRS":
 			doc = build_doc_grs(doc_name)
-		case "CRE":
+	elif typeDocSri == "CRE":
 			doc = build_doc_cre(doc_name)
 			print(doc)
 	
@@ -227,13 +248,12 @@ def get_doc(doc_name, typeDocSri, typeFile, siteName):
 
 	#El parametro doc aquí es el nombre del documento
       
-	match typeDocSri:
-		case "FAC":
+	if typeDocSri == "FAC":
 			doc = build_doc_fac(doc_name)
 			print ("")
-		case "GRS":
+	elif typeDocSri == "GRS":
 			doc = build_doc_grs(doc_name)
-		case "CRE":
+	elif typeDocSri == "CRE":
 			doc = build_doc_cre(doc_name)
 			print(doc)
 	
@@ -365,18 +385,17 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 	else:
 		raise ReferenceError("No se encontró configuración requerida 'Sri Sequence' para la empresa "+ doc_object_build.company)
 		
-	match typeDocSri:
-		case "FAC":
+	if typeDocSri == "FAC":
 			
 			doc_data = build_doc_fac(doc_object_build.name)
 			
 			print('-----------------------')
 			print(doc_data.secuencial)
 			print('-----------------------')
-		case "GRS":
+	elif typeDocSri == "GRS":
 			doc_data = build_doc_grs(doc_object_build.name)
 			
-		case "CRE":
+	elif typeDocSri == "CRE":
 			doc_data = build_doc_cre(doc_object_build.name)
 	
 	#TODO: Validacion de los datos previo al envío al SRI
@@ -518,8 +537,7 @@ def setSecuencial(doc, typeDocSri):
 	#company_object.name
 	#company_object.sri_active_environment
 	
-	match typeDocSri:
-		case "FAC":
+	if typeDocSri ==  "FAC":
 			
 			#print(doc)
 			document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name})
@@ -529,7 +547,7 @@ def setSecuencial(doc, typeDocSri):
 					print(document_object.secuencial)
 					return True
 
-		case "GRS":
+	elif typeDocSri ==  "GRS":
 			
 			#print(doc)
 			document_object = frappe.get_last_doc('Delivery Note', filters = { 'name': doc.name})
@@ -539,7 +557,7 @@ def setSecuencial(doc, typeDocSri):
 					print(document_object.secuencial)
 					return True
 
-		case "CRE":
+	elif typeDocSri ==  "CRE":
 			
 			#print(doc)
 			document_object = frappe.get_last_doc('Purchase Withholding Sri Ec', filters = { 'name': doc.name})
@@ -602,8 +620,7 @@ def registerResponse(doc, typeDocSri, doctype_erpnext, response_json, response_j
 	frappe.db.commit()
 
 def updateStatusDocument(doc, typeDocSri, response_json):
-	match typeDocSri:
-		case "FAC":
+	if typeDocSri ==  "FAC":
 			document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name })
 			if(document_object):
 				document_object.db_set('numeroautorizacion', response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
@@ -629,7 +646,7 @@ def updateStatusDocument(doc, typeDocSri, response_json):
 				#	ignore_version=True # do not create a version record
 				#)
 	
-		case "GRS":
+	elif typeDocSri ==  "GRS":
 			
 			print(response_json)
 
