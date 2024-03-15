@@ -119,3 +119,5 @@ def get_ecrypted_signature(tax_id):
             #print("pwd encriptado")
             #print(encrypted_pwd)
             return encrypted_data        
+        
+

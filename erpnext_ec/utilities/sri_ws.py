@@ -14,6 +14,7 @@ import json
 from types import SimpleNamespace
 import requests
 from erpnext_ec.utilities.encryption import *
+from erpnext_ec.utilities.signature_tool import *
 
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -232,6 +233,11 @@ def get_doc_blob(doc_name, typeDocSri, typeFile, siteName):
 		print(response.status_code)
 
 		if (response.status_code == 200):
+			#test signature
+			#response.content
+			
+			SriXmlData.action_sign(SriXmlData, response.content, doc)
+
 			frappe.local.response.filename = doc_name + "." + typeFile
 			frappe.local.response.filecontent = response.content
 			frappe.local.response.type = "download"

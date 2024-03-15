@@ -136,14 +136,21 @@ def get_full_company_sri(def_company):
     #print(docs)
     
     if docs:
-        doc = docs[0]
+        doc = docs[0]        
         compania_sri['nombreComercial'] = doc.nombrecomercial
         compania_sri['ruc'] = doc.tax_id
         compania_sri['obligadoContabilidad'] = doc.obligadocontabilidad
         compania_sri['contribuyenteRimpe'] = doc.contribuyenterimpe
         compania_sri['agenteRetencion'] = doc.agenteretencion
         compania_sri['contribuyenteEspecial'] = doc.contribuyenteespecial
-        compania_sri['ambiente'] = doc.sri_active_environment        
+
+        sri_enviroment = frappe.get_all('Sri Environment', fields='*', filters={'name': doc.sri_active_environment})        
+        sri_active_environment = 1
+
+        if(sri_enviroment):
+            sri_active_environment = sri_enviroment[0].id
+
+        compania_sri['ambiente'] = sri_active_environment
         
         company_address_primary = None
         company_address_first = None
