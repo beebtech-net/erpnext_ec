@@ -236,7 +236,7 @@ def get_doc_blob(doc_name, typeDocSri, typeFile, siteName):
 			#test signature
 			#response.content
 			
-			SriXmlData.action_sign(SriXmlData, response.content, doc)
+			#SriXmlData.action_sign(SriXmlData, response.content, doc)
 
 			frappe.local.response.filename = doc_name + "." + typeFile
 			frappe.local.response.filecontent = response.content

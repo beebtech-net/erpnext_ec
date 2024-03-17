@@ -66,3 +66,6 @@ frappe.db.commit()
 
 #comando independiente posterior a la descarga
 /opt/bench/frappe-bench/env/bin/python -m pip install --quiet --upgrade -e /opt/bench/frappe-bench/apps/erpnext_ec
+
+bench --site prueba list-apps
+
