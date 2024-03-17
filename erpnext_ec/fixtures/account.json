@@ -73,50 +73,5 @@
 		"is_custom_field": 1,
 		"doctype": "Custom Field",
 		"dt": "Account"
-	},
-	{
-		"doctype": "Account",
-		"company": "BeebTech",
-		"name":"Retenciones Sri",
-		"account_name": "Retenciones Sri",
-		"is_group": 1,
-		"parent": "Pasivo circulante - B",
-		"parent_account": "Pasivo circulante - B",
-		"is_root": false,
-		"root_type":"Liability"
-	},
-	{
-		"doctype": "Account",
-		"company": "BeebTech",
-		"name":"ret_3_iva",
-		"account_number": "3",
-		"codigoretencion": "3",
-		"descripcionsri":"IVA",
-		"account_name": "Retención Iva",
-		"account_type": "Tax",
-		"is_group": 0,
-		"parent": "Retenciones Sri",
-		"parent_account": "Retenciones Sri",
-		"is_root": false,		
-		"root_type":"Liability",
-		"is_withhold_account": true,
-		"tax_rate": 100.00
-	},
-	{
-		"doctype": "Account",
-		"company": "BeebTech",
-		"name":"ret_303_honorarios",
-		"account_number": "303",
-		"codigoretencion": "303",
-		"descripcionsri":"RENTA",
-		"account_name": "Honorarios profesionales y demás pagos por servicios relacionados con el título profesional",
-		"account_type": "Tax",
-		"is_group": 0,
-		"parent": "Retenciones Sri",
-		"parent_account": "Retenciones Sri",
-		"is_root": false,		
-		"root_type":"Liability",
-		"is_withhold_account": true,
-		"tax_rate": 10.00
 	}
 ]
