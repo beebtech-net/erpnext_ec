@@ -112,8 +112,7 @@ from erpnext_ec.utilities.doc_builder_fac import build_doc_fac
 #Frappe <=13
 jenv = {
         "methods": [
-            "doc_builder_fac:erpnext_ec.utilities.doc_builder_fac",
-            #"erpnext_ec.erpnext_ec.hooks.jenv_customizations"
+            "doc_builder_fac:erpnext_ec.utilities.doc_builder_fac"
         ],
         "filters": [
 
