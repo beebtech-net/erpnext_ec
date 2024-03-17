@@ -110,7 +110,11 @@ def jenv_customizations(jenv):
 #Frappe <=13
 jenv = {
         "methods": [
-                "erpnext_ec.erpnext_ec.hooks.jenv_customizations"
+            "doc_builder_fac:erpnext_ec.utilities.doc_builder_fac",
+            #"erpnext_ec.erpnext_ec.hooks.jenv_customizations"
+        ],
+        "filters": [
+
         ]
 }
 
