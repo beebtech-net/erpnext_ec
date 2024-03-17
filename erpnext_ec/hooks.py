@@ -108,11 +108,12 @@ from erpnext_ec.utilities import doc_builder_fac
 def jenv_customizations(jenv):
 #    jenv.globals['build_doc_fac'] = build_doc_fac
     print ("---")
+    
 
 #Frappe <=13
 jenv = {
         "methods": [
-            "doc_builder_fac:erpnext_ec.utilities.doc_builder_fac"
+            "doc_builder_fac:doc_builder_fac.doc_builder_fac"
         ],
         "filters": [
 
