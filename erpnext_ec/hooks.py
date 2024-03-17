@@ -105,9 +105,9 @@ doctype_list_js = {
 
 from erpnext_ec.utilities.doc_builder_fac import build_doc_fac 
 
-#def jenv_customizations(jenv):
-    # Aquí estamos añadiendo `get_document_details` al entorno Jinja como una 'global'
+def jenv_customizations(jenv):
 #    jenv.globals['build_doc_fac'] = build_doc_fac
+    print ("---")
 
 #Frappe <=13
 jenv = {
