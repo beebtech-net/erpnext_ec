@@ -104,7 +104,7 @@ doctype_list_js = {
 #Frappe <=13
 jenv = {
         "methods": [
-                "jinja_doc_builder_fac:erpnext_ec.utilities.doc_builder_fac"
+                "jinja_doc_builder_fac:erpnext_ec.utilities.doc_builder_fac.doc_builder_fac"
         ]
 }
 
