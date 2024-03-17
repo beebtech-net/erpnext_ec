@@ -103,7 +103,7 @@ doctype_list_js = {
 
 
 
-from erpnext_ec.utilities.doc_builder_fac import build_doc_fac 
+from erpnext_ec.utilities import doc_builder_fac 
 
 def jenv_customizations(jenv):
 #    jenv.globals['build_doc_fac'] = build_doc_fac
