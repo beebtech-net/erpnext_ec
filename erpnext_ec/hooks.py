@@ -105,9 +105,9 @@ doctype_list_js = {
 
 from erpnext_ec.utilities.doc_builder_fac import build_doc_fac 
 
-def jenv_customizations(jenv):
+#def jenv_customizations(jenv):
 #    jenv.globals['build_doc_fac'] = build_doc_fac
-    print ("---")
+#    print ("---")
 
 #Frappe <=13
 jenv = {
