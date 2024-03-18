@@ -110,7 +110,7 @@ if(is_frappe_above_v13):
         #"filters": "erpnext_ec.utils.jinja_filters"
     }
 
-if(not is_frappe_above_v12 and not is_frappe_above_v13):
+if(is_frappe_above_v13 and not is_frappe_above_v14):
     from erpnext_ec.utilities.doc_builder_fac import build_doc_fac 
 
     #Frappe <=13
