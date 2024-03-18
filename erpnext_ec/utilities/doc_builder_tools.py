@@ -112,7 +112,7 @@ def get_payments_sri(doc_name):
         return paymentResults    
     return None
 
-#devolver formaPago, total
+#devolver formaPago, plazo, total
 def build_pagos(paymentResults):
     pagos = []
     for paymentEntry in paymentResults:
@@ -121,7 +121,9 @@ def build_pagos(paymentResults):
             pago_item = {}
             pago_item['formaPago'] = mode_of_payment[0].formapago
             pago_item['formaPagoDescripcion'] = mode_of_payment[0].name
-            pago_item['total'] = paymentEntry.paid_amount
+            pago_item['plazo'] = 5
+            pago_item['unidadTiempo'] = 'dias'
+            pago_item['total'] = paymentEntry.paid_amount            
             pagos.append(pago_item)
     return pagos
 
