@@ -1,0 +1,14 @@
+[	
+	{
+		"doctype": "Account",
+		"company": "{{company}}",
+		"account_name": "VAT*",
+		"codigoretencion": "0",
+		"sricodeper": "2",
+		"descripcionsri": "",
+		"sricode":"2",
+		"is_withhold_account": false,
+		"parent_account": "IMPUESTOS Y ARANCELES*",
+		"tax_rate": 12
+	}
+]

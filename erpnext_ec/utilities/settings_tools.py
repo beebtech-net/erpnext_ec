@@ -11,7 +11,14 @@ import erpnext
 import json
 from types import SimpleNamespace
 
-from erpnext_ec.patches.v15_0 import print_formats 
+from erpnext_ec.patches.v15_0 import print_formats, import_tools
+
+@frappe.whitelist()
+def load_accounts():
+	#accounts.execute()
+	import_tools.execute()
+	print('Terminada la importación y configuracion de cuentas para el SRI')
+	pass
 
 @frappe.whitelist()
 def load_print_format_sri():

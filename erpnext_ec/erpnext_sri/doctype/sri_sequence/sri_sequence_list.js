@@ -47,20 +47,22 @@ async function SequenceSriBuild (listview) {
                                 always: function(r) {},
                            },
                            callback: function(r) 
-                           {
-                               //console.log(r);
-                               //jsonResponse = JSON.parse(r.message);
-                               //console.log(jsonResponse);
+                           {                               
+                               frappe.show_alert({
+                                    message: __(`Proceso realizado con éxito`),
+                                    indicator: 'green'
+                                }, 5);
                            },
-                           error: function(r) {
-                               //$(btnProcess).show();
-                               //$(btnProcess).parent().find('.custom-animation').remove();
+                           error: function(r) {                               
+                               frappe.show_alert({
+                                message: __(`Error en proceso`),
+                                indicator: 'red'
+                                }, 10);
                            },
                        });
                    },
-                   'Confirmar proceso de envío al SRI'
-               );
-    
+                   'Confirmar creación de secuenciales SRI'
+               );    
 }
 
 frappe.listview_settings['Sri Sequence'] = {

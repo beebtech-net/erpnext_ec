@@ -1,8 +1,8 @@
-function PrintFormatSriBuild(listview) {
-    console.log("PrintFormatSriBuild");
+function AccountSriBuild(listview) {
+    console.log("AccountSriBuild");
     //frappe.msgprint("ButtonFunction");
     var document_preview = `
-           <p>Confirmar para crear los formatos de impresion para el SRI?</p>
+           <p>Confirmar para crear los datos de las cuentas para el SRI?</p>
            <table>
                <tr>
                    <td><i class="fa fa-file"></i> Se eliminarán los formatos de impresión ya creados previamente</td>                   
@@ -12,15 +12,15 @@ function PrintFormatSriBuild(listview) {
                </tr>`;
     
     
-    frappe.warn('Crear Formatos SRI?',
+    frappe.warn('Crear datos de cuentas para el SRI?',
                    document_preview,
                    () => {
                        frappe.call({
-                           method: "erpnext_ec.utilities.settings_tools.load_print_format_sri",
+                           method: "erpnext_ec.utilities.settings_tools.load_accounts",
                            args: 
                            {
                                freeze: true,
-                               freeze_message: "Procesando documento, espere un momento.",
+                               freeze_message: "Procesando datos, espere un momento.",
                                success: function(r) {},								
                                always: function(r) {},
                            },
@@ -45,14 +45,14 @@ function PrintFormatSriBuild(listview) {
                            },
                        });
                    },
-                   'Confirmar creación de formatos SRI'
+                   'Confirmar creación de datos para el SRI'
                );    
 }
 
-frappe.listview_settings['Print Format'] = {
+frappe.listview_settings['Account'] = {
    refresh: function(listview) {
-       listview.page.add_inner_button('<i class="fa fa-file"></i> Crear Formatos SRI', function() {
-           PrintFormatSriBuild(listview);
+       listview.page.add_inner_button('<i class="fa fa-file"></i> Crear datos SRI', function() {
+        AccountSriBuild(listview);
        });;
    },
 };

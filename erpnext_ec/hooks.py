@@ -60,6 +60,7 @@ doctype_list_js = {
 
 
     "Print Format" : "public/js/overrides/print_format_list_sri.js",
+    "Account" : "public/js/overrides/account_list_sri.js",
     }
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -86,38 +87,45 @@ doctype_list_js = {
 # automatically create page for each record of this doctype
 # website_generators = ["Web Page"]
 
+is_frappe_above_v14 = int(frappe_version.split('.')[0]) > 14
+is_frappe_above_v13 = int(frappe_version.split('.')[0]) > 13
+is_frappe_above_v12 = int(frappe_version.split('.')[0]) > 12
+
+#print(is_frappe_above_v13)
+#print(is_frappe_above_v12)
+#print(is_frappe_above_v14)
+
 # Jinja
 # ----------
+if(is_frappe_above_v13):
+    #Frappe >=14
+    # add methods and filters to jinja environment
+    jinja = {
+        #"methods": "erpnext_ec.utils.jinja_methods",
+        "methods": [
+                    "erpnext_ec.utilities.doc_builder_fac",
+                    "erpnext_ec.utilities.doc_builder_cre",
+                    "erpnext_ec.utilities.doc_builder_grs",
+                    ]
+        #"filters": "erpnext_ec.utils.jinja_filters"
+    }
 
-#Frappe >=14
-# add methods and filters to jinja environment
-#jinja = {
- 	#"methods": "erpnext_ec.utils.jinja_methods",
-#    "methods": [
-#                "erpnext_ec.utilities.doc_builder_fac",
-#                "erpnext_ec.utilities.doc_builder_cre",
-#                "erpnext_ec.utilities.doc_builder_grs",
-#                ]
- 	#"filters": "erpnext_ec.utils.jinja_filters"
-# }
+if(not is_frappe_above_v12 and not is_frappe_above_v13):
+    from erpnext_ec.utilities.doc_builder_fac import build_doc_fac 
 
+    def jenv_customizations(jenv):
+    #    jenv.globals['build_doc_fac'] = build_doc_fac
+        print ("no usado")
 
-
-from erpnext_ec.utilities.doc_builder_fac import build_doc_fac 
-
-def jenv_customizations(jenv):
-#    jenv.globals['build_doc_fac'] = build_doc_fac
-    print ("no usado")
-
-#Frappe <=13
-jenv = {
+    #Frappe <=13
+    jenv = {
         "methods": [
             "doc_builder_fac:erpnext_ec.utilities.doc_builder_fac.build_doc_fac"
         ],
         "filters": [
 
         ]
-}
+    }
 
 # Installation
 # ------------
@@ -283,15 +291,6 @@ doc_events = {
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
-
-
-is_frappe_above_v14 = int(frappe_version.split('.')[0]) > 14
-is_frappe_above_v13 = int(frappe_version.split('.')[0]) > 13
-is_frappe_above_v12 = int(frappe_version.split('.')[0]) > 12
-
-#print(is_frappe_above_v13)
-#print(is_frappe_above_v12)
-#print(is_frappe_above_v14)
 
 #app_include_js = [
 #    'better_list_view.bundle.js'
