@@ -260,7 +260,7 @@
 
 </style>
 
-{% set doc_build = doc_builder_fac(doc.name) %}
+{% set doc_build = build_doc_fac(doc.name) %}
 
 <div class="page-header">
     <p></p>
@@ -460,7 +460,7 @@
                             <tbody>
                                 <tr>
                                     <td class="subsection-title" colspan="2">Pagos</td>
-                                </tr>
+                                </tr>                                
                                 {% for payment in doc_build.pagos %}
                                     <tr>
                                         <td style="text-align: center;">F. Pago</td>

@@ -115,16 +115,17 @@ def get_payments_sri(doc_name):
 #devolver formaPago, plazo, total
 def build_pagos(paymentResults):
     pagos = []
-    for paymentEntry in paymentResults:
-        mode_of_payment = frappe.get_all('Mode of Payment', fields='*', filters = { 'name': paymentEntry.mode_of_payment })
-        if(mode_of_payment):
-            pago_item = {}
-            pago_item['formaPago'] = mode_of_payment[0].formapago
-            pago_item['formaPagoDescripcion'] = mode_of_payment[0].name
-            pago_item['plazo'] = 5
-            pago_item['unidadTiempo'] = 'dias'
-            pago_item['total'] = paymentEntry.paid_amount            
-            pagos.append(pago_item)
+    if paymentResults:
+        for paymentEntry in paymentResults:
+            mode_of_payment = frappe.get_all('Mode of Payment', fields='*', filters = { 'name': paymentEntry.mode_of_payment })
+            if(mode_of_payment):
+                pago_item = {}
+                pago_item['formaPago'] = mode_of_payment[0].formapago
+                pago_item['formaPagoDescripcion'] = mode_of_payment[0].name
+                pago_item['plazo'] = 5
+                pago_item['unidadTiempo'] = 'dias'
+                pago_item['total'] = paymentEntry.paid_amount            
+                pagos.append(pago_item)
     return pagos
 
 def get_full_company_sri(def_company):

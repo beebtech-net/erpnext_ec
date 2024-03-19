@@ -98,6 +98,7 @@ is_frappe_above_v12 = int(frappe_version.split('.')[0]) > 12
 # Jinja
 # ----------
 if(is_frappe_above_v13):
+#if(True):
     #Frappe >=14
     # add methods and filters to jinja environment
     jinja = {
@@ -110,23 +111,22 @@ if(is_frappe_above_v13):
         #"filters": "erpnext_ec.utils.jinja_filters"
     }
 
-#if(is_frappe_above_v13 and not is_frappe_above_v14):
-if(True):
+if(is_frappe_above_v13 and not is_frappe_above_v14):
+#if(False):
     from erpnext_ec.utilities.doc_builder_fac import build_doc_fac 
 
     #Frappe <=13
     jenv = {
         "methods": [
-            "doc_builder_fac:erpnext_ec.utilities.doc_builder_fac.build_doc_fac"
+            "build_doc_fac:erpnext_ec.utilities.doc_builder_fac.build_doc_fac"
         ],
         "filters": [
-
         ]
     }
 
-def jenv_customizations(jenv):
+#def jenv_customizations(jenv):
     #    jenv.globals['build_doc_fac'] = build_doc_fac
-    print ("no usado")
+#    print ("no usado")
 
 
 # Installation
