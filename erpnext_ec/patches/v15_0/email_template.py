@@ -51,7 +51,7 @@ def create_email_template(doc_data, template_content):
 			"name": doc_data['name'],
 			"use_html": True,
 			"subject":"EMAIL YUO",
-			"use_html": template_content
+			"response_html": template_content
 		}
 
     # Crea un nuevo documento Client Script usando el ORM de Frappe
