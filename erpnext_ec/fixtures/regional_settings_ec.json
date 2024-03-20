@@ -5,7 +5,7 @@
     "id": 1,
     "usuario": "Desarrollo",
     "password":"",
-    "url_server_beebtech": "https://192.168.56.1:7037/api/v2",
+    "url_server_beebtech": "http://127.0.0.1:3044/api/v2",
     "server_timeout": 30
   }
 ]

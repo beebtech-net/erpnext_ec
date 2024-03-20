@@ -1,0 +1,533 @@
+@using System;
+@using System.Text.Json;
+@using System.Text.RegularExpressions;
+@using System.Globalization;
+<html>
+<head>
+    <style>
+        body {
+            font-family: sans-serif;
+            font-size: 10pt;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .round-box {
+            height: 1in;
+            margin: 0pt;
+            border: 0.1em solid;
+            border-color: #000;
+            border-radius: 0.3em 0.3em 0.3em 0.3em;
+            font-size: 8pt;
+            padding-left: 8px;
+            padding-right: 8px;
+            padding-top: 2px;
+            padding-bottom: 1px;
+        }
+
+        .card-box {
+            height: 1in;
+            margin: 0pt;
+            border: 0.1em solid;
+            background-color: #f7f7f7;
+            /*border-color: #000;*/
+            border-radius: 0.3em 0.3em 0.3em 0.3em;
+            font-size: 8pt;
+            padding-left: 8px;
+            padding-right: 8px;
+            padding-top: 2px;
+            padding-bottom: 1px;
+        }
+
+        p {
+            page-break-after: always;
+        }
+
+        .footer {
+            /*position: fixed;*/
+            /*bottom: 5px;*/
+            /*padding-bottom: 10px;*/
+            position: running(footer);
+        }
+
+        @@page {
+                @@bottom-center {
+                    content: element(footer);
+                }
+            }
+
+        .pagenum:before {
+            content: counter(page);
+        }
+
+        a {
+            color: blue !important;
+            text-decoration: underline;
+            cursor: auto;
+        }
+
+        .tabdetalle {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            font-size: 1.3em;
+        }
+
+        .tabdetalle td, .tabdetalle th {
+            border: 1px solid #000;
+            padding: 8px;
+            font-size: 0.7em;
+        }
+
+        .tabdetalle tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .tabdetalle tr:hover {
+            background-color: #ddd;
+        }
+
+        .tabdetalle th {
+            font-weight: bold;
+            font-size: 0.7em;
+            padding-top: 3px;
+            padding-bottom: 3px;
+            text-align: left;
+            background-color: #ddd;
+            color: #000;
+        }
+
+        .infoAdicional {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            font-size: 1.3em;
+            margin: 10px;
+        }
+
+            .infoAdicional td, .infoAdicional th {
+                border: 1px solid #000;
+                padding: 8px;
+                font-size: 0.7em;
+            }
+
+            .infoAdicional tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+
+            .infoAdicional tr:hover {
+                background-color: #ddd;
+            }
+
+            .infoAdicional th {
+                font-weight: bold;
+                font-size: 0.7em;
+                padding-top: 3px;
+                padding-bottom: 3px;
+                text-align: left;
+                background-color: #ddd;
+                color: #000;
+            }
+
+        .summary-title-top {
+            text-align: left;
+            border-left: none;
+            border-right: none;
+            border-bottom: 0.1pt solid;
+            border-top: 2px solid;
+            border-top-width: medium;
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            font-size: 1em;
+            font-weight: bold;
+        }
+
+        .summary-data-top {
+            text-align: right;
+            padding-right: 3px;
+            border-right: none;
+            border-bottom: 0.1pt solid;
+            border-top: 2px solid;
+            border-top-width: medium;
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            font-size: 1em;
+            font-weight: bold;
+        }
+
+        .summary-title {
+            text-align: left;
+            border-right: none;
+            border-bottom: 0.1pt solid;
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            font-size: 0.9em;
+        }
+
+        .summary-data {
+            text-align: right;
+            padding-right: 3px;
+            border-right: none;
+            border-bottom: 0.1pt solid;
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            font-size: 0.9em;
+        }
+
+        .summary-title-bottom {
+            text-align: left;
+            border-right: none;
+            border-bottom: 0.1pt solid;
+            border-bottom-width: medium;
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            font-size: 1.0em;
+            font-weight: bold;
+        }
+
+        .summary-data-bottom {
+            text-align: right;
+            padding-right: 3px;
+            border-right: none;
+            border-bottom: 0.1pt solid;
+            border-bottom-width: medium;
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            font-size: 1.0em;
+            font-weight: bold;
+        }
+
+        #body {
+            width: 820px;
+        }
+
+        @@media print { body { -webkit-print-color-adjust: exact; } }
+
+    </style>
+</head>
+@{
+    string specifier = "0.00";
+    CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
+    
+    JsonElement infoAdicional = new JsonElement();
+    if (!(Model.infoAdicional is DBNull) && Model.infoAdicional != "")    
+    {
+        infoAdicional = JsonSerializer.Deserialize<dynamic>(Model.infoAdicional);
+    }
+
+    double TotalRetencion = 0;
+
+    Dictionary<string, string> formasPago = new Dictionary<string, string>();
+    formasPago.Add("01", "SIN UTILIZACION DEL SISTEMA FINANCIERO");
+    formasPago.Add("15", "COMPENSACIÓN DE DEUDAS");
+    formasPago.Add("16", "TARJETA DE DÉBITO");
+    formasPago.Add("17", "DINERO ELECTRÓNICO");
+    formasPago.Add("18", "TARJETA PREPAGO");
+    formasPago.Add("19", "TARJETA DE CRÉDITO");    
+    formasPago.Add("20", "OTROS CON UTILIZACION DEL SISTEMA FINANCIERO");
+    formasPago.Add("21", "ENDOSO DE TÍTULOS");
+
+    string PhoneCli = "";
+
+    //Buscar telefono dentro de la informacionAdicional
+    foreach(var jsonItem in infoAdicional.EnumerateObject())
+    {
+        //jsonItem.Name
+        //jsonItem.Value
+        if(!(jsonItem.Value is DBNull))
+        {
+            string itemValue = jsonItem.Value.ToString();
+            bool includesPhone = Regex.IsMatch(itemValue, "[0-9]{7,}");
+            if(includesPhone)
+            {
+                PhoneCli = jsonItem.Value.ToString();
+                break;
+            }
+        }
+    }
+}
+<body>
+    <div id="body">
+        
+        <table style="font-size: 8pt;width:86%;" cellspacing="0">
+            <tr>
+                <td align="center" valign="middle" style="width: 50%;vertical-align:bottom">
+                    <table style="width: 100%;" cellspacing="0">
+                        <tr>
+                            <td>
+                                <table style="height:150px">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <h1>Raul Borbor</h1>
+                                                <img src="../wwwroot/resources/img/Logo-Raul-Borbor-min.png" width="200px"/>
+                                                <p>@System.AppContext.BaseDirectory</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align:bottom">
+                                <table class="round-box" style="width:100%;" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td valign="top" style="width:310px;font-size: 10pt;"><strong>@Model.razonSocial</strong></td>
+                                    </tr>
+                                    <!--
+                                    <tr>
+                                        <td>@Model.nombreComercial</td>
+                                    </tr>
+                                    -->
+                                    <tr>
+                                        <td align="left"><strong>RUC:</strong>&nbsp;&nbsp;&nbsp;@Model.ruc</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Direcci&oacute;n Matriz:</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td height="30px" valign="top">@Model.dirMatriz</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>CONTRIBUYENTE ESPECIAL</strong></td>
+                                    </tr>
+                                    <tr>
+                                    @if(Model.contribuyenteEspecial == "000")
+                                    {
+                                        <td><strong>NO</strong></td>
+                                    }
+                                    else
+                                    {
+                                        <td><strong>@Model.contribuyenteEspecial</strong></td>
+                                    }
+                                    </tr>
+                                    <tr>
+                                        <td><strong>OBLIGADO A LLEVAR CONTABILIDAD</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>@Model.obligadoContabilidad</strong></td>
+                                    </tr>
+                                    @if(Model.contribuyenteRimpe)
+                                    {
+                                    <tr>
+                                        <td><strong>CONTRIBUYENTE RÉGIMEN MICROEMPRESA</strong></td>
+                                    </tr>
+                                    }
+                                    
+                                    @if (!(Model.agenteRetencion is DBNull) && Model.agenteRetencion != "")
+                                    {
+                                    <tr>
+                                        <td><strong>Agente de Retenci&oacute;n Resoluci&oacute;n No.</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>@Model.agenteRetencion</strong></td>
+                                    </tr>
+                                    }
+                                </table>
+                            </td>
+
+                        </tr>
+                    </table>
+                </td>
+                <td style="width:50%">
+                    <table cellspacing="0" class="round-box" style="width:100%;">
+                        
+                        <tr>
+                            <td align="center" style="font-size: 13pt;"><strong>R E T E N C I Ó N:</strong></td>
+                        </tr>
+                        <tr>
+                            <td align="left"><strong>No.:</strong>&nbsp;&nbsp;&nbsp;@Model.estab-@Model.ptoEmi-@Model.secuencial.ToString().PadLeft(9, '0')</td>
+                        </tr>
+                        <tr>
+                            <td align="center"><strong>N&Uacute;MERO DE AUTORIZACI&Oacute;N</strong></td>
+                        </tr>
+                        <tr>
+                            <td align="center"><strong>@Model.claveAcceso</strong></td>
+                        </tr>
+                        <tr>
+                            <td align="center" style="font-size:9px">CLAVE DE ACCESO</td>
+                        </tr>
+                        <tr>
+                            <td align="center">
+                                <img src="data:image/jpeg;base64,@Model.claveAccesoB64" width="320" height="12" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" style="font-size: .9em;font-weight: bold;font-family:helvetica;">
+                                @Model.claveAcceso
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="written_field" style="padding-left: 2.5in;font-size:.1em;">&nbsp;</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>
+                                <table width="100%" cellspacing="0" style="font-size: 8pt;" padding="0">
+                                    <tr>
+                                        <td colspan="2">
+                                            <table style="width:100%;font-size: 8pt;" padding="0" cellspacing="0">
+                                               
+                                                <tr>
+                                                    <td align="left"><strong>AMBIENTE:</strong></td>
+                                                    @switch(@Model.ambiente)
+                                                    {
+                                                        case 1:
+                                                            <td align="left">PRUEBA</td>
+                                                        break;
+                                                        case 2:
+                                                            <td align="left">PRODUCCI&Oacute;N</td>
+                                                        break;
+                                                    }
+                                                    
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size:7px"><strong>FEC./HORA DE AUTOR.:</strong></td>
+                                        <td align="right" style="font-size:7px"><strong>@Model.fechaAutorizacion</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size:7px" colspan="2"><strong>EMISI&Oacute;N:</strong>&nbsp;&nbsp;&nbsp;NORMAL</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size:7px">&nbsp;</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+            </tr>
+        </table>
+
+        <table class="card-box" style="width: 86%" cellspacing="0">
+            <tbody>
+                <tr>
+                    <td style=""><strong>Razón Social:</strong></td>
+                    <td style="">@Model.razonSocialComprador</td>
+                    <td style="">RUC/CI:</td>
+                    <td style="">@Model.identificacionComprador</td>
+                </tr>
+                <tr>
+                    <td style="">Dirección:</td>
+                    <td style="">@Model.direccionComprador</td>
+                    <td style="">Teléfono:</td>
+                    <td style="">@PhoneCli</td>
+                </tr>
+                <tr>
+                    <td style="">Fecha Emisión:</td>
+                    <td style="">@Model.fechaEmision.ToString("dd/MM/yyyy")
+                    <strong>Ejercicio Fiscal:</strong>
+                    @Model.fechaEmision.ToString("MM/yyyy")</td>
+                    <td style="">Email:</td>
+                    <td style="">@Model.email</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="tabdetalle" style="width: 86%" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th style="width:50px;text-align: center;">Comprobante</th>
+                    <th style="width:50px;text-align: center;">Número</th>
+                    <th style="width:50px;text-align: center;">Fec.Emi.</th>
+                    <th style="width:60px;text-align: center;">Base Imp. para la ret.</th>
+                    <th style="width:40px;text-align: center;">Impuesto</th>
+                    <th style="width:60px;text-align: center;">Código</th>
+                    <th style="width:60px;text-align: center;">Porcentaje Retención</th>
+                    <th style="width:60px;text-align: center;">Valor Retenido</th>
+                </tr>
+                @foreach (var item in Model.taxes)
+                {
+                    double itemTotal = 0;
+
+                    //if (!(item.cantidad is DBNull) && !(item.precioUnitario is DBNull) && !(item.descuento is DBNull))
+                    //{
+                    //    itemTotal = Convert.ToDouble(item.cantidad) * (Convert.ToDouble(item.precioUnitario) - Convert.ToDouble(item.descuento));
+                    //}
+                    <tr>
+                        <td style="padding-left:3px;">FACTURA</td>
+                        <td style="padding-left:3px;">@Model.numDocSustento</td>
+                        <td style="text-align: center;">@Model.fechaEmisionDocSustento.ToString("dd/MM/yyyy")</td>
+                        <td style="text-align: right;padding-right:3px;">$@item.baseImponible.ToString(specifier, culture)</td>
+                        <td style="text-align: center;">RENTA/IVA</td>
+                        <td style="text-align: center;">@item.codigoRetencion</td>
+                        <td style="text-align: right;padding-right:3px;">@item.tasa.ToString(specifier, culture)</td>
+                        <td style="text-align: right;padding-right:3px;">$@item.valor.ToString(specifier, culture)</td>
+                    </tr>
+
+                    
+                        double baseImponible = 0;
+                        if (!(item.baseImponible is DBNull))
+                        {
+                            baseImponible = Convert.ToDouble(item.baseImponible);
+                        }
+                        
+                        //double.TryParse(item.baseImponible.ToString()), out baseImponible);
+                        
+                        TotalRetencion += baseImponible;
+                                       
+                }
+            </tbody>
+        </table>
+
+        <table border="0" cellpadding="0" cellspacing="0" style="width: 86%">
+            <tbody>
+                <tr>
+                    <td style="width:50%">
+                        @if(!(Model.pagos is DBNull) && Model.pagos.Count > 0)
+                        {
+                        <table class="infoAdicional">
+                            <tbody>
+                                <tr>
+                                    <td style="text-align: center;" colspan="2">Pagos</td>
+                                </tr>                           
+                            
+                            @foreach(var jsonItem in Model.pagos)
+                            {
+                                <tr>
+                                    <td style="text-align: center;">F. Pago</td>
+                                    <td style="text-align: center;font-size: 9px;">@formasPago[@jsonItem.formaPago]</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center;">Total</td>
+                                    <td style="text-align: center;">@jsonItem.total.ToString(specifier, culture)</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                        }
+
+                        <table class="infoAdicional" style="display:none;">
+                            <tbody>
+                                <tr>
+                                    <td style="text-align: center;" colspan="2">Informaci&oacute;n Adicional</td>
+                                </tr>                           
+                            
+                            @foreach(var jsonItem in infoAdicional.EnumerateObject())
+                            {
+                                <tr>
+                                    <td style="text-align: center;">@jsonItem.Name</td>
+                                    <td style="text-align: center;">@jsonItem.Value</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>                        
+                    </td>
+                    <td style="width:50%" valign="top">
+                        <table cellpadding="1" cellspacing="0" style="width:100%">
+                            <tbody>
+                                <tr>
+                                    <td class="summary-title-top">Total Retenido:</td>
+                                    <td class="summary-data-top">$ @TotalRetencion.ToString(specifier, culture)</td>
+                                </tr>                                  
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="footer">
+            <div style="display:none;">Consulte sus facturas en <a href="http://clientes.tusitioweb.com">http://clientes.tusitioweb.com</a></div>
+            <br>
+            P&aacute;gina: <span class="pagenum"></span>
+    </div>
+</body>
+</html>
