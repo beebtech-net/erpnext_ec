@@ -124,9 +124,9 @@ if(is_frappe_above_v13 and not is_frappe_above_v14):
         ]
     }
 
-#def jenv_customizations(jenv):
+def jenv_customizations(jenv):
     #    jenv.globals['build_doc_fac'] = build_doc_fac
-#    print ("no usado")
+    print ("no usado")
 
 
 # Installation

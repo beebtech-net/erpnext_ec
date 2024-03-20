@@ -602,7 +602,11 @@ def setSecuencial(doc, typeDocSri):
 		#Se asigna a la tabla de secuenciales
 
 		#Actualizar dato de secuencia
-		doc_sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'id': sequence_object[0].id })
+		#doc_sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'id': sequence_object[0].id })
+		doc_sequence_object = frappe.get_last_doc('Sri Sequence', 
+				filters = { 'company_id': company_object.name, 
+					  'sri_environment_lnk': company_object.sri_active_environment, 
+					  'sri_type_doc_lnk': typeDocSri })
 		doc_sequence_object.db_set('value', nuevo_secuencial)
 		return True
 	else:
@@ -633,6 +637,8 @@ def updateStatusDocument(doc, typeDocSri, response_json):
 				document_object.db_set('sri_estado', 200)
 				document_object.db_set('sri_response', response_json.data.autorizaciones.autorizacion[0].estado)
 				#fechaAutorizacion = parser.parse(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
+
+				print(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
 
 				fecha_con_zona = datetime.fromisoformat(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
 				# Eliminar la zona horaria
