@@ -97,7 +97,7 @@ is_frappe_above_v12 = int(frappe_version.split('.')[0]) > 12
 
 # Jinja
 # ----------
-if(is_frappe_above_v13):
+if(not is_frappe_above_v13):
 #if(True):
     #Frappe >=14
     # add methods and filters to jinja environment

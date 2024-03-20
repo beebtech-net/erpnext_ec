@@ -44,6 +44,7 @@ def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnex
 	template_name = ''	#email body template
 	template = ''
 	print_format_name = ''
+	email_subject = ''
 
 	#Python 3.6 incompatible
 	# match typeDocSri:
@@ -61,10 +62,13 @@ def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnex
 			doc_data = build_doc_fac(doc_name)
 			template_name = 'Factura SRI Body'
 			print_format_name = 'Factura SRI'
+			email_subject = 'Factura Electrónica {{}}'
 	elif typeDocSri == "GRS":
 			doc_data = build_doc_grs(doc_name)
+			email_subject = 'Guía de Remisión {{}}'
 	elif typeDocSri == "CRE":
 			doc_data = build_doc_cre(doc_name)
+			email_subject = 'Comprobante de Retención {{}}'
 			
 	templates = frappe.get_list('Email Template', fields = ['*'], filters = { 'name': template_name })
 
@@ -119,7 +123,7 @@ def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnex
 	#my_attachments = [frappe.attach_print(self.doctype, self.name, file_name=self.name)]
 
 	#var url = `${btApiServer}/api/Tool/AddToEmailQuote/${doc}?tip_doc=FAC&sitename=${sitenameVar}&email_to=${values.email_to}`;
-	sendmail(doc_data, recipients, 'TITULOOO', msg_template, attachments)	        
+	sendmail(doc_data, recipients, email_subject, msg_template, attachments)	        
 	pass
 
 
