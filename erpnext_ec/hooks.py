@@ -91,13 +91,15 @@ is_frappe_above_v14 = int(frappe_version.split('.')[0]) > 14
 is_frappe_above_v13 = int(frappe_version.split('.')[0]) > 13
 is_frappe_above_v12 = int(frappe_version.split('.')[0]) > 12
 
+frappe_version_int = int(frappe_version.split('.')[0])
+
 #print(is_frappe_above_v13)
 #print(is_frappe_above_v12)
 #print(is_frappe_above_v14)
 
 # Jinja
 # ----------
-if(not is_frappe_above_v13):
+if(frappe_version_int == 13):
 #if(True):
     #Frappe >=14
     # add methods and filters to jinja environment
@@ -111,7 +113,7 @@ if(not is_frappe_above_v13):
         #"filters": "erpnext_ec.utils.jinja_filters"
     }
 
-if(is_frappe_above_v13 and not is_frappe_above_v14):
+if(frappe_version_int > 13):
 #if(False):
     from erpnext_ec.utilities.doc_builder_fac import build_doc_fac 
 
