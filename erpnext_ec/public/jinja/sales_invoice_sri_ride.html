@@ -27,16 +27,27 @@
     
     .barcode{
         font-family: 'Libre Barcode 39', cursive;
-        font-size: 56px;
+        font-size: 16px;
         font-weight: 100;
-        /*transform: scaleY(5); */
+        transform: scaleY(5);
         transform-origin: top; /* Establece el punto de origen en la parte superior */
         white-space: nowrap; /* Evita que el texto se divida en varias líneas */
         /*background-color: red;*/
         max-height: 8px;
         overflow: hidden;
         position: relative;
-        letter-spacing: -10px;
+        letter-spacing: -2px;
+    }
+
+    .contenedor {
+      display: flex;
+      flex-direction: column;
+    }
+    .barra {
+      width: 50px; /* Ancho de cada barra */
+      height: 100px; /* Altura de cada barra */
+      background-color: black; /* Color de las barras */
+      margin-bottom: 2px; /* Espacio entre las barras */
     }
 
     .round-box {

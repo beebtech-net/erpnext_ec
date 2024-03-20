@@ -21,7 +21,7 @@ def execute():
 				  "custom_format": True,
 				  "print_format_type": "Jinja",
 				  "default_print_language":"es-EC",
-                  "source_path" : "sales_invoice_sri.html",
+                  "source_path" : "sales_invoice_sri_ride.html",
 				  "disabled": 0,
 				  "raw_printing": 0,
 			},					
