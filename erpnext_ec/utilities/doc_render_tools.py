@@ -11,10 +11,17 @@ def get_barcode_base64(string_code):
     code39 = barcode.get_barcode_class('code39')
     barcode_instance = code39(string_code, writer=ImageWriter(), add_checksum=False)
 
+    options = {
+        "text_distance": 0, 
+        "write_text": False,
+        'background': '#eaeaea' # #eaeaea
+        #'background': 'rgba(0, 0, 0, 0)'
+    }
+
     # Guardar como imagen en memoria
     buffer = BytesIO()
-    barcode_instance.write(buffer)
-    buffer.seek(0)
+    barcode_instance.write(buffer, options=options)
+    buffer.seek(0)   
 
     # Convertir la imagen a base64
     base64_image = base64.b64encode(buffer.read()).decode('utf-8')

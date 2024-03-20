@@ -12,43 +12,6 @@
         background-position: center;
         line-height: 0.1em;
     }
-    
-    .barcode-container-master {
-        position: relative;
-        height: 50px;
-        /*background-color: green;*/
-    }
-    
-    .barcode-container {
-        position: relative;
-        height: 48px;
-        padding-top: 5px;
-    }
-    
-    .barcode{
-        font-family: 'Libre Barcode 39', cursive;
-        font-size: 16px;
-        font-weight: 100;
-        transform: scaleY(5);
-        transform-origin: top; /* Establece el punto de origen en la parte superior */
-        white-space: nowrap; /* Evita que el texto se divida en varias líneas */
-        /*background-color: red;*/
-        max-height: 8px;
-        overflow: hidden;
-        position: relative;
-        letter-spacing: -2px;
-    }
-
-    .contenedor {
-      display: flex;
-      flex-direction: column;
-    }
-    .barra {
-      width: 50px; /* Ancho de cada barra */
-      height: 100px; /* Altura de cada barra */
-      background-color: black; /* Color de las barras */
-      margin-bottom: 2px; /* Espacio entre las barras */
-    }
 
     .round-box {
         font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -271,7 +234,7 @@
 
 </style>
 
-{% set doc_build = build_doc_fac(doc.name) %}
+{% set doc_build = build_doc_fac_with_images(doc.name) %}
 
 <div class="page-header">
     <p></p>
@@ -391,11 +354,9 @@
                         </tr>
                         <tr>
                             <td align="center" style="width:100%">
-                                <div class="barcode-container-master">
-                                    <div class="barcode-container">
-                                        <div class="barcode">{{doc_build.numeroautorizacion}}</div>
-                                    </div>
-                                </div>
+                                {% if doc_build.numeroautorizacion_img is not none %}
+                                    <img src="data:image/png;base64,{{doc_build.numeroautorizacion_img}}" width="220px" />
+                                {% endif %}
                             </td>
                         </tr>
                         <tr>
@@ -407,7 +368,6 @@
                 </td>
             </tr>
         </table>
-
 
         <table style="width:100%" cellspacing="0" cellpading="0">
             <tr>
