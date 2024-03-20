@@ -3,9 +3,6 @@ from frappe import __version__ as frappe_version
 import frappe
 import json
 import os
-#from frappe.utils import validate_email_address, split_emails
-#import click
-# from ec_extend.setup import after_install as setup
 
 def execute():
 	
@@ -19,11 +16,9 @@ def execute():
                   "module" : "Accounts",
 				  "standard": "No",
 				  "custom_format": True,
-				  "print_format_type": "Jinja",
-				  "default_print_language":"es-EC",
                   "source_path" : "sales_invoice_sri_email.html",
 				  "disabled": 0,
-				  "raw_printing": 0,
+				  "subject": "Factura Electrónica -",
 			},					
 	]
     
@@ -32,7 +27,7 @@ def execute():
 		with open(dir_path + "/../../public/jinja/" + script_item['source_path']) as f:			
 			data = f.read()
 			#data = data.replace('[DOCTYPE_CUSTOM_FORM_SRI]',script_item['doc_type'])
-		create_email_template(script_item, data)
+		#create_email_template(script_item, data)
 
 def create_email_template(doc_data, template_content):
 		
@@ -49,8 +44,8 @@ def create_email_template(doc_data, template_content):
 			"docstatus": 0,
 			"doctype": "Email Template",
 			"name": doc_data['name'],
-			"use_html": True,
-			"subject":"EMAIL YUO",
+			"use_html": 1,
+			"subject": doc_data['subject'],
 			"response_html": template_content
 		}
 
