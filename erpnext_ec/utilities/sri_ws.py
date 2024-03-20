@@ -608,6 +608,7 @@ def setSecuencial(doc, typeDocSri):
 					  'sri_environment_lnk': company_object.sri_active_environment, 
 					  'sri_type_doc_lnk': typeDocSri })
 		doc_sequence_object.db_set('value', nuevo_secuencial)
+		frappe.db.commit()
 		return True
 	else:
 		return False
@@ -640,7 +641,10 @@ def updateStatusDocument(doc, typeDocSri, response_json):
 
 				print(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
 
-				fecha_con_zona = datetime.fromisoformat(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
+				fecha_string = response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion
+				fecha_con_zona = datetime.datetime.strptime(fecha_string, "%Y-%m-%d %H:%M:%S")
+
+				#fecha_con_zona = datetime.fromisoformat(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
 				# Eliminar la zona horaria
 				fechaAutorizacion = fecha_con_zona.replace(tzinfo=None)
 
