@@ -27,7 +27,7 @@ def execute():
 		with open(dir_path + "/../../public/jinja/" + script_item['source_path']) as f:			
 			data = f.read()
 			#data = data.replace('[DOCTYPE_CUSTOM_FORM_SRI]',script_item['doc_type'])
-		#create_email_template(script_item, data)
+		create_email_template(script_item, data)
 
 def create_email_template(doc_data, template_content):
 		
@@ -38,8 +38,7 @@ def create_email_template(doc_data, template_content):
 	if resultData:
 		#resultData.remove()
 		frappe.delete_doc("Email Template", doc_data['name'])
-
-    # Define el documento Client Script en formato JSON
+    
 	client_script_data = {
 			"docstatus": 0,
 			"doctype": "Email Template",
@@ -48,13 +47,10 @@ def create_email_template(doc_data, template_content):
 			"subject": doc_data['subject'],
 			"response_html": template_content
 		}
-
-    # Crea un nuevo documento Client Script usando el ORM de Frappe
+    
 	new_client_script = frappe.get_doc(client_script_data)
-	new_client_script.insert()
-
-    # Guarda el documento
-	new_client_script.save()
+	#new_client_script.insert()
+	#new_client_script.save()
 
 	print("Instalando Email Template " + doc_data['name'])
     #add("Client Script","All", script_path)
