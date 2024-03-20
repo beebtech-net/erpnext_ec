@@ -45,11 +45,12 @@ def create_email_template(doc_data, template_content):
 			"name": doc_data['name'],
 			"use_html": 1,
 			"subject": doc_data['subject'],
-			"response_html": template_content
+			"response_html": template_content,
+			#"owner":""
 		}
     
 	new_client_script = frappe.get_doc(client_script_data)
-	#new_client_script.insert()
+	new_client_script.insert()
 	#new_client_script.save()
 
 	print("Instalando Email Template " + doc_data['name'])
