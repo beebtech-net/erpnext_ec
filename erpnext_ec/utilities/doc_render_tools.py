@@ -27,9 +27,8 @@ def get_barcode_base64(string_code):
     base64_image = base64.b64encode(buffer.read()).decode('utf-8')
 
     # Imprimir la cadena base64
-    print(base64_image)
+    #print(base64_image)
     return base64_image
-
 
 def get_barcode_svg(string_code):
     # Generar código de barras Code 39
@@ -40,6 +39,11 @@ def get_barcode_svg(string_code):
     svg_code = barcode_instance.render()
 
     # Imprimir el código SVG
-    print(svg_code)
+    #print(svg_code)
     return svg_code
+
+def get_img_base64(file_path):
+    
+    
+    return
 
