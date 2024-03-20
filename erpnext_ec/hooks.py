@@ -99,32 +99,32 @@ frappe_version_int = int(frappe_version.split('.')[0])
 
 # Jinja
 # ----------
-if(frappe_version_int == 13):
+#if(frappe_version_int == 13):
 #if(True):
     #Frappe >=14
     # add methods and filters to jinja environment
-    jinja = {
-        #"methods": "erpnext_ec.utils.jinja_methods",
-        "methods": [
-                    "erpnext_ec.utilities.doc_builder_fac",
-                    "erpnext_ec.utilities.doc_builder_cre",
-                    "erpnext_ec.utilities.doc_builder_grs",
-                    ]
-        #"filters": "erpnext_ec.utils.jinja_filters"
-    }
+jinja = {
+    #"methods": "erpnext_ec.utils.jinja_methods",
+    "methods": [
+                "erpnext_ec.utilities.doc_builder_fac",
+                "erpnext_ec.utilities.doc_builder_cre",
+                "erpnext_ec.utilities.doc_builder_grs",
+                ]
+    #"filters": "erpnext_ec.utils.jinja_filters"
+}
 
-if(frappe_version_int > 13):
+#if(frappe_version_int > 13):
 #if(False):
-    from erpnext_ec.utilities.doc_builder_fac import build_doc_fac 
+from erpnext_ec.utilities.doc_builder_fac import build_doc_fac 
 
-    #Frappe <=13
-    jenv = {
-        "methods": [
-            "build_doc_fac:erpnext_ec.utilities.doc_builder_fac.build_doc_fac"
-        ],
-        "filters": [
-        ]
-    }
+#Frappe <=13
+jenv = {
+    "methods": [
+        "build_doc_fac:erpnext_ec.utilities.doc_builder_fac.build_doc_fac"
+    ],
+    "filters": [
+    ]
+}
 
 def jenv_customizations(jenv):
     #    jenv.globals['build_doc_fac'] = build_doc_fac
