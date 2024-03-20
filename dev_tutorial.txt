@@ -50,6 +50,7 @@ bench migrate
 
 #Instalar
 bench pip install pycryptodome
+bench pip install python-barcode
 
 #MariaDB open connection
 CREATE USER 'root'@'%' IDENTIFIED BY 'root';
