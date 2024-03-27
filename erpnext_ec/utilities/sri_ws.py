@@ -38,6 +38,24 @@ from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
 
 @frappe.whitelist()
+def test_signaure(signature_doc):
+	print ("----")
+	print(signature_doc)
+	#Este metodo aun utiliza el api
+	doc_data = build_doc_fac('ACC-SINV-2024-00001')
+	#archivo XML de prueba
+	full_path_doc = '/opt/bench/frappe-bench/sites/principal/private/files/ACC-SINV-2024-00001.xml'
+	file = open(full_path_doc, "r")
+	doc_text = file.read()
+	file.close()
+	print(doc_text)
+
+	#doc_text = get_doc('ACC-SINV-2024-00001', 'FAC', 'xml', 'principal')
+	signed_xml = SriXmlData.action_sign(SriXmlData, doc_text, doc_data)
+	print(signed_xml)
+
+
+@frappe.whitelist()
 def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnext):
 
 	doc_data = []
@@ -240,8 +258,6 @@ def get_doc_blob(doc_name, typeDocSri, typeFile, siteName):
 			#test signature
 			#response.content
 			
-			#SriXmlData.action_sign(SriXmlData, response.content, doc)
-
 			frappe.local.response.filename = doc_name + "." + typeFile
 			frappe.local.response.filecontent = response.content
 			frappe.local.response.type = "download"
