@@ -44,7 +44,7 @@ class SriXmlData():
             key_pem = keypem_file.read().decode()
         return key_pem
 
-    def validate_password(self, sri_signature):
+    def validate_password_old(self, sri_signature):
         #print(sri_signature)
         full_path_p12 = '/opt/bench/frappe-bench/sites/principal/' + sri_signature.p12
         #full_path_p12 = '/opt/bench/frappe-bench/sites/principal/public/files/beebtech_0919826958001.p12'
@@ -110,7 +110,7 @@ class SriXmlData():
             raise SystemError(f"Error al validar, la contrasena es correcta? {e}")
         return True
     
-    def new_mode(self, sri_signature):
+    def validate_password(self, sri_signature):
 
         print(sri_signature.password)
         password_p12 = 'beebtech2022CB'
@@ -143,7 +143,7 @@ class SriXmlData():
         cert.flush()
         session = Session()
         session.cert = (cert.name, key.name)
-        return private_key
+        return private_key, certificate
 
     def get_sri_signature(self, doc):
         #sri_signature = frappe.get_all('Sri Environment', fields='*', filters={'name': doc.sri_active_environment})        
@@ -151,10 +151,10 @@ class SriXmlData():
 
         if(sri_signatures):
             sri_signature_object = sri_signatures[0]
-            #sri_signature_validated = self.validate_password(self, sri_signature_object)
-            sri_signature_validated = self.new_mode(self, sri_signature_object)
+            #sri_signature_validated = self.validate_password_old(self, sri_signature_object)
+            sri_signature_validated, p12 = self.validate_password(self, sri_signature_object)
             
-            return sri_signature_validated
+            return sri_signature_validated, p12
 
 
     def action_sign(self, xml_string_data, doc):
@@ -162,7 +162,8 @@ class SriXmlData():
             return randrange(100000, 999999)
 
         #digital_signature = self.get_sri_signature(doc)
-        digital_signature = self.get_sri_signature(self, doc)
+        digital_signature , p12 = self.get_sri_signature(self, doc)
+        
         print(digital_signature)
 
         # filecontent = base64.b64decode(digital_signature)
@@ -226,8 +227,11 @@ class SriXmlData():
         x509 = None
         # revisar si el certificado tiene la extension digital_signature activada
         # caso contrario tomar del listado de certificados el primero que tengan esta extension
-        x509_to_review = p12.get_certificate().to_cryptography()
+        # x509_to_review = p12.get_certificate().to_cryptography()
+        x509_to_review = p12
+        #print(x509_to_review)
         for exten in x509_to_review.extensions:
+            print(exten)
             if exten.oid._name == "keyUsage" and exten.value.digital_signature:
                 is_digital_signature = True
                 break
