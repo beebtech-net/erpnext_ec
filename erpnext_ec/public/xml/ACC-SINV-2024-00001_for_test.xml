@@ -1,0 +1,74 @@
+<factura xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="comprobante" version="1.0.0">
+  <infoTributaria>
+    <ambiente>1</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>BEEBTECH</razonSocial>
+    <nombreComercial>BEEBTECH STUDIOS</nombreComercial>
+    <ruc>0919826958001</ruc>
+    <claveAcceso>2902202401091982695800110010020000000011234567813</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>001</estab>
+    <ptoEmi>002</ptoEmi>
+    <secuencial>000000001</secuencial>
+    <dirMatriz>LINEA 1</dirMatriz>
+    <contribuyenteRimpe>CONTRIBUYENTE R?GIMEN RIMPE</contribuyenteRimpe>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>29/02/2024</fechaEmision>
+    <dirEstablecimiento>LINEA 1</dirEstablecimiento>
+    <obligadoContabilidad>NO</obligadoContabilidad>
+    <tipoIdentificacionComprador>05</tipoIdentificacionComprador>
+    <razonSocialComprador>CLIENTE DE PRUEBA</razonSocialComprador>
+    <identificacionComprador>0919826941</identificacionComprador>
+    <direccionComprador>DIRECCION LINEA 1 DIRECCION LINEA 2</direccionComprador>
+    <totalSinImpuestos>20</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>0</codigoPorcentaje>
+        <baseImponible>20</baseImponible>
+        <tarifa>12</tarifa>
+        <valor>2.40</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0</propina>
+    <importeTotal>22.40</importeTotal>
+    <moneda>DOLAR</moneda>
+    <placa>Placa</placa>
+    <pagos>
+      <pago>
+        <formaPago>01</formaPago>
+        <total>0</total>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>001</codigoPrincipal>
+      <codigoAuxiliar>001</codigoAuxiliar>
+      <descripcion>SERVICIO TECNOL?GICO</descripcion>
+      <cantidad>1.00</cantidad>
+      <precioUnitario>20.00</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>20.00</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="Unidad" valor="Und" />
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>0</codigoPorcentaje>
+          <tarifa>12</tarifa>
+          <baseImponible>20</baseImponible>
+          <valor>2.40</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="email">ronald.chonillo@gmail.com</campoAdicional>
+    <campoAdicional nombre="tel.">0992601015</campoAdicional>
+    <campoAdicional nombre="Doc. Ref.">ACC-SINV-2024-00001</campoAdicional>
+  </infoAdicional>
+</factura>

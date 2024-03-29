@@ -38,9 +38,9 @@ from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
 
 @frappe.whitelist()
-def test_signaure(signature_doc):
-	print ("----")
-	print(signature_doc)
+def test_signature(signature_doc):
+	#print ("----")
+	#print(signature_doc)
 	#Este metodo aun utiliza el api
 	doc_data = build_doc_fac('ACC-SINV-2024-00001')
 	#archivo XML de prueba
@@ -48,11 +48,70 @@ def test_signaure(signature_doc):
 	file = open(full_path_doc, "r")
 	doc_text = file.read()
 	file.close()
-	print(doc_text)
+	#print(doc_text)
 
 	#doc_text = get_doc('ACC-SINV-2024-00001', 'FAC', 'xml', 'principal')
-	signed_xml = SriXmlData.action_sign(SriXmlData, doc_text, doc_data)
-	print(signed_xml)
+	signed_xml = SriXmlData.sign_xml(SriXmlData, doc_text, doc_data, signature_doc)
+	#print(signed_xml)
+	return signed_xml
+
+@frappe.whitelist()
+def verify_signature(signature_doc):	
+	
+	#doc_text = get_doc('ACC-SINV-2024-00001', 'FAC', 'xml', 'principal')
+	private_key, p12 = SriXmlData.get_sri_signature(SriXmlData, signature_doc)
+	print(private_key)
+	print(p12)
+
+	#propietario = p12.subject.rfc4514_string() #certificado_decodificado.subject.rfc4514_string()
+	#fecha_emision = p12.not_valid_before #certificado_decodificado.not_valid_before
+	#fecha_expiracion = p12.not_valid_after
+
+	#print("Propietario:", propietario)
+	#print("Fecha de emisión:", fecha_emision)
+	#print("Fecha de expiración:", fecha_expiracion)
+
+	if(private_key is None and p12 is None):
+		return_object = {
+			"tax_id": "",
+			"issuer": "",
+			"thumbprint":"",
+			"subject": "",
+			"not_valid_before": "",
+			"not_valid_after":"",
+			"status": "fail"
+		}
+		return return_object 
+
+	tax_id = ""
+	x509_to_review = p12
+	for exten in x509_to_review.extensions:		
+		#print(exten)
+		#break
+		if(exten.value.oid.dotted_string=="1.3.6.1.4.1.37746.3.11"):			
+			#print(exten.value.value.decode())
+			#print(exten.value.oid)
+			tax_id = exten.value.value.decode()
+			break
+            #if exten.oid._name == "keyUsage" and exten.value.digital_signature:
+            #    is_digital_signature = True
+            #    break
+	
+	#print(p12.issuer.rfc4514_string())
+	#print(p12.issuer.human_friendly)
+
+	issuerName = p12.issuer.rfc4514_string()
+	
+	return_object = {
+		"tax_id": tax_id,
+		"issuer": issuerName,
+		"thumbprint":"",
+		"subject": p12.subject.rfc4514_string(),
+		"not_valid_before": p12.not_valid_before,
+		"not_valid_after":p12.not_valid_after,
+		"status": "success"
+	}
+	return return_object
 
 
 @frappe.whitelist()
@@ -135,8 +194,6 @@ def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnex
 	
 	if(pdf_attachment):
 		attachments.append(pdf_attachment[0])
-
-
 
 	#my_attachments = [frappe.attach_print(self.doctype, self.name, file_name=self.name)]
 

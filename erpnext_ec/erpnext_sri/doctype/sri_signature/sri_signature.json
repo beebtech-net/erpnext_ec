@@ -1,9 +1,9 @@
 {
  "actions": [],
- "autoname": "format:EXP-{YYYY}-{#####}",
+ "autoname": "format:SIG-{YYYY}-{#####}",
  "creation": "2023-12-21 01:27:30.810619",
  "doctype": "DocType",
- "document_type": "Document", 
+ "document_type": "Document",
  "show_name_in_global_search": 1,
  "engine": "InnoDB",
  "field_order": [
