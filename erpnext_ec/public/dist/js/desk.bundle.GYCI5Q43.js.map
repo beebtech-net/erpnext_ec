@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../../apps/erpnext_ec/erpnext_ec/public/js/utils/desk.bundle.js"],
+  "sourcesContent": ["console.log(\"SIPIS!\");\nsetTimeout(\n    async function () {\n\n        var buttonGroup = `<div class=\"dropdown show\" style=\"display: inline-block;\">\n  <a class=\"btn btn-secondary dropdown-toggle btn-xs\" href=\"#\" role=\"button\" id=\"dropdownMenuTopNavBar\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n  </a>\n  <div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"dropdownMenuTopNavBar\">\n    <a class=\"dropdown-item\" href=\"javascript:document.Website.DownloadXml(''); \"><i class=\"fa fa-file-code-o\" aria-hidden=\"true\"></i> Xml </a>\n    <a class=\"dropdown-item\" href=\"javascript:document.Website.DownloadPdf(''); \"><i class=\"fa fa-file-pdf-o\" aria-hidden=\"true\"></i> Pdf </a>\n    <a class=\"dropdown-item\" href=\"javascript:document.Website.ShowInfo(''); \"><i class=\"fa fa-info-circle\" aria-hidden=\"true\"></i> Ver informaci\u00F3n</a>\n  </div>\n</div>\n`;\n\n        $('.form-inline.fill-width.justify-content-end').after(buttonGroup);\n\n    }, 2000);\n\nconsole.log(\"YAPIS!\")"],
+  "mappings": ";;AAAA,UAAQ,IAAI,QAAQ;AACpB;AAAA,IACI,iBAAkB;AAEd,UAAI,cAAc;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAWlB,QAAE,6CAA6C,EAAE,MAAM,WAAW;AAAA,IAEtE;AAAA,IAAG;AAAA,EAAI;AAEX,UAAQ,IAAI,QAAQ;",
+  "names": []
+}

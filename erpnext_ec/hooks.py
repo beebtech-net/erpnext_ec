@@ -25,6 +25,7 @@ app_include_js = [
     "/assets/erpnext_ec/js/erpnext_ec.bundle.js",
 
     "/assets/erpnext_ec/js/libs/jsonTree/jsonTree.js",
+    "/assets/erpnext_ec/js/utils/desk.bundle.js",
 ]
 
 app_include_css = [

@@ -24,8 +24,7 @@ frappe.ui.form.on('Sri Signature', {
                     frappe.show_alert({
                         message: __(`Error al procesar firma:`),
                         indicator: 'red'
-                    }, 10);                    
-
+                    }, 10);
                 },
                 error: function(r) {
                     
@@ -57,7 +56,7 @@ frappe.ui.form.on('Sri Signature', {
                     {
                         if(r.message.status == "success")
                         {
-                            message_body = "issuer:" + r.message.issuer + '</br>' +
+                            var message_body = "issuer:" + r.message.issuer + '</br>' +
                             "tax_id:" + r.message.tax_id + '</br>' +
                             "not_valid_before:" + r.message.not_valid_before + '</br>' +
                             "not_valid_after:<span class='font-weight-bold'>" + r.message.not_valid_after + '</span></br>' ;
@@ -96,7 +95,7 @@ frappe.ui.form.on('Sri Signature', {
                                 message: __(`Error al procesar firma:` + r.message.status),
                                 indicator: 'red'
                             }, 10);
-                        }                        
+                        }
                     }
                     else
                     {
