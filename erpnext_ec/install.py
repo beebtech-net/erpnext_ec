@@ -4,10 +4,14 @@ import frappe
 import json
 import os
 #from frappe.utils import validate_email_address, split_emails
-
+from erpnext_ec.patches.v15_0.custom_fields import *
 
 import click
 # from ec_extend.setup import after_install as setup
+
+def before_install():
+	print('Eliminando columnas de datos del modo antiguo')
+	remove_old_columns()
 
 def after_install():
 	try:

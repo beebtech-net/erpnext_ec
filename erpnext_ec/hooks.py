@@ -136,7 +136,7 @@ def jenv_customizations(jenv):
 # Installation
 # ------------
 
-# before_install = "erpnext_ec.install.before_install"
+before_install = "erpnext_ec.install.before_install"
 #after_install = ["erpnext_ec.install.after_install","erpnext_ec.patches.client_scripts.execute"]
 after_install = ["erpnext_ec.install.after_install"]
 

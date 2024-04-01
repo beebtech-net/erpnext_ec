@@ -2,10 +2,6 @@ from __future__ import unicode_literals
 import frappe
 import os
 
-#def after_install():
-    # Llama a la función que agrega campos personalizados
-#    agregar_campos_personalizados()
-
 def execute():
     
     print('Sales Invoices Custom Fields')
