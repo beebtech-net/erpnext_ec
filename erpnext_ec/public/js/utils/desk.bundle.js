@@ -1,4 +1,4 @@
-/*
+
 console.log("SIPIS!");
 setTimeout(
     async function () {
@@ -19,4 +19,3 @@ setTimeout(
     }, 2000);
 
 console.log("YAPIS!")
-*/
