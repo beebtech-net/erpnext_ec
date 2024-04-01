@@ -1,3 +1,8 @@
+#POR AHORA OBSOLETO
+# YA NO SE USARA ESTE MODO PARA LA PERSONALIZACION DE 
+# LAS VISTAS
+# YA QUE FRAPPE SI PERMITE EL OVERRIDE POR MEDIO DEL HOOK
+
 from __future__ import unicode_literals
 from frappe import __version__ as frappe_version
 import frappe
