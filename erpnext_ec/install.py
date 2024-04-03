@@ -10,8 +10,9 @@ import click
 # from ec_extend.setup import after_install as setup
 
 def before_install():
-	print('Eliminando columnas de datos del modo antiguo')
-	remove_old_columns()
+	print('before_install')
+	#print('Eliminando columnas de datos del modo antiguo')
+	#remove_old_columns()
 
 def after_install():
 	try:

@@ -39,9 +39,29 @@
 		"is_group": 0,
 		"parent": "Retenciones Sri*",
 		"parent_account": "Retenciones Sri*",
-		"is_root": false,		
+		"is_root": false,
 		"root_type":"Liability",
 		"is_withhold_account": true,
 		"tax_rate": 10.00
+	},
+	{
+		"doctype": "Account",
+		"name": "VAT 15%",
+		"sricode": "2",
+		"sricodeper": "4",
+		"codigoretencion": "0",
+		"descripcionsri": null,
+		"is_withhold_account": 0,		
+		"account_name": "VAT 15%",
+		"account_number": "00015",
+		"is_group": 0,
+		"is_root": false,
+		"company": "{{company}}",
+		"root_type": "Liability",
+		"report_type": "Balance Sheet",
+		"account_currency": "USD",
+		"parent_account": "2300 - IMPUESTOS Y ARANCELES*",
+		"account_type": "Tax",
+		"tax_rate": 15
 	}
 ]

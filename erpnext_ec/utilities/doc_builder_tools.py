@@ -251,9 +251,9 @@ def get_full_customer_sri(def_customer):
         if customer_address_primary:
             customer_sri['customer_email_id']  = customer_address_primary.email_id
             customer_sri['customer_phone']  = customer_address_primary.phone
-            customer_sri['address_line1']  = customer_address_primary.address_line1
-            customer_sri['address_line2']  = customer_address_primary.address_line2
-            customer_sri['direccionComprador']  = customer_address_primary.address_line1 + ' ' + customer_address_primary.address_line2
+            customer_sri['address_line1']  = customer_address_primary.address_line1 if customer_address_primary.address_line1 is not None else ''
+            customer_sri['address_line2']  = customer_address_primary.address_line2 if customer_address_primary.address_line2 is not None else ''
+            customer_sri['direccionComprador']  = customer_sri['address_line1'] + ' ' + customer_sri['address_line2']
         else:
             customer_sri['customer_email_id']  = ''
             customer_sri['customer_phone']  = ''
@@ -408,9 +408,14 @@ def get_address_by_name(link_name, primary_address, link_doctype):
     if customer_address_primary:
         address_data['email_id']  = customer_address_primary.email_id
         address_data['phone']  = customer_address_primary.phone
-        address_data['address_line1']  = customer_address_primary.address_line1
-        address_data['address_line2']  = customer_address_primary.address_line2
-        address_data['direccion']  = customer_address_primary.address_line1 + ' ' + customer_address_primary.address_line2
+        #address_data['address_line1']  = customer_address_primary.address_line1
+        #address_data['address_line2']  = customer_address_primary.address_line2
+        #address_data['direccion']  = customer_address_primary.address_line1 + ' ' + customer_address_primary.address_line2
+
+        address_data['address_line1']  = customer_address_primary.address_line1 if customer_address_primary.address_line1 is not None else ''
+        address_data['address_line2']  = customer_address_primary.address_line2 if customer_address_primary.address_line2 is not None else ''
+        address_data['direccionComprador']  = address_data['address_line1'] + ' ' + address_data['address_line2']
+        
     else:
         address_data['email_id']  = ''
         address_data['phone']  = ''
