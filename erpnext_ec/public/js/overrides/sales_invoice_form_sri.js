@@ -8,5 +8,8 @@ frappe.ui.form.on(doctype_customized, {
         }
         
         SetFormSriButtons(frm, doctype_customized);
+      
+        //console.log(frm);
+        //console.log(frm.doctype_customized);
     },
 })

@@ -1,5 +1,4 @@
 
-console.log("SIPIS!");
 setTimeout(
     async function () {
         /*
@@ -28,11 +27,12 @@ setTimeout(
 
 //$('.form-inline.fill-width.justify-content-end').after(buttonGroup);
 
-      var buttonGroup = `<li class="nav-item dropdown dropdown-mobile show">      <button class="btn-reset nav-link text-muted" data-toggle="" aria-haspopup="true" aria-expanded="true" title="" data-original-title="Compania">       <span class="">        HOLA       </span>             </button>           </li>`;
+      var buttonGroup = `<li class="nav-item dropdown dropdown-mobile show">
+        <button class="btn-reset nav-link text-muted ellipsis" data-toggle="" aria-haspopup="true" aria-expanded="true" title="" data-original-title="Compania" style="max-width: 120px;">
+        <span class="ellipsis">${frappe.boot.sysdefaults.company}</span>
+        </button>
+        </li>`;
 
-      $('li.nav-item.dropdown.dropdown-notifications').before(buttonGroup);
-        
+      $('li.nav-item.dropdown.dropdown-notifications').before(buttonGroup);        
 
-    }, 2000);
-
-console.log("YAPIS!")
+}, 2000);

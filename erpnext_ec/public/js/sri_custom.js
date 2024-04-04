@@ -1,14 +1,51 @@
+function extractPageName(pageText) {
+    const separator = '/';
+    const parts = pageText.split(separator);
+    //const lastPart = parts[parts.length - 1];
+    
+    var middlePart = parts[0];
+
+    if(parts.length > 1)
+        middlePart = parts[1];
+
+    var name = middlePart;
+    
+    console.log((middlePart.split('-')));
+
+    if((middlePart.split('-')).length > 1)
+        name = middlePart.split('-')[1];
+
+    return name;
+}
+
 function get_current_doc_type()
 {
-    var properties_view = Object.getOwnPropertyNames(frappe.views.list_view);
-    var doctype_erpnext = properties_view[0];
+    //console.log(cur_page);
+    //console.log(cur_list);
+    var doctype_erpnext = '';
+
+    doctype_erpnext = extractPageName(cur_page.page.id);
+
+    //cur_tree
+
+    //Cuando es vista de formulario
+    //if (cur_frm != null && cur_frm != undefined)
+    //    doctype_erpnext = cur_frm.doctype;
+
+    //Cuando es vista de lista
+    //if (cur_list != null && cur_list != undefined)
+    //    doctype_erpnext = cur_list.doctype;
+
+    //Object.getOwnPropertyNames(frappe.views.formview)
+    //var properties_view = Object.getOwnPropertyNames(frappe.views.list_view);
+    //var doctype_erpnext = properties_view[0];
 
     //console.log(doctype_erpnext);
     //console.log(doc_name);
 
     //var sitenameVar = frappe.boot.sitename;
 
-    typeDocSri = '-';
+    var typeDocSri = '-';
 
     if(doctype_erpnext == 'Sales Invoice')
         typeDocSri = 'FAC';
@@ -16,6 +53,8 @@ function get_current_doc_type()
     if(doctype_erpnext == 'Delivery Note')
         typeDocSri = 'GRS';
 
+    //console.log([doctype_erpnext, typeDocSri]);
+    
     return [doctype_erpnext, typeDocSri];
 }
 

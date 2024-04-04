@@ -16,7 +16,7 @@
     "branch": "branch_002"
   },
   {
-		"name": "Branh-sri-estab",
+		"name": "Branch-sri-estab",
 		"parent": "Customize Form",
 		"parentfield": "fields",
 		"parenttype": "Customize Form",
@@ -61,6 +61,9 @@
 		"columns": 0,
 		"is_custom_field": 1,
 		"doctype": "Custom Field",
-		"dt": "Branch"
+		"dt": "Branch",
+		"oldname": "Branh-sri-estab",
+		"oldfieldname": "sri_estab",		
+		"oldfieldtype": "Link"
 	}
 ]

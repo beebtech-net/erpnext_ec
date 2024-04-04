@@ -50,9 +50,23 @@ function AccountSriBuild(listview) {
 }
 
 frappe.listview_settings['Account'] = {
-   refresh: function(listview) {
-       listview.page.add_inner_button('<i class="fa fa-file"></i> Crear datos SRI', function() {
-        AccountSriBuild(listview);
-       });;
-   },
+    onload: function (listview) {
+		var buttonObj = listview.page.add_inner_button('<i class="fa fa-file"></i> Crear datos SRI', function() {
+            AccountSriBuild(listview);
+           });
+        
+        //TODO: Para que no se oculte en pantalla pequeña se va a requerir 
+        // crear un metodo que construya un nuevo div
+        // con estilos propios, ya que el div donde se agregan los botones 
+        // tiene por defecto un estilo par ocultarse en pantallas pequeñas
+
+        //console.log(buttonObj);
+        //$(buttonObj).parent().removeClass('hidden-xs');
+        //$(buttonObj).parent().removeClass('hidden-md');
+	},
+   //refresh: function(listview) {
+   //    listview.page.add_inner_button('<i class="fa fa-file"></i> Crear datos SRI', function() {
+   //     AccountSriBuild(listview);
+   //    });
+   //},
 };
