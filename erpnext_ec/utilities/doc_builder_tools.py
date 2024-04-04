@@ -211,6 +211,37 @@ def get_full_customer_sri(def_customer):
         else:
             customer_sri['customer_name'] = doc.name
 
+
+        should_update_typeidtax = False
+
+        if len(doc.typeidtax) > 2:
+            print(doc.typeidtax[:2])
+            doc.typeidtax = doc.typeidtax[:2]
+            should_update_typeidtax = True        
+        
+        if len(doc.typeidtax) == 0:            
+            doc.typeidtax = '04'
+            #Cuando el campo typeidtax esta vacio
+            if(len(doc.tax_id) == 10):
+                #Se asumira que es CEDULA
+                doc.typeidtax = '05'
+            #if(len(doc.tax_id) == 13):
+                #Se asumira que es RUC
+            #    doc.typeidtax = '04'
+            
+            should_update_typeidtax = True
+        
+
+        #Se fuerza la actualizacion del dato del cliente
+        # para que tenga seleccionado un RUC o CEDULA
+        # ya que si el dato esta siendo migrado desde el modo viejo
+        # habran datos almacenados similares a 04 RUC (debe ser solo 04)
+        # o estará vacío
+        if (should_update_typeidtax):
+            document_for_update = frappe.get_last_doc('Customer', filters = { 'name': doc.name})
+            if(document_for_update):
+                document_for_update.db_set('typeidtax', doc.typeidtax)
+
         customer_sri['tipoIdentificacionComprador'] = doc.typeidtax
         customer_sri['customer_email_id']  = ''
         customer_sri['customer_phone']  = ''
