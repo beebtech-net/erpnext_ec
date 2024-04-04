@@ -445,7 +445,7 @@ def get_address_by_name(link_name, primary_address, link_doctype):
 
         address_data['address_line1']  = customer_address_primary.address_line1 if customer_address_primary.address_line1 is not None else ''
         address_data['address_line2']  = customer_address_primary.address_line2 if customer_address_primary.address_line2 is not None else ''
-        address_data['direccionComprador']  = address_data['address_line1'] + ' ' + address_data['address_line2']
+        address_data['direccion']  = address_data['address_line1'] + ' ' + address_data['address_line2']
         
     else:
         address_data['email_id']  = ''
