@@ -8,8 +8,6 @@ bench get-app https://github.com/frappe/erpnext --branch v15.10.3
 bench new-site frappedev
 bench use frappedev
 
-
-
 #ejecutar en modo desarrollo
 bench start
 

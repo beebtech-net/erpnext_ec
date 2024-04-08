@@ -122,9 +122,9 @@ def build_pagos(paymentResults):
                 pago_item = {}
                 pago_item['formaPago'] = mode_of_payment[0].formapago
                 pago_item['formaPagoDescripcion'] = mode_of_payment[0].name
-                pago_item['plazo'] = 5
+                pago_item['plazo'] = 0
                 pago_item['unidadTiempo'] = 'dias'
-                pago_item['total'] = paymentEntry.paid_amount            
+                pago_item['total'] = paymentEntry.grand_total #paymentEntry.paid_amount            
                 pagos.append(pago_item)
     return pagos
 
@@ -360,13 +360,64 @@ def get_full_supplier_sri(def_customer):
         return supplier_sri
 
 
-def get_full_items(doc_name):    
+def get_full_items(doc_name, doc_parent):
+
     items = frappe.get_all('Sales Invoice Item',
                            filters={'parent': doc_name},
                            fields=['*']
                         #    fields=['item_code', 'item_name', 'rate', 'qty', 'amount']
                                        )
+    
+    total_items_discount = 0
 
+    if (items):
+        for item in items:
+            item.impuestos = []
+            total_items_discount += item.discount_amount
+
+            #if(item.item_tax_template is None):
+            for itemOfTax in doc_parent.taxes:
+                if(not itemOfTax.item_wise_tax_detail is None):
+                    #print(itemOfTax.item_wise_tax_detail)
+                    json_item_wise_tax_detail = json.loads(itemOfTax.item_wise_tax_detail)
+                    #print(json_item_wise_tax_detail)
+                    key_item = list(json_item_wise_tax_detail.keys())[0]
+                    if(item.item_code == key_item):
+                        print(key_item)
+                        print(json_item_wise_tax_detail[key_item][0])
+                        item_impuesto_valor = json_item_wise_tax_detail[key_item][1]
+                        
+                        #TODO: Chequear la base imponible, posibles casos especiales
+                        new_tax_item = {                            
+                                "codigo": itemOfTax.sricode,
+                                "codigoPorcentaje": itemOfTax.codigoPorcentaje,
+                                "tarifa": itemOfTax.rate,
+                                "baseImponible": item.rate,
+                                "valor": item_impuesto_valor                            
+                        }
+
+                        item.impuestos.append(new_tax_item)
+                            
+                #if (not doc_parent.taxes_and_charges is None):
+                #    item["item_tax_template"] = doc_parent.taxes_and_charges 
+
+            #item_tax_rate = {"VAT - RSCV": 12.0}
+            #item_tax_template = Ecuador Tax - RSCV
+
+            #"item_tax_rate" :"{}",
+            #"item_tax_template" : null,
+            #<impuestos>
+            #<impuesto>
+            #<codigo>2</codigo>
+            #<codigoPorcentaje>0</codigoPorcentaje>
+            #<tarifa>12</tarifa>
+            #<baseImponible>20</baseImponible>
+            #<valor>2.40</valor>
+            #</impuesto>
+            #</impuestos>
+        
+        #Coloca el total de descuentos de los items en el documento padre
+        doc_parent.TotalDescuento = total_items_discount
     return items
 
 def get_full_items_delivery_note(doc_name):    
@@ -388,15 +439,23 @@ def get_full_taxes(doc_name):
         # print('CUENTAAAAAAAAAAAAA')
         # print(accountApi)
         #print(accountApi.sricode)
-        #print(accountApi.sricodeper)
+        #print(accountApi.codigoporcentaje)
         #print(taxItem)
 
         if accountApi.sricode:
             taxItem.sricode =  int(accountApi.sricode)
               
-        if accountApi.sricodeper:
-            taxItem.codigoPorcentaje = int(accountApi.sricodeper)
-            #taxItem.codigoPorcentaje = accountApi.sricodeper
+        if accountApi.codigoporcentaje:
+            taxItem.codigoPorcentaje = int(accountApi.codigoporcentaje)
+            #taxItem.codigoPorcentaje = accountApi.codigoporcentaje
+                
+        if accountApi.compute_label_sri:
+            taxItem.compute_label_sri = accountApi.compute_label_sri
+        else:
+            if taxItem.sricode == 2:
+                taxItem.compute_label_sri = "IVA " + str(int(accountApi.tax_rate)) + "%"
+
+        print(taxItem.compute_label_sri)
 
     return impuestos
 
@@ -541,7 +600,7 @@ def get_full_delivery_trips(doc):
 
         #print("delivery_stops")
         #print(delivery_stops)
-        # print(accountApi.sricodeper)
+        # print(accountApi.codigoporcentaje)
         delivery_tripItem.delivery_stops = delivery_stops
         
         #delivery_trip_driver = frappe.get_last_doc('Driver', filters={'name': delivery_tripItem.driver})
@@ -567,12 +626,12 @@ def get_full_taxes_withhold(doc_name):
         # print('CUENTAAAAAAAAAAAAA')
         # print(accountApi)
         # print(accountApi.sricode)
-        # print(accountApi.sricodeper)
+        # print(accountApi.codigoporcentaje)
 
         if accountApi.sricode:
             taxItem.sricode =  int(accountApi.sricode)
               
-        if accountApi.sricodeper:
-            taxItem.codigoPorcentaje = int(accountApi.sricodeper)
+        if accountApi.codigoporcentaje:
+            taxItem.codigoPorcentaje = int(accountApi.codigoporcentaje)
 
     return impuestos

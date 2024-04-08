@@ -1,0 +1,21 @@
+
+bench build --production
+bench build --apps frappe
+bench --site all show-config
+bench --site all show-config -f json
+bench --site all set-config maintenance_mode false
+
+sudo systemctl restart nginx
+
+#1
+bench setup supervisor
+sudo ln -s `pwd`/config/supervisor.conf /etc/supervisor/conf.d/frappe-bench.conf
+
+#2
+bench setup nginx
+sudo ln -s `pwd`/config/nginx.conf /etc/nginx/conf.d/frappe-bench.conf
+
+bench config dns_multitenant on
+
+sudo bench setup production frappe --yes
+sudo bench disable-production

@@ -48,7 +48,7 @@
 		"doctype": "Account",
 		"name": "VAT 15%",
 		"sricode": "2",
-		"sricodeper": "4",
+		"codigoporcentaje": "4",
 		"codigoretencion": "0",
 		"descripcionsri": null,
 		"is_withhold_account": 0,		
@@ -62,6 +62,7 @@
 		"account_currency": "USD",
 		"parent_account": "2300 - IMPUESTOS Y ARANCELES*",
 		"account_type": "Tax",
-		"tax_rate": 15
+		"tax_rate": 15,
+		"compute_label_sri": "IVA 15%"
 	}
 ]

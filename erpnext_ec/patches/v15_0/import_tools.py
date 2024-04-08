@@ -93,8 +93,8 @@ def update_data(DocTypeName, JsonPath):
             print(document_object)
             
             #Realiza modificaciones en la base solo si los datos no coinciden
-            if(not document_object.sricodeper == record["sricodeper"]):
-                document_object.db_set('sricodeper', record["sricodeper"])
+            if(not document_object.codigoporcentaje == record["codigoporcentaje"]):
+                document_object.db_set('codigoporcentaje', record["codigoporcentaje"])
 
             if(not document_object.sricode == record["sricode"]):
                 document_object.db_set('sricode', record["sricode"])           

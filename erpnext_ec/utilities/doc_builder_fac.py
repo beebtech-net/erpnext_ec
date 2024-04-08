@@ -29,13 +29,14 @@ def build_doc_fac(doc_name):
 
 	if docs:
 		doc = docs[0]
-		#print("ITEEEEMMMMSSSS")
-		doc.items = get_full_items(doc.name)
-		#print(doc.items)
-        
+		
 		doc.taxes = get_full_taxes(doc.name)
 		#print("TAXEEESSS")
 		#print(doc.taxes)
+  
+		#print("ITEEEEMMMMSSSS")
+		doc.items = get_full_items(doc.name, doc)
+		#print(doc.items)
 
 		#Datos completos de la compañia emisora
 		company_full = get_full_company_sri(doc.company)

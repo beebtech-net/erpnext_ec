@@ -15,7 +15,7 @@
 		"dt": "Account"
 	},
 	{
-		"name": "Account-sricodeper",
+		"name": "Account-codigoPorcentaje",
 		"parent": "Customize Form",
 		"parentfield": "fields",
 		"parenttype": "Customize Form",
@@ -23,7 +23,7 @@
 		"docstatus": 0,
 		"label": "Sri Codigo Porcentaje",
 		"fieldtype": "Data",
-		"fieldname": "sricodeper",
+		"fieldname": "codigoPorcentaje",
 		"inser_after": "sricode",
 		"is_custom_field": 1,
 		"doctype": "Custom Field",
@@ -39,7 +39,7 @@
 		"label": "Sri Codigo Retención",
 		"fieldtype": "Data",
 		"fieldname": "codigoretencion",
-		"inser_after": "sricodeper",
+		"inser_after": "codigoPorcentaje",
 		"is_custom_field": 1,
 		"doctype": "Custom Field",
 		"dt": "Account"
@@ -60,16 +60,31 @@
 		"dt": "Account"
 	},
 	{
-		"name": "Account-isretencion",
+		"name": "Account-compute-label-sri",
 		"parent": "Customize Form",
 		"parentfield": "fields",
 		"parenttype": "Customize Form",
 		"idx": 10,
 		"docstatus": 0,
+		"label": "Etiqueta Subtotal Sri",
+		"fieldtype": "Data",
+		"fieldname": "compute_label_sri",
+		"inser_after": "descripcionsri",
+		"is_custom_field": 0,
+		"doctype": "Custom Field",
+		"dt": "Account"
+	},
+	{
+		"name": "Account-isretencion",
+		"parent": "Customize Form",
+		"parentfield": "fields",
+		"parenttype": "Customize Form",
+		"idx": 11,
+		"docstatus": 0,
 		"label": "Es cuenta de Retención",
 		"fieldtype": "Check",
 		"fieldname": "is_withhold_account",
-		"inser_after": "codigoretencion",
+		"inser_after": "compute_label_sri",
 		"is_custom_field": 1,
 		"doctype": "Custom Field",
 		"dt": "Account"

@@ -4,11 +4,12 @@
 		"company": "{{company}}",
 		"account_name": "VAT*",
 		"codigoretencion": "0",
-		"sricodeper": "2",
+		"codigoporcentaje": "2",
 		"descripcionsri": "",
 		"sricode":"2",
 		"is_withhold_account": false,
 		"parent_account": "IMPUESTOS Y ARANCELES*",
-		"tax_rate": 12
+		"tax_rate": 12,
+		"compute_label_sri": "IVA 12%"
 	}
 ]

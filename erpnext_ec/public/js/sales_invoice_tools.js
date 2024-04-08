@@ -169,7 +169,7 @@ function PrepareDocument(doc_name)
 					//console.log(accountApi);
 					
 					taxItem.sricode = accountApi.sricode;
-					taxItem.codigoPorcentaje = accountApi.sricodeper;
+					taxItem.codigoPorcentaje = accountApi.codigoporcentaje;
 					
 				}
 				
