@@ -19,3 +19,7 @@ bench config dns_multitenant on
 
 sudo bench setup production frappe --yes
 sudo bench disable-production
+
+#Agregar el dominio del sitio por ejemplo beebtech.localhost
+#sudo nano /etc/hosts
+#Sino se hace esto, puede fallar la generacion de los PDF
