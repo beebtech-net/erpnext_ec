@@ -559,7 +559,7 @@ const Website = {
                     fieldname: 'email_to',
                     fieldtype: 'Data',
                     reqd: 1,
-                    default: 'ronald.chonillo@gmail.com'
+                    default: '@gmail.com'
                 },
                 {
                     label: 'Copia (cc)',
