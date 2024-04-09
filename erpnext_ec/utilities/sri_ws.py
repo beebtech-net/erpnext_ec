@@ -490,7 +490,7 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 
 	#print(url_server_beebtech)
 
-	is_simulation_mode = True
+	is_simulation_mode = False
 	
 	if(is_simulation_mode):
 		#Modo de simulación
