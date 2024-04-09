@@ -560,7 +560,7 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 		if(response.status_code == 400):
 			registerResponse(doc_data, typeDocSri, doctype_erpnext, response_json, response_xml_data_string)
 			if(response_json.data.numeroComprobantes is not None and int(response_json.data.numeroComprobantes) > 0):
-				if( 'ya estaba autorizada' in response_json.error):
+				if( not response_json.error is None and  'ya estaba autorizada' in response_json.error):
 					print ("correcto ya registrado previamente")
 					#Se simula que el proceso fue correcto para que los datos sean actualizados
 					response.status_code = 200
