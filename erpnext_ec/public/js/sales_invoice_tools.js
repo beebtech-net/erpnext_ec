@@ -271,9 +271,8 @@ function SendSalesInvoice(doc) {
     setTimeout(
         async function () {
 
-
-			var properties_view = Object.getOwnPropertyNames(frappe.views.list_view);
-			var doctype_erpnext = properties_view[0];
+			var doctype_erpnext = 'Sales Invoice';
+        	var typeDocSri = 'FAC';
 
 			console.log(doctype_erpnext);
             console.log(doc);
@@ -413,14 +412,6 @@ function SendSalesInvoice(doc) {
                         var docApi = frappe.get_doc('Sales Invoice', doc.name);
                         //console.log(docApi);
 						
-						typeDocSri = '-';
-
-						if(doctype_erpnext == 'Sales Invoice')
-							typeDocSri = 'FAC';
-				
-						if(doctype_erpnext == 'Delivery Note')
-							typeDocSri = 'GRS';
-
 						frappe.call({
 							method: "erpnext_ec.utilities.sri_ws.send_doc",
 							args: 

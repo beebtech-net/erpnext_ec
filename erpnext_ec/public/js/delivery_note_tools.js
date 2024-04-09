@@ -2,11 +2,11 @@ function SendDeliveryNote(doc) {
     setTimeout(
         async function () {
 
-			var properties_view = Object.getOwnPropertyNames(frappe.views.list_view);
-			var doctype_erpnext = properties_view[0];
-
-			console.log(doctype_erpnext);
-            console.log(doc);
+			//var doctype_erpnext = get_current_doc_type()[0];
+        	//var typeDocSri = get_current_doc_type()[1];
+			
+			var doctype_erpnext = 'Delivery Note';
+        	var typeDocSri = 'GRS';
 
             var sitenameVar = frappe.boot.sitename;
 			var customer_email_id = '';
@@ -142,16 +142,6 @@ function SendDeliveryNote(doc) {
                         //var docApi = frappe.get_doc('Sales Invoice', doc.name);
                         //console.log(docApi);
 						
-						//typeDocSri = '-';
-
-						//if(doctype_erpnext == 'Sales Invoice')
-						//	typeDocSri = 'FAC';
-				
-						//if(doctype_erpnext == 'Delivery Note')
-						//	typeDocSri = 'GRS';
-						
-						typeDocSri = 'GRS';
-
 						frappe.call({
 							method: "erpnext_ec.utilities.sri_ws.send_doc",
 							args: 
