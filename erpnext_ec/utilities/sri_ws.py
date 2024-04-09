@@ -719,7 +719,7 @@ def updateStatusDocument(doc, typeDocSri, response_json):
 				print(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
 
 				fecha_string = response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion
-				fecha_con_zona = datetime.strptime(fecha_string, "%Y-%m-%d %H:%M:%S")
+				fecha_con_zona = datetime.strptime(fecha_string, "%Y-%m-%dT%H:%M:%S")
 
 				#datetime.fromisoformat NO COMPATIBLE CON PYTHON 3.6
 				#fecha_con_zona = datetime.fromisoformat(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
