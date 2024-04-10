@@ -381,6 +381,9 @@ def get_full_items(doc_name, doc_parent):
             item.impuestos = []
             total_items_discount += item.discount_amount
 
+            item.precioUnitario = item.rate
+            item.precioUnitarioSinImpuestos = item.rate
+            
             #if(item.item_tax_template is None):
             for itemOfTax in doc_parent.taxes:
                 if(not itemOfTax.item_wise_tax_detail is None):
