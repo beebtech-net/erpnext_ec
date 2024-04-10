@@ -394,11 +394,11 @@ def get_full_items(doc_name, doc_parent):
                         item_impuesto_valor = json_item_wise_tax_detail[key_item][1]
                         
                         #TODO: Chequear la base imponible, posibles casos especiales
-                        new_tax_item = {                            
+                        new_tax_item = {
                                 "codigo": itemOfTax.sricode,
                                 "codigoPorcentaje": itemOfTax.codigoPorcentaje,
                                 "tarifa": itemOfTax.rate,
-                                "baseImponible": item.net_amount,
+                                "baseImponible": item.net_amount,  #base_amount, base_net_amount, qty * rate
                                 "valor": item_impuesto_valor                            
                         }
 
@@ -461,7 +461,11 @@ def get_full_taxes(doc_name):
             if taxItem.sricode == 2:
                 taxItem.compute_label_sri = "IVA " + str(int(accountApi.tax_rate)) + "%"
 
-        print(taxItem.compute_label_sri)
+        if (taxItem.total == taxItem.base_total):
+            taxItem.baseImponible = taxItem.base_total - taxItem.tax_amount
+        else:            
+            taxItem.baseImponible = taxItem.base_total
+        #print(taxItem.compute_label_sri)
 
     return impuestos
 
