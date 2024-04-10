@@ -540,7 +540,7 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 
 		print('Numero de respuesta')		
 		
-		print(json.loads(response.text))
+		print(response.text)
 
 		response_json = json.loads(response.text, object_hook=lambda d: SimpleNamespace(**d))
 		
