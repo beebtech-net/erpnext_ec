@@ -124,7 +124,9 @@ def build_pagos(paymentResults):
                 pago_item['formaPagoDescripcion'] = mode_of_payment[0].name
                 pago_item['plazo'] = 0
                 pago_item['unidadTiempo'] = 'dias'
-                pago_item['total'] = paymentEntry.grand_total #paymentEntry.paid_amount            
+                #pago_item['total'] = paymentEntry.grand_total
+                pago_item['total'] = paymentEntry.paid_amount 
+                print(paymentEntry)           
                 pagos.append(pago_item)
     return pagos
 
