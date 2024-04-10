@@ -44,6 +44,7 @@ def build_doc_fac(doc_name):
 		#print('Compañia')
 		#print(company_full)
 
+		doc.razonSocial = company_full['razonSocial'] #La razon social es el nombre normal de la empresa emisora
 		doc.nombreComercial = company_full['nombreComercial']
 		doc.company_name = doc.company
 		
@@ -54,12 +55,11 @@ def build_doc_fac(doc_name):
 		doc.obligadoContabilidad = company_full['obligadoContabilidad']
 		doc.agenteRetencion = company_full['agenteRetencion']
 		doc.contribuyenteEspecial = company_full['contribuyenteEspecial']
-		doc.ambiente = company_full['ambiente']
+		doc.ambiente = company_full['ambiente']		
 
 		#Datos completos del cliente
 		customer_full = get_full_customer_sri(doc.customer)
 		doc.customer_tax_id = customer_full['customer_tax_id']		
-		doc.RazonSocial = customer_full['customer_name']
 		doc.tipoIdentificacionComprador = customer_full['tipoIdentificacionComprador']
 		doc.direccionComprador = customer_full['direccionComprador']
 		customer_phone = customer_full['customer_phone']

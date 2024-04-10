@@ -145,8 +145,14 @@ def get_full_company_sri(def_company):
     #print(docs)
     
     if docs:
-        doc = docs[0]        
-        compania_sri['nombreComercial'] = doc.nombrecomercial
+        doc = docs[0]
+        compania_sri['razonSocial'] = doc.name
+        
+        if(not doc.nombrecomercial is None and not str.strip(doc.nombrecomercial) == ''):
+            compania_sri['nombreComercial'] = doc.nombrecomercial
+        else:
+            compania_sri['nombreComercial'] = doc.name
+
         compania_sri['ruc'] = doc.tax_id
         compania_sri['obligadoContabilidad'] = doc.obligadocontabilidad
         compania_sri['contribuyenteRimpe'] = doc.contribuyenterimpe
