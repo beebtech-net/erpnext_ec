@@ -35,6 +35,11 @@ function SendDeliveryNote(doc) {
             var docApi = frappe.get_doc('Delivery Note', doc.name);
             var data_alert = '<table>';
             //console.log(docApi);
+
+			//Dato de la compañia requerido por el API	
+			// frappe no lo obtiene por defecto en este doctype (Delivery Note)
+			doc.company = docApi.company;
+
             var documentIsReady = true;
 
             if (paymentsApi.length == 0 && paymentsEntryApi.length == 0) {

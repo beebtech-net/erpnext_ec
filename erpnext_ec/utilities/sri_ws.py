@@ -540,9 +540,10 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 
 		print('Numero de respuesta')		
 		
-		response_json = json.loads(response.text, object_hook=lambda d: SimpleNamespace(**d))
-
 		print(json.loads(response.text))
+
+		response_json = json.loads(response.text, object_hook=lambda d: SimpleNamespace(**d))
+		
 		#TODO: Conversión del XML para guardar en la base de datos es correcta, pero no agrega la declaracion:
 		# <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
