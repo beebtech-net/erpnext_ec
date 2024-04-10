@@ -398,7 +398,7 @@ def get_full_items(doc_name, doc_parent):
                                 "codigo": itemOfTax.sricode,
                                 "codigoPorcentaje": itemOfTax.codigoPorcentaje,
                                 "tarifa": itemOfTax.rate,
-                                "baseImponible": item.rate,
+                                "baseImponible": item.net_amount,
                                 "valor": item_impuesto_valor                            
                         }
 
