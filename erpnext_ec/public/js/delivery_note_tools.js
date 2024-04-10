@@ -193,7 +193,9 @@ function SendDeliveryNote(doc) {
 										indicator: 'green'
 									}, 5);
 
-									if(jsonResponse.error!==undefined && jsonResponse.error !== '')
+									//Se mostrará alerta de error en este nivel solamente si es que
+									// jsonResponse.error contiene información que deba ser mostrada
+									if(jsonResponse.error!==null && jsonResponse.error!==undefined && jsonResponse.error !== '')
 									{
 										var string_error = jsonResponse.error;
 										frappe.show_alert({
@@ -249,11 +251,11 @@ function SendDeliveryNote(doc) {
                     'Confirmar proceso de envío al SRI'
                 );
             }
-            else {
-
-				//Cuando la factura no esté correcta
+            else 
+			{
+				//Cuando no esté correcta
                 frappe.msgprint({
-                    title: __('Factura incompatible con el SRI'),
+                    title: __('Guía de Remisión incompatible con el SRI'),
                     indicator: 'red',
                     message: __(document_preview)
                 });
