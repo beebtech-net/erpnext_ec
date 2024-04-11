@@ -444,7 +444,7 @@ def get_full_items_delivery_note(doc_name):
 
     return items
 
-def get_full_taxes(doc_name):    
+def get_full_taxes(doc_name):
     
     impuestos = frappe.get_all('Sales Taxes and Charges', filters={'parent': doc_name}, fields=['*'])
     #    fields=['charge_type', 'account_head', 'tax_amount']
@@ -452,10 +452,10 @@ def get_full_taxes(doc_name):
     for taxItem in impuestos:
         accountApi = frappe.get_doc('Account', taxItem.account_head)
         # print('CUENTAAAAAAAAAAAAA')
-        # print(accountApi)
+        print(taxItem.rate)
         #print(accountApi.sricode)
         #print(accountApi.codigoporcentaje)
-        #print(taxItem)
+        print(accountApi.tax_rate)
 
         if accountApi.sricode:
             taxItem.sricode =  int(accountApi.sricode)
@@ -469,12 +469,19 @@ def get_full_taxes(doc_name):
         else:
             if taxItem.sricode == 2:
                 taxItem.compute_label_sri = "IVA " + str(int(accountApi.tax_rate)) + "%"
+            #se deberian agregar manualmente los otros tipos de impuestos
 
         if (taxItem.total == taxItem.base_total):
             taxItem.baseImponible = taxItem.base_total - taxItem.tax_amount
         else:            
             taxItem.baseImponible = taxItem.base_total
         #print(taxItem.compute_label_sri)
+
+        #print(accountApi.tax_rate)
+        
+        #TODO: Probablemente un bug en la version 13, no se ha replicado en la version 15
+        if (taxItem.rate == 0 and  taxItem.rate != accountApi.tax_rate):
+            taxItem.rate = accountApi.tax_rate
 
     return impuestos
 
