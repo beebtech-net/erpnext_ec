@@ -18,6 +18,13 @@ Erpnext Ecuador
 Aplicacion de ErpNext para Ecuador
 Permite habilitar los documentos electrónicos del SRI
 
+#### Refer & Earn
+My unique referral link Frappe Cloud for support us
+
+<a href="https://frappecloud.com/dashboard/signup?referrer=9961e30a">
+https://frappecloud.com/dashboard/signup?referrer=9961e30a
+</a>
+
 
 [RC 1.1]
 
