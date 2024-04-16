@@ -267,9 +267,54 @@ function PrepareDocument(doc_name)
 }
 
 
+function validationSri(doc)
+{
+	frappe.call({
+		method: "erpnext_ec.utilities.doc_validator.validate_sales_invoice",
+		args: 
+		{
+			doc_name: doc,			
+			freeze: false,
+			freeze_message: "Procesando documento, espere un momento.",
+			success: function(r) {},								
+			always: function(r) {},
+		},
+		callback: function(r) 
+		{
+			console.log(r);
+			
+			console.log(r.message.doctype_erpnext);
+			//jsonResponse = JSON.parse(r.message);
+			//console.log(jsonResponse);
+			
+			var data_alert = '<table>';
+
+			for(i=0; i < r.message.alerts.length; i++)
+			{
+				data_alert += document.Website.CreateAlertItem(r.message.alerts[i].description);
+			}
+
+			data_alert += '</table>'
+
+			console.log(data_alert);
+
+			if(r.message.documentIsReady)
+			{
+				
+			}
+		},
+		error: function(r) {
+			$(btnProcess).show();
+			$(btnProcess).parent().find('.custom-animation').remove();
+		},
+	});
+}
+
 function SendSalesInvoice(doc) {
     setTimeout(
         async function () {
+
+			validationSri(doc.name);
 
 			var doctype_erpnext = 'Sales Invoice';
         	var typeDocSri = 'FAC';

@@ -163,7 +163,7 @@ def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnex
 
 	attach_file_name = doc_data.estab + doc_data.ptoemi + f'{doc_data.secuencial:09d}'
 
-	attachments = []	
+	attachments = []
 	#Attach Zip with XMl
 	if(xml_responses):
 		

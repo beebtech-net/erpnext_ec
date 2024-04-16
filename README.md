@@ -24,7 +24,7 @@ My unique referral link Frappe Cloud for support us
 <a href="https://frappecloud.com/dashboard/signup?referrer=9961e30a">
 https://frappecloud.com/dashboard/signup?referrer=9961e30a
 </a>
-
+</br>
 
 [RC 1.1]
 
