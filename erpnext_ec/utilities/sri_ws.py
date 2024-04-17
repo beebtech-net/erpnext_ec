@@ -217,6 +217,9 @@ def get_info_doc(doc_name, typeDocSri, doctype_erpnext, siteName):
 	info_doc['responses'] = xml_responses
 	info_doc['doc_json'] = doc_json
 	#print(info_doc)
+	
+	#print(doc_json.estab + "-" + doc_json.ptoemi + "-" + '{:09d}'.format(doc_json.secuencial) )
+
 	return info_doc
 
 @frappe.whitelist()
@@ -538,7 +541,7 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 		#print(response)
 		#print(response.text)
 
-		print('Numero de respuesta')		
+		print('Numero de respuesta')
 		
 		print(response.text)
 
@@ -715,6 +718,8 @@ def updateStatusDocument(doc, typeDocSri, response_json):
 				document_object.db_set('numeroautorizacion', response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
 				document_object.db_set('sri_estado', 200)
 				document_object.db_set('sri_response', response_json.data.autorizaciones.autorizacion[0].estado)
+				document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
+
 				#fechaAutorizacion = parser.parse(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
 
 				print(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
@@ -751,6 +756,7 @@ def updateStatusDocument(doc, typeDocSri, response_json):
 				document_object.db_set('numeroautorizacion', response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
 				document_object.db_set('sri_estado', 200)
 				document_object.db_set('sri_response', response_json.data.autorizaciones.autorizacion[0].estado)
+
 				fechaAutorizacion = parser.parse(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
 				#fecha_con_zona = datetime.fromisoformat(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
 				# Eliminar la zona horaria
