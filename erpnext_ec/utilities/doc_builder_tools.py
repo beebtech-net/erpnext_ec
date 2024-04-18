@@ -393,25 +393,35 @@ def get_full_items(doc_name, doc_parent):
             #if(item.item_tax_template is None):
             for itemOfTax in doc_parent.taxes:
                 if(not itemOfTax.item_wise_tax_detail is None):
+                    
                     #print(itemOfTax.item_wise_tax_detail)
-                    json_item_wise_tax_detail = json.loads(itemOfTax.item_wise_tax_detail)
-                    #print(json_item_wise_tax_detail)
-                    key_item = list(json_item_wise_tax_detail.keys())[0]
-                    if(item.item_code == key_item):
-                        print(key_item)
-                        print(json_item_wise_tax_detail[key_item][0])
-                        item_impuesto_valor = json_item_wise_tax_detail[key_item][1]
-                        
-                        #TODO: Chequear la base imponible, posibles casos especiales
-                        new_tax_item = {
-                                "codigo": itemOfTax.sricode,
-                                "codigoPorcentaje": itemOfTax.codigoPorcentaje,
-                                "tarifa": itemOfTax.rate,
-                                "baseImponible": item.net_amount,  #base_amount, base_net_amount, qty * rate
-                                "valor": item_impuesto_valor                            
-                        }
 
-                        item.impuestos.append(new_tax_item)
+                    json_item_wise_tax_detail = json.loads(itemOfTax.item_wise_tax_detail)
+                    
+                    for key_item in list(json_item_wise_tax_detail.keys()):
+                        print("key_item")
+                        print (key_item)
+                    
+                        #print(json_item_wise_tax_detail)
+                        #key_item = list(json_item_wise_tax_detail.keys())[0]
+
+                        if(item.item_code == key_item):                            
+                            #print(key_item)
+                            #print(json_item_wise_tax_detail[key_item][0])
+                            item_impuesto_valor = json_item_wise_tax_detail[key_item][1]
+
+                            print(f'Encontrado {item.item_code} {item_impuesto_valor}')
+                            
+                            #TODO: Chequear la base imponible, posibles casos especiales
+                            new_tax_item = {
+                                    "codigo": itemOfTax.sricode,
+                                    "codigoPorcentaje": itemOfTax.codigoPorcentaje,
+                                    "tarifa": itemOfTax.rate,
+                                    "baseImponible": item.net_amount,  #base_amount, base_net_amount, qty * rate
+                                    "valor": item_impuesto_valor                            
+                            }
+
+                            item.impuestos.append(new_tax_item)
                             
                 #if (not doc_parent.taxes_and_charges is None):
                 #    item["item_tax_template"] = doc_parent.taxes_and_charges 
@@ -579,7 +589,7 @@ def get_full_delivery_trips(doc):
         #print(delivery_tripItem.against_sales_invoice)
         print(delivery_note_item.against_sales_invoice)
         main_against_sales_invoice = delivery_note_item.against_sales_invoice
-        docs_si = frappe.get_all('Sales Invoice', filters={"name": main_against_sales_invoice}, fields = ['*'])        
+        docs_si = frappe.get_all('Sales Invoice', filters={"name": main_against_sales_invoice}, fields = ['*'])
 
         if docs_si:
             #doc = docs[0]
