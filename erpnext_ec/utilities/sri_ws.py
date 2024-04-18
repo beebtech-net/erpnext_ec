@@ -718,7 +718,8 @@ def updateStatusDocument(doc, typeDocSri, response_json):
 				document_object.db_set('numeroautorizacion', response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
 				document_object.db_set('sri_estado', 200)
 				document_object.db_set('sri_response', response_json.data.autorizaciones.autorizacion[0].estado)
-				document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
+				#TODO: Corregir
+				#document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
 
 				#fechaAutorizacion = parser.parse(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
 
