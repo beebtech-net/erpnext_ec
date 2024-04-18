@@ -600,7 +600,8 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 				# frappe.db.commit()
 
 				if(response_json.data.autorizaciones.autorizacion[0].estado == "AUTORIZADO"):
-					updateStatusDocument(doc_object_build, typeDocSri, response_json)
+					#updateStatusDocument(doc_object_build, typeDocSri, response_json)
+	 				updateStatusDocument(doc_data, typeDocSri, response_json)
 
 		#api_url = "https://jsonplaceholder.typicode.com/todos/10"
 		#response = requests.get(api_url)
@@ -719,7 +720,7 @@ def updateStatusDocument(doc, typeDocSri, response_json):
 				document_object.db_set('sri_estado', 200)
 				document_object.db_set('sri_response', response_json.data.autorizaciones.autorizacion[0].estado)
 				#TODO: Corregir
-				#document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
+				document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
 
 				#fechaAutorizacion = parser.parse(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
 
@@ -757,6 +758,7 @@ def updateStatusDocument(doc, typeDocSri, response_json):
 				document_object.db_set('numeroautorizacion', response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
 				document_object.db_set('sri_estado', 200)
 				document_object.db_set('sri_response', response_json.data.autorizaciones.autorizacion[0].estado)
+				#document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
 
 				fechaAutorizacion = parser.parse(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
 				#fecha_con_zona = datetime.fromisoformat(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
