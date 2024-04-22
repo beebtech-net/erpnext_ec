@@ -462,7 +462,7 @@ def get_full_taxes(doc_name):
     for taxItem in impuestos:
         accountApi = frappe.get_doc('Account', taxItem.account_head)
         # print('CUENTAAAAAAAAAAAAA')
-        print(taxItem.rate)
+        print(taxItem)
         #print(accountApi.sricode)
         #print(accountApi.codigoporcentaje)
         print(accountApi.tax_rate)

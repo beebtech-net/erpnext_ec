@@ -101,6 +101,8 @@ function normalizeString(strSource) {
     return strResult;
 }
 
+const btApiServer = 'http://localhost:3003'; //
+
 const Website = {
     current_document_info: undefined,
 
@@ -768,7 +770,119 @@ const Website = {
 
         document.Website.DownloadFileBlob(doc, typeFile, siteName, typeDocSri, btnProcess);
 
-    },        
+              
+        
+    },
+    DownloadFile_Obsolete(doc, typeFile, siteName, doctype_erpnext)
+    {
+        typeDocSri = '-';
+
+        if(doctype_erpnext == 'Sales Invoice')
+            typeDocSri = 'FAC';
+
+        if(doctype_erpnext == 'Delivery Note')
+            typeDocSri = 'GRS';
+
+        if(doctype_erpnext == 'Purchase Withholding Sri Ec')
+            typeDocSri = 'CRE';
+        
+        console.log(doc);
+        console.log(typeDocSri);
+        console.log(typeFile);
+        console.log(siteName);
+
+        if(typeFile == 'pdf')
+        {
+            document.Website.DownloadFileBlob(doc, typeFile, siteName, typeDocSri);
+            return;
+        }
+
+        var btnProcess = $('div.dropdown[data-name="' + doc + '"]');
+        //Oculta el botón
+        $(btnProcess).hide();
+        //Muestra animación de carga
+        $(btnProcess).after(document.Website.loadingAnimation);
+
+        frappe.call({
+            method: "erpnext_ec.utilities.sri_ws.get_doc",
+            args: {
+                doc_name: doc,
+                typeDocSri: typeDocSri,
+                typeFile: typeFile,
+                siteName: siteName
+                //freeze: true,
+                //freeze_message: "Procesando documento, espere un momento.",                
+            },
+            success: function(r) {
+                console.log('success');
+                console.log(r);
+            },                
+            always: function(r) {
+                //console.log("siempre!!");
+                $(btnProcess).show();
+                $(btnProcess).parent().find('.custom-animation').remove();
+            },
+            error: function(r) {
+
+                console.log('error');
+                console.log(r);
+
+                frappe.show_alert({
+                    //message: __(`Error al procesar documento ${doc}:` + req.statusText + ":" + req.responseText),
+                    message: __(`Error al procesar descarga del documento ${doc}:`),
+                    indicator: 'red'
+                }, 5);
+            },
+            callback: function(r) 
+            {
+                console.log(r.message);
+                console.log(r.message.length);
+                
+                var fileNameForDownload = doc + `.${typeFile}`;
+
+                if(r != undefined && r.message != undefined && r.message != "")
+                {   
+                    //Se convierte el resultado en Blob
+                    var blob = new Blob([r.message], {
+                        type: 'text/plain'
+                    });
+
+                    //var blob = new Blob([r.message], {
+                    //    type: 'application/pdf'
+                    //});
+                    
+                    //var blob = r.message;
+                    //var fileName = req.getResponseHeader("fileName") //if you have the fileName header available
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = fileNameForDownload; //doc+".xml";
+                    link.click();
+
+                    frappe.show_alert({                        
+                        message: __(`Documento XML ${doc} descargado.`),
+                        indicator: 'green'
+                    }, 5);
+                }
+                else
+                {
+                    //console.log(req);
+                        //console.log("Error", req.statusText);
+                    //console.log('1x');
+                    frappe.show_alert({
+                        //message: __(`Error al procesar documento ${doc}:` + req.statusText + ":" + req.responseText),
+                        message: __(`Error al procesar descarga del documento ${doc}:`),
+                        indicator: 'red'
+                    }, 5);
+                    
+                    //$(btnProcess).show();
+                    //$(btnProcess).parent().find('.custom-animation').remove();
+                }
+
+                $(btnProcess).show();
+                $(btnProcess).parent().find('.custom-animation').remove();
+            }
+        });
+    },    
     DownloadXml(doc) {
         //console.log(doc);
         var doctype_erpnext = get_current_doc_type()[0];

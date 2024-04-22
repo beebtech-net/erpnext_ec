@@ -162,7 +162,6 @@ frappe.ui.form.on("Purchase Taxes and Charges Ec", "numDocSustentoLink", functio
 
         if(docs.length > 0)
         {
-
             /*
             frappe.db.set_value('Purchase Invoice', item.numDocSustentoLink, 'numeroautorizacion', '4567890654327890211')
             .then(r => {
@@ -183,9 +182,13 @@ frappe.ui.form.on("Purchase Taxes and Charges Ec", "numDocSustentoLink", functio
             });
             */
             
+            console.log("numeroautorizacion");
             console.log(docs[0].numeroautorizacion);
 
-            if(docs[0].numeroautorizacion != undefined && docs[0].numeroautorizacion != null && docs[0].numeroautorizacion != '')
+            if(docs[0].numeroautorizacion != undefined && 
+                docs[0].numeroautorizacion != null && 
+                docs[0].numeroautorizacion != '' &&
+                docs[0].numeroautorizacion != '0')
             {
                 //item.numDocSustento = docs[0].numeroautorizacion;
                 item.numDocSustento = docs[0].docidsri; //docidsri --> cambiarlo a numDoc
@@ -257,8 +260,6 @@ frappe.ui.form.on("Purchase Taxes and Charges Ec", "numDocSustentoLink", functio
     
     //frm.refresh_field('taxes');
 });
-
-
 
 frappe.ui.form.on("Purchase Taxes and Charges Ec", "codigoRetencion", function(frm, cdt, cdn) {         
     let item = locals[cdt][cdn];

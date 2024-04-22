@@ -210,7 +210,8 @@
     "label": "fechaAutorizacion",
     "no_copy": 1, 
     "reqd": 0,
-    "in_list_view": 0
+    "in_list_view": 0,
+    "read_only": 1
   },
   {
     "idx": 110,
