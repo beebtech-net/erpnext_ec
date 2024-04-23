@@ -75,7 +75,19 @@ def evaluate_brand(create_if_not_exists, name_for_search):
         new_data.insert()
 
 def evaluate_product_group(create_if_not_exists, name_for_search):
-    found_purchase_invoice = frappe.get_all('Sales Invoice', filters={"numeroautorizacion": doc_comprobante.find('infoTributaria').find('claveAcceso').text}, fields = ['*'])
+    found_data = frappe.get_all('Item Group', filters={"name": name_for_search})
+
+    if (found_data):
+        pass
+    else:
+        new_data = frappe.get_doc({
+            "doctype": "Item Group",
+            "name":  name_for_search,
+            "parent_item_group":  name_for_search,
+            "route":  name_for_search
+        })
+
+        new_data.insert()
 
 def evaluate_taxes(create_if_not_exists, name_for_search):
     found_purchase_invoice = frappe.get_all('Sales Invoice', filters={"numeroautorizacion": doc_comprobante.find('infoTributaria').find('claveAcceso').text}, fields = ['*'])
