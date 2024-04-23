@@ -19,6 +19,14 @@
     "label": "Url Server Beebtech",
     "default":"http://127.0.0.1:3044/api/v2"
   },
+  {	
+    "fieldname": "use_external_service",
+    "fieldtype": "Check",		
+		"label": "Usar servicio externo",
+		"in_list_view": 1,
+    "in_preview": 1,
+    "default": 0
+	},
   {
     "fieldname": "usuario",
     "fieldtype": "Data",
