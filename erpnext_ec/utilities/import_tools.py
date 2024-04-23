@@ -22,6 +22,65 @@ def custom_upload(file = None):
     with open(file_path, "wb") as file:
         file.write(file_content)
 
+def evaluate_supplier(create_if_not_exists, tax_id, supplier_name, nombreComercial, dirMatriz):
+    found_data = frappe.get_all('Supplier', filters={"tax_id": tax_id, "name": supplier_name}, fields = ['*'])
+
+    if (found_data):
+        pass
+    else:
+        new_data = frappe.get_doc({
+            "doctype": "Supplier",
+            "tax_id":  tax_id,
+            "name":  supplier_name,
+            "nombreComercial":  nombreComercial,
+            "primary_address":  dirMatriz,
+            "is_internal_supplier":  0,
+            "is_transporter":  0,
+            "supplier_group":  "Servicios"
+        })
+
+        new_data.insert()
+
+def evaluate_item(create_if_not_exists, item_code, item_name, item_group, item_brand, item_description, item_standard_rate):
+    found_data = frappe.get_all('Item', filters={"code": item_code, "name": item_name}, fields = ['*'])
+
+    if (found_data):
+        pass
+    else:
+        new_data = frappe.get_doc({
+            "doctype": "Item",
+            "code":  item_code,
+            "name":  item_name,
+            "group":  item_group,
+            "brand":  item_brand,
+            "description":  item_description,
+            "standard_rate":  item_standard_rate,
+        })
+
+        new_data.insert()
+
+def evaluate_brand(create_if_not_exists, name_for_search):
+    found_data = frappe.get_all('Brand', filters={"name": name_for_search})
+
+    if (found_data):
+        pass
+    else:
+        new_data = frappe.get_doc({
+            "doctype": "Brand",
+            "name":  name_for_search,
+            "brand":  name_for_search,
+            "description":  name_for_search
+        })
+
+        new_data.insert()
+
+def evaluate_product_group(create_if_not_exists, name_for_search):
+    found_purchase_invoice = frappe.get_all('Sales Invoice', filters={"numeroautorizacion": doc_comprobante.find('infoTributaria').find('claveAcceso').text}, fields = ['*'])
+
+def evaluate_taxes(create_if_not_exists, name_for_search):
+    found_purchase_invoice = frappe.get_all('Sales Invoice', filters={"numeroautorizacion": doc_comprobante.find('infoTributaria').find('claveAcceso').text}, fields = ['*'])
+
+
 @frappe.whitelist()
 def import_purchase_invoice_from_xml(file, auto_create_data, update_invoices, remove_files):
     print(file)
@@ -69,7 +128,35 @@ def import_purchase_invoice_from_xml(file, auto_create_data, update_invoices, re
             #doc_comprobante = etree.fromstring(b'' + child.text)
             doc_comprobante = etree.fromstring(child.text.encode('utf-8'))
             #print(doc_comprobante)
-            
+
+            #purchase_invoice_doc = frappe.get_last_doc("Purchase Invoice", doc_comprobante.find('infoTributaria').find('claveAcceso').text)
+            found_purchase_invoice = frappe.get_all('Sales Invoice', filters={"numeroautorizacion": doc_comprobante.find('infoTributaria').find('claveAcceso').text}, fields = ['*'])
+
+            new_purchase_invoice___ = {
+                "docstatus": 0,
+			    "doctype": "Purchase Invoice",
+                "numeroautorizacion": doc_comprobante.find('infoTributaria').find('claveAcceso').text
+            }
+
+            if(not found_purchase_invoice):
+                print('Registro nuevo')
+                #new_client_script = frappe.get_doc(new_purchase_invoice)
+                reference_purchase_invoice = frappe.get_doc(doctype='Purchase Invoice')
+                reference_purchase_invoice.numeroautorizacion = doc_comprobante.find('infoTributaria').find('claveAcceso').text
+                #Requeridos
+                reference_purchase_invoice.supplier = 'RUEDA SANCHEZ JUAN CARLOS'
+                reference_purchase_invoice.base_grand_total = 0
+                reference_purchase_invoice.grand_total = 0
+
+                reference_purchase_invoice.items
+
+                reference_purchase_invoice.insert()
+            else:
+                print('Registro exitente')
+                reference_purchase_invoice = found_purchase_invoice[0]
+
+            reference_purchase_invoice.db_set('sri_estado', 200)
+
             print(doc_comprobante.find('infoTributaria').find('ambiente').text)
             print(doc_comprobante.find('infoTributaria').find('tipoEmision').text)
             print(doc_comprobante.find('infoTributaria').find('razonSocial').text)
