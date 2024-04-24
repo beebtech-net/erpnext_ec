@@ -257,10 +257,10 @@ def import_purchase_invoice_from_xml(file, auto_create_data, update_invoices, re
             defaultBrand = 'Sin Marca (DI)'
 
             #purchase_invoice_doc = frappe.get_last_doc("Purchase Invoice", doc_comprobante.find('infoTributaria').find('claveAcceso').text)
-            found_purchase_invoice = frappe.get_all('Sales Invoice', filters={"numeroautorizacion": doc_comprobante.find('infoTributaria').find('claveAcceso').text}, fields = ['*'])
+            found_purchase_invoice = frappe.get_all('Purchase Invoice', filters={"numeroautorizacion": doc_comprobante.find('infoTributaria').find('claveAcceso').text}, fields = ['*'])
             
-            if(found_purchase_invoice):               
-                print('Registro exitente, se creará nuevo')
+            if(found_purchase_invoice):
+                print('Registro exitente, no se creará nuevo')
                 reference_purchase_invoice = found_purchase_invoice[0]
                 return
             
@@ -286,16 +286,13 @@ def import_purchase_invoice_from_xml(file, auto_create_data, update_invoices, re
             #new_purchase_invoice_.grand_total = 0
             #new_purchase_invoice_.items
             #new_purchase_invoice_.insert()
-            #new_purchase_invoice_.db_set('sri_estado', 200)
-
-            
+            #new_purchase_invoice_.db_set('sri_estado', 200)            
             
             #print('fechaAutorizacion')
             #print(doc_root.find('fechaAutorizacion'))
 
             fechaAutorizacion = parser.parse(doc_root.find('fechaAutorizacion').text)
-            #fechaAutorizacion = fecha_con_zona.replace(tzinfo=None)
-            
+            #fechaAutorizacion = fecha_con_zona.replace(tzinfo=None)           
 
             # print(doc_comprobante.find('infoTributaria').find('ambiente').text)
             # print(doc_comprobante.find('infoTributaria').find('tipoEmision').text)
@@ -322,7 +319,6 @@ def import_purchase_invoice_from_xml(file, auto_create_data, update_invoices, re
 
             # print(doc_comprobante.find('infoFactura').find('totalConImpuestos').text)
 
-
             new_tax_items = []
 
             for totalConImpuestoItem in doc_comprobante.find('infoFactura').find('totalConImpuestos'):
@@ -338,20 +334,21 @@ def import_purchase_invoice_from_xml(file, auto_create_data, update_invoices, re
                                     totalConImpuestoItem.find('codigoPorcentaje').text, 
                                     totalConImpuestoItem.find('tarifa').text)
 
-                new_tax_item = {
-                    "category" : "Total",
-                    "add_deduct_tax" : "Add",
-                    "charge_type" : "On Net Total",
-                    "account_head" : found_account.name,
-                    "description" : found_account.account_name + "@" + str(found_account.tax_rate),
-                    "rate" : float(totalConImpuestoItem.find('tarifa').text),
-                    "tax_amount" : float(totalConImpuestoItem.find('valor').text),
-                    "tax_amount_after_discount_amount" : float(totalConImpuestoItem.find('valor').text),
-                    "total" : float(totalConImpuestoItem.find('baseImponible').text) + float(totalConImpuestoItem.find('valor').text),
-                    "base_tax_amount" : float(totalConImpuestoItem.find('valor').text)
-                }
-            
-                new_tax_items.append(new_tax_item)
+                if(found_account):
+                    new_tax_item = {
+                        "category" : "Total",
+                        "add_deduct_tax" : "Add",
+                        "charge_type" : "On Net Total",
+                        "account_head" : found_account.name,
+                        "description" : found_account.account_name + "@" + str(found_account.tax_rate),
+                        "rate" : float(totalConImpuestoItem.find('tarifa').text),
+                        "tax_amount" : float(totalConImpuestoItem.find('valor').text),
+                        "tax_amount_after_discount_amount" : float(totalConImpuestoItem.find('valor').text),
+                        "total" : float(totalConImpuestoItem.find('baseImponible').text) + float(totalConImpuestoItem.find('valor').text),
+                        "base_tax_amount" : float(totalConImpuestoItem.find('valor').text)
+                    }
+                
+                    new_tax_items.append(new_tax_item)
 
             # print(doc_comprobante.find('infoFactura').find('propina').text)
             # print(doc_comprobante.find('infoFactura').find('importeTotal').text)
@@ -359,11 +356,10 @@ def import_purchase_invoice_from_xml(file, auto_create_data, update_invoices, re
 
             for pagoItem in doc_comprobante.find('infoFactura').find('pagos'):
                 print(pagoItem.tag, pagoItem.attrib)
-                print(pagoItem.find('formaPago').text)
-                print(pagoItem.find('total').text)
-                print(pagoItem.find('plazo').text)
-                print(pagoItem.find('unidadTiempo').text)
-            
+                #print(pagoItem.find('formaPago').text)
+                #print(pagoItem.find('total').text)
+                #print(pagoItem.find('plazo').text)
+                #print(pagoItem.find('unidadTiempo').text)            
             
             new_items = []
             idx_item = 0
@@ -434,8 +430,8 @@ def import_purchase_invoice_from_xml(file, auto_create_data, update_invoices, re
             for infoAdicionalItem in doc_comprobante.find('infoAdicional'):
                 #print(infoAdicionalItem.tag, infoAdicionalItem.attrib)
                 if(infoAdicionalItem.tag == 'campoAdicional'):
-                    print(infoAdicionalItem.attrib['nombre'])
-                    print(infoAdicionalItem.text)
+                    #print(infoAdicionalItem.attrib['nombre'])
+                    #print(infoAdicionalItem.text)
                     infoAdicional.append({
                         "nombre": infoAdicionalItem.attrib['nombre'],
                         "valor": infoAdicionalItem.text
@@ -484,3 +480,7 @@ def import_purchase_invoice_from_xml(file, auto_create_data, update_invoices, re
         print(file_path)
         if os.path.exists(file_path):
             os.remove(file_path)
+    
+    #final de proceso de importacion
+    #este proceso es individual
+    #se ejecuta una vez por cada xml

@@ -13,7 +13,7 @@ function UploadFromSriBuild(listview)
         //frm: frm,
         restrictions: {
             allowed_file_types: [".xml", ".zip"]
-        },
+        },        
         on_success (file)
         {
             console.log(file);
@@ -78,7 +78,7 @@ function UploadFromSriBuild(listview)
                 <span class="label-area">Crear datos no existentes (artículos, marcas, etc.)</span>        
             </label>    
         </div>
-        <div class="checkbox">
+        <div class="checkbox hide">
             <label>
                 <span class="input-area"><input id="import_update_invoices" type="checkbox" autocomplete="off" class="input-with-feedback" data-fieldtype="Check" data-fieldname="update_invoices" placeholder="" checked></span>
                 <span class="label-area">Actualizar facturas existentes</span>        
