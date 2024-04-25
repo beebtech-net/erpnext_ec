@@ -20,15 +20,15 @@ function PrepareDocument(doc_name)
 			
 			var paymentsItems = null;
 			var paymentsEntryApi = null;
-			var paymentsEntryRefApi = await frappe.db.get_list('Payment Entry Reference', { 'fields': '["*"]', 'filters': { 'reference_name': docApi.name } });			
+			//var paymentsEntryRefApi = await frappe.db.get_list('Payment Entry Reference', { 'fields': '["*"]', 'filters': { 'reference_name': docApi.name } });			
 			//console.log(paymentsEntryRefApi);
 			
-			if(paymentsEntryRefApi!=null && paymentsEntryRefApi.length > 0)
-			{
+			//if(paymentsEntryRefApi!=null && paymentsEntryRefApi.length > 0)
+			//{
 				//console.log(paymentsEntryRefApi[0].parent);
-				var paymentsEntryApi = await frappe.db.get_list('Payment Entry', { 'fields': '["*"]', 'filters': { 'name': paymentsEntryRefApi[0].parent } });
+				//var paymentsEntryApi = await frappe.db.get_list('Payment Entry', { 'fields': '["*"]', 'filters': { 'name': paymentsEntryRefApi[0].parent } });
 				//console.log(paymentsEntryApi);
-			}
+			//}
 			
 			//Existe pago
 			if(paymentsEntryApi!=null && paymentsEntryApi.length > 0)
@@ -297,7 +297,7 @@ function SendSalesInvoice(doc)
             //var paymentsEntryApi = await frappe.db.get_list('Payment Entry Reference', { 'filters': { 'reference_name': doc.name }, fields: ['name'], order_by: null });
             // se reemplaza hasta solucionarlo
 
-			var paymentsEntryRefApi = await frappe.db.get_list('Payment Entry Reference', { 'fields': '["*"]', 'filters': { 'reference_name': doc.name } });			
+			//var paymentsEntryRefApi = await frappe.db.get_list('Payment Entry Reference', { 'fields': '["*"]', 'filters': { 'reference_name': doc.name } });			
             
             //console.log(paymentsEntryApi);
 			//console.log(paymentsEntryRefApi);
@@ -307,10 +307,10 @@ function SendSalesInvoice(doc)
             //console.log(docApi);
             var documentIsReady = true;
 
-            if (paymentsApi.length == 0 && paymentsEntryRefApi.length == 0) {
-                data_alert += document.Website.CreateAlertItem(`No se han definido datos de pago (solicitud de pago/entrada de pago)`);
-                documentIsReady = false;
-            }
+            //if (paymentsApi.length == 0 && paymentsEntryRefApi.length == 0) {
+             //   data_alert += document.Website.CreateAlertItem(`No se han definido datos de pago (solicitud de pago/entrada de pago)`);
+            //    documentIsReady = false;
+            //}
 
             //if(docApi.tax_id == "" || docApi.tax_id == "9999999999")
             //{
