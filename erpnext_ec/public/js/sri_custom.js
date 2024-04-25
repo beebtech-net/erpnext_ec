@@ -787,7 +787,86 @@ const Website = {
         var sitenameVar = frappe.boot.sitename;
         document.Website.DownloadFile(doc, 'pdf', sitenameVar, doctype_erpnext);
         //console.log(doc);
-    }    
+    },
+    DownloadXml_v2(doc) {        
+        
+        var siteName = frappe.boot.sitename;
+        var doctype_erpnext = get_current_doc_type()[0];
+        var typeDocSri = get_current_doc_type()[1];      
+        var btnProcess = $('div.dropdown[data-name="' + doc + '"]');
+        
+        var typeFile = 'xml';
+
+        //DownloadFileBlob(doc, typeFile, siteName, typeDocSri, btnProcess)
+    
+        //var url = `${btApiServer}/api/Download/${typeFile}/${doc}?tip_doc=FAC&sitename=${sitename}`;
+        //var url = `/api/method/erpnext_ec.utilities.sri_ws.get_doc_blob`;
+        var url = `/api/method/erpnext_ec.utilities.xml_builder.build_xml`;
+        
+        var req = new XMLHttpRequest();
+        req.open("POST", url, true);
+        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        req.setRequestHeader("X-Frappe-CSRF-Token", frappe.csrf_token);
+
+        req.responseType = "blob";
+       
+        req.onreadystatechange = function (aEvt) {
+            if (req.readyState == 4) 
+            {
+               if(req.status == 200)
+                {
+                    //console.log(req);
+                    //console.log(req.length);
+
+                    var fileNameForDownload = doc + `.${typeFile}`;
+                    var disposition = req.getResponseHeader('Content-Disposition');
+                    //console.log(disposition);
+
+                    if (disposition && disposition.indexOf('attachment') !== -1) {
+                        var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                        var matches = filenameRegex.exec(disposition);
+                        if (matches != null && matches[1]) {
+                            fileNameForDownload = matches[1].replace(/['"]/g, '');
+                        }
+                    }
+
+                    console.log(req.response);
+
+                    var blob = req.response;
+
+                    //var fileName = req.getResponseHeader("fileName") //if you have the fileName header available
+                    
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = fileNameForDownload;
+                    link.click();
+
+                    frappe.show_alert({                        
+                        message: __(`Documento ${typeFile} ${doc} descargado.`),
+                        indicator: 'green'
+                    }, 5);
+                }
+                else
+                {
+                    frappe.show_alert({                    
+                        message: __(`Error al procesar descarga del documento ${doc}:`),
+                        indicator: 'red'
+                    }, 5);
+                }
+
+                $(btnProcess).show();
+                $(btnProcess).parent().find('.custom-animation').remove();     
+            }
+          };
+
+        var datos = "doc_name=" + encodeURIComponent(doc) +
+                "&typeDocSri=" + encodeURIComponent(typeDocSri) +
+                "&typeFile=" + encodeURIComponent(typeFile) +
+                "&siteName=" + encodeURIComponent(siteName);
+
+        req.send(datos);
+
+    }   
 }
 
 document.Website = Website;

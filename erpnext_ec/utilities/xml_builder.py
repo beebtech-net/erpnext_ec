@@ -1,8 +1,18 @@
 from lxml import etree
 from xml.etree.ElementTree import Element, SubElement, tostring
+from xml.etree import ElementTree
+import xml.etree.ElementTree as ET
+
+
 from datetime import datetime
 #from odoo.addons.ec_sri_authorizathions.models import modules_mapping
 import base64
+
+import time
+import frappe
+from frappe import _
+import erpnext
+import os
 
 DOCUMENT_VERSIONS = {
     'out_invoice': '1.1.0',
@@ -51,117 +61,206 @@ DOCUMENT_FIELDS_DATE = {
     'withhold_purchase': 'creation_date',
 }
 
-class xml_builder:
-    def generate_xml_file(self, xml_id, document_id, invoice_type, type_grouped='individual'):
-        """Genera estructura xml del archivo a ser firmado
-        :param xml_id: identificador xml_data
-        :param document_id: identificador del documento a firmar
-        :param invoice_type: Puede ser los tipos :
-            out_invoice : Factura
-            out_refund : Nota de Credito
-            debit_note_out : Nota de Debito
-            delivery_note : Guia de Remision
-            withhold_purchase : Comprobante de Retencion
-            lote_masivo : Lote Masivo
-        :param type_grouped: El tipo de agrupado puede ser:
-            individual : Individual
-            grouped : Lotes Masivos
-        :rtype: objeto root agregado con info tributaria
-        """
+class XMLGenerator:
+    def __init__(self, xsd_file):
+        self.xsd_file = xsd_file
+        self.schema = etree.XMLSchema(file=self.xsd_file)
+        self.nsmap = {
+            None: "http://www.w3.org/2001/XMLSchema",
+            'ds': "http://www.w3.org/2000/09/xmldsig#"
+        }
 
-        util_model = self.env['ecua.utils']
-        key_model = self.env['sri.keys']
-        company = self.printer_id.shop_id.company_id
-        sign_now = self.env.context.get('sign_now',True)
-        xml_data = self.browse(xml_id)
-        document_type = modules_mapping.get_document_type(invoice_type)
-        field_name = modules_mapping.get_field_name(document_type)
-        model_name = modules_mapping.get_model_name(document_type)
-        doc_model = self.env[model_name]
-        if not company.documents_electronic_settings_id:
-            raise UserError(_("No ha cargado la Firma Electrónica para la compañía %s") % (company.name))
-        environment = company.documents_electronic_settings_id.type_environment
+    def generate_xml(self, root_tag, data_dict):
+        root = etree.Element(root_tag, nsmap=self.nsmap)
 
-        emission = "1"
-        document = doc_model.browse(document_id)
-        partner_id = document.partner_id
-        printer_id = document.printer_id.id
-        sequence = ''
-        if xml_data.xml_type == 'individual':
-            if document[field_name]:
-                sequence = self.get_sequence(printer_id, document[field_name])
+        # Crear el árbol XML basado en los datos proporcionados
+        self._build_xml(root, data_dict)
+
+        # Crear el documento XML
+        xml_doc = etree.ElementTree(root)
+        return xml_doc #.getroot()  # Obtener el elemento raíz del árbol XML
+
+    def _build_xml(self, parent, data_dict):
+        for key, value in data_dict.items():
+            if isinstance(value, dict):
+                child = etree.SubElement(parent, key)
+                self._build_xml(child, value)
+            elif isinstance(value, list):
+                for item in value:
+                    child = etree.SubElement(parent, key)
+                    self._build_xml(child, item)
             else:
-                number = document.printer_id.get_next_number_electronic(invoice_type, document.id)
-                sequence = self.get_sequence(printer_id, number)
-        type_document = XML_HEADERS.get(invoice_type)
-        root = Element(type_document, id="comprobante", version=DOCUMENT_VERSIONS.get(invoice_type))
-        key_id, clave_acceso, root = self.generate_info_tributaria(xml_id, root, DOCUMENT_TYPES.get(invoice_type),
-                                                                   environment, emission, company, printer_id, sequence,
-                                                                   document[DOCUMENT_FIELDS_DATE.get(invoice_type)])
-        if key_id:
-            key_model.write([key_id], {'state': 'used'})
-        state = xml_data.state
-        if xml_data.external_document:
-            type_emision = 'normal'
-        else:
-            if emission == '1':
-                type_emision = 'normal'
-            else:
-                type_emision = 'contingency'
-                state = 'contingency'
-        xml_data.write({'type_environment': environment,
-                        'type_emision': type_emision,
-                        'key_id': key_id,
-                        'state': state,
-                        'xml_key': clave_acceso,
-                        'partner_id': partner_id and partner_id.id or False,
-                        })
+                child = etree.SubElement(parent, key)
+                child.text = str(value)
 
-        if xml_data.invoice_out_id:
-            xml_data.invoice_out_id.write({'xml_key': clave_acceso,
-                                           'xml_data_id': xml_id,
-                                           })
-        elif xml_data.credit_note_out_id:
-            xml_data.credit_note_out_id.write({'xml_key': clave_acceso,
-                                               'xml_data_id': xml_id,
-                                               })
-        elif xml_data.debit_note_out_id:
-            xml_data.debit_note_out_id.write({'xml_key': clave_acceso,
-                                              'xml_data_id': xml_id,
-                                              })
-        elif xml_data.withhold_id:
-            xml_data.withhold_id.write({'xml_key': clave_acceso,
-                                        'xml_data_id': xml_id,
-                                        })
-        elif xml_data.invoice_in_id:
-            xml_data.invoice_in_id.write({'xml_key': clave_acceso,
-                                          'xml_data_id': xml_id,
-                                          })
-        elif xml_data.delivery_note_id:
-            xml_data.delivery_note_id.write({'xml_key': clave_acceso,
-                                             'xml_data_id': xml_id,
-                                             })
+    def validate_xml(self, xml_doc):
+        try:
+            self.schema.assertValid(xml_doc)
+            print("El XML es válido según el XSD.")
+        except etree.DocumentInvalid as e:
+            print("El XML no es válido según el XSD:")
+            print(e)
 
-        if sign_now:
-            if invoice_type == 'out_invoice':
-                doc_model.get_info_factura(document, root)
-            #nota de credito
-            elif invoice_type == 'out_refund':
-                doc_model.get_info_credit_note(document, root)
-            #nota de debito
-            elif invoice_type == 'debit_note_out':
-                doc_model.get_info_debit_note(document, root)
-            elif invoice_type == 'withhold_purchase':
-                doc_model.get_info_withhold(document, root)
-            elif invoice_type == 'delivery_note':
-                doc_model.get_info_delivery_note(document, root)
-            elif invoice_type == 'liquidation':
-                doc_model.get_info_liquidation(document, root)
+def fix_infoAdicional(xml_tree):
+    root = xml_tree.getroot()
+    info_adicional = root.find("infoAdicional")
+    if info_adicional is not None:
+        for campo_adicional in info_adicional.findall("campoAdicional"):
+            print(campo_adicional)
+            #campo_adicional.set("nombre", campo_adicional.text)
+            campo_adicional.set("nombre", campo_adicional.find("nombre").text)
+            campo_adicional.text = campo_adicional.find("text").text
+            
+            campo_adicional.remove(campo_adicional.find("nombre"))
+            campo_adicional.remove(campo_adicional.find("text"))
+    return xml_tree
+    
 
-        util_model.indent(root)
-        string_data = tostring(root, encoding="UTF-8")
-        self.check_xsd(string_data, DOCUMENT_XSD_FILES.get(invoice_type))
-        binary_data = base64.b64encode(string_data)
+@frappe.whitelist()
+def build_xml(doc_name, typeDocSri, typeFile, siteName):
 
-        self._generate_partner_login(xml_id, document_id, invoice_type)
-        return binary_data, type_document
+    # Datos para generar el XML
+    data = {
+        "infoTributaria": {
+            "ambiente": "1",
+            "tipoEmision": "1",
+            "razonSocial": "Razón Social",
+            "nombreComercial":"nombreComercial",
+            "ruc":"0919826958001",
+            "claveAcceso":"2003202401179071031900122160010001408395658032312",
+            "codDoc": "01",
+            "estab" : "216",
+            "ptoEmi" : "001",
+            "secuencial" : "000140839",
+            "dirMatriz" : "KM CINCO Y MEDIO AV DE LOS SHYRIS N SN Y SECUNDARIA"
+        },
+        "infoFactura": {
+            "fechaEmision": "20/03/2024",
+            "dirEstablecimiento": "VIA A LA COSTA KM 9.8 JUNTO A LA",
+            "contribuyenteEspecial": "5368",
+            "obligadoContabilidad": "SI",
+            "tipoIdentificacionComprador": "05",
+            "razonSocialComprador": "CHONILLO VILLON RONALD STALIN",
+            "identificacionComprador": "0919826958",
+            "totalSinImpuestos": "20.69",
+            "totalDescuento": "0",
+            "totalConImpuestos": {
+                "totalImpuesto": {
+                    "codigo": "2",
+                    "codigoPorcentaje": "0",
+                    "baseImponible": "20.69",
+                    "tarifa": "0",
+                    "valor": "0.00"
+                }
+            },
+            "propina": "0.00",
+            "importeTotal": "20.69",
+            "moneda": "DOLAR",
+            "pagos": {
+                "pago": {
+                    "formaPago": "19",
+                    "total": "20.69",
+                    "plazo": "0",
+                    "unidadTiempo": "MESES"
+                }
+            }
+        },
+        "detalles": {
+            "detalle": [
+            {
+                "codigoPrincipal": "100027114",
+                "descripcion": "CONRELAX.CONRELAX PLUS TABS. 504 MG C10 SUELTAS",
+                "cantidad": "5",
+                "precioUnitario": "2.09",
+                "descuento": "0",
+                "precioTotalSinImpuesto": "10.45",
+                "impuestos": {
+                "impuesto": {
+                    "codigo": "2",
+                    "codigoPorcentaje": "0",
+                    "tarifa": "0",
+                    "baseImponible": "10.45",
+                    "valor": "0.00"
+                }
+                }
+            },
+            {
+                "codigoPrincipal": "244624",
+                "descripcion": "NEOGAIVAL.NEOGAIVAL 2 MG CJA X20 SUELTAS",
+                "cantidad": "10",
+                "precioUnitario": "0.384",
+                "descuento": "0",
+                "precioTotalSinImpuesto": "3.84",
+                "impuestos": {
+                "impuesto": {
+                    "codigo": "2",
+                    "codigoPorcentaje": "0",
+                    "tarifa": "0",
+                    "baseImponible": "3.84",
+                    "valor": "0.00"
+                }
+                }
+            },
+            {
+                "codigoPrincipal": "140376",
+                "descripcion": "PANALGESIC.PANALGESIC FORTE CREMA 32 GR",
+                "cantidad": "2",
+                "precioUnitario": "3.2",
+                "descuento": "0",
+                "precioTotalSinImpuesto": "6.4",
+                "impuestos": {
+                "impuesto": {
+                    "codigo": "2",
+                    "codigoPorcentaje": "0",
+                    "tarifa": "0",
+                    "baseImponible": "6.40",
+                    "valor": "0.00"
+                }
+                }
+            }
+            ]
+        },
+        "infoAdicional": {
+            "campoAdicional": 
+            [
+                {
+                    "nombre": "DIRECCION",
+                    "text": "SP SN SI"
+                },
+                {
+                    "nombre": "DESCUENTO",
+                    "text": "1.01"
+                }
+            ]
+        }
+    }
+
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+
+    # Nombre del archivo XSD
+    xsd_file = dir_path + "/xsd/factura_V1/1/0.xsd"
+    xmldsig_xsd_path = dir_path + "/xsd/xmldsig-core-schema.xsd"
+    
+    # Crear instancia del generador XML
+    xml_generator = XMLGenerator(xsd_file) #, xmldsig_xsd_path)
+
+    # Generar el XML
+    xml_doc = xml_generator.generate_xml("factura", data)
+
+    xml_doc = fix_infoAdicional(xml_doc)
+
+    # Validar el XML con respecto al XSD
+    validationResult = xml_generator.validate_xml(xml_doc.getroot())
+
+    if(not validationResult):
+        print("No debe retornar nada")
+        #return ""
+    #frappe.local.response.filename = doc_name + "." + typeFile
+    #frappe.local.response.filecontent = response.content
+    #frappe.local.response.type = "download"
+
+    xml_str = ElementTree.tostring(xml_doc.getroot(), encoding='utf-8')
+
+    print(xml_str.decode())
+
+    return xml_str.decode()
