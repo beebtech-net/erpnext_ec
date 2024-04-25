@@ -629,7 +629,7 @@ const Website = {
                 "&title=" + encodeURIComponent('---') +
                 "&typeDocSri=" + get_current_doc_type()[1] +
                 "&doctype_erpnext=" + get_current_doc_type()[0] + 
-                "&use_doc_email=0";
+                "&use_doc_email=1";
 
                 req.send(datos);
 

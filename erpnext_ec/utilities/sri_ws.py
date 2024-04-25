@@ -201,9 +201,12 @@ def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnex
 	print(recipients)
 	print(use_doc_email)
 
-	if(recipients == '' or recipients == None and use_doc_email == True):
+	if((recipients == "" or not recipients) and use_doc_email == "1"):
+		print('Se usará email de documento')
 		recipients = doc_data.contact_email
 
+	print("recipients final:")
+	print(recipients)
 	#var url = `${btApiServer}/api/Tool/AddToEmailQuote/${doc}?tip_doc=FAC&sitename=${sitenameVar}&email_to=${values.email_to}`;
 	sendmail(doc_data, recipients, email_subject, msg_template, attachments)	        
 	pass
