@@ -556,7 +556,7 @@ const Website = {
                     label: 'Email',
                     fieldname: 'email_to',
                     fieldtype: 'Data',
-                    reqd: 1,
+                    reqd: 0,
                     default: '@gmail.com'
                 },
                 {
@@ -580,7 +580,9 @@ const Website = {
                 console.log(doc_name);
                 //console.log(values);
                 //console.log(values.email_to);
-                frappe.utils.validate_type('ronald.chonillo@gmail.com', 'email');
+                
+                frappe.utils.validate_type(values.email_to, 'email');
+
                 //show_alert with indicator
                 var sitenameVar = frappe.boot.sitename;
                 //var url = `${btApiServer}/api/Tool/AddToEmailQuote/${doc}?tip_doc=FAC&sitename=${sitenameVar}&email_to=${values.email_to}`;
@@ -623,10 +625,11 @@ const Website = {
 
                 var datos = "doc_name=" + encodeURIComponent(doc_name) +
                 "&recipients=" + encodeURIComponent([values.email_to]) +
-                "&msg=" + encodeURIComponent('Hola') +
-                "&title=" + encodeURIComponent('Mensaje') +
+                "&msg=" + encodeURIComponent('---') +
+                "&title=" + encodeURIComponent('---') +
                 "&typeDocSri=" + get_current_doc_type()[1] +
-                "&doctype_erpnext=" + get_current_doc_type()[0];
+                "&doctype_erpnext=" + get_current_doc_type()[0] + 
+                "&use_doc_email=0";
 
                 req.send(datos);
 

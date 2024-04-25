@@ -1,6 +1,6 @@
 import frappe
 from erpnext_ec.utilities.email_tool import sendmail
-#from erpnext_ec.utilities.sri_ws import send_doc
+from erpnext_ec.utilities.sri_ws import add_email_quote
 
 def validate(doc, event):
     print("validate")
@@ -23,7 +23,10 @@ def after_insert(doc, event):
     frappe.db.commit()
     #frappe.msgprint(f"{note.title} has been created.")
 
-    #(doc, recipients, msg, title, attachments = None):
+    #sendmail(doc, recipients, msg, title, attachments = None)
+    
+    add_email_quote(doc.name, '', '', '', doc.tip_doc, doc.doc_type, True)
+
     print("Ready for send email -- FROM EVENT!!!!")
     print("after_insert")
     print(doc)

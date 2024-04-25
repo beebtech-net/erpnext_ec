@@ -16,7 +16,7 @@ def sendmail(doc, recipients, title, msg_template, attachments = None):
     #if attachments: email_args['attachments'] = attachments
 
     result_queue = frappe.enqueue(method= frappe.sendmail, queue = 'short', timeout = 30000, delayed=False, **email_args)
-    print(result_queue)
+    #print(result_queue)
 
     # frappe.sendmail(
     # recipients=recipients,

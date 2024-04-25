@@ -115,7 +115,7 @@ def verify_signature(signature_doc):
 
 
 @frappe.whitelist()
-def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnext):
+def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnext, use_doc_email):
 
 	doc_data = []
 	template_name = ''	#email body template
@@ -187,7 +187,7 @@ def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnex
 	#Attach PDF
 	attach_file_name_pdf = attach_file_name
 	doc_data.doctype = doctype_erpnext
-	print(doc_data)
+	#print(doc_data)
 
 	#pdf_attachment = [frappe.attach_print(doc_data.doctype, doc_data.name, file_name=attach_file_name_pdf, print_format = print_format_name, print_letterhead=True)]
 	pdf_attachment = [frappe.attach_print(doc_data.doctype, doc_data.name, file_name=attach_file_name_pdf, print_format = print_format_name)]
@@ -196,6 +196,13 @@ def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnex
 		attachments.append(pdf_attachment[0])
 
 	#my_attachments = [frappe.attach_print(self.doctype, self.name, file_name=self.name)]
+
+	print('LISTO PARA ENVIAR')
+	print(recipients)
+	print(use_doc_email)
+
+	if(recipients == '' or recipients == None and use_doc_email == True):
+		recipients = doc_data.contact_email
 
 	#var url = `${btApiServer}/api/Tool/AddToEmailQuote/${doc}?tip_doc=FAC&sitename=${sitenameVar}&email_to=${values.email_to}`;
 	sendmail(doc_data, recipients, email_subject, msg_template, attachments)	        
