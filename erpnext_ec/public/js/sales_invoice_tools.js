@@ -1,6 +1,6 @@
 /***********************************/
 
-function SendSalesInvoiceToSri(documentIsReady, document_preview)
+function SendSalesInvoiceToSri(documentIsReady, document_preview, doc)
 {
 	var doctype_erpnext = 'Sales Invoice';
 	var typeDocSri = 'FAC';
@@ -182,7 +182,7 @@ function validationSri(doc)
 			data_alert +
                 `<div class="warning-sri">Por favor, verifique que toda la información esté correctamente ingresada antes de enviarla al SRI y generar el documento electrónico.</div>`;
 
-			SendSalesInvoiceToSri(r.message.documentIsReady, document_preview);
+			SendSalesInvoiceToSri(r.message.documentIsReady, document_preview, doc);
 
 			//if(r.message.documentIsReady)
 			//{				
