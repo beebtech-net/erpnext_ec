@@ -4,13 +4,15 @@
     "name": "DES",
     "id": 1,
     "description": "Desarrollo",
-    "service_url": "https://cel.cert.xyz"
+    "service_url_recept": "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl",
+    "service_url_authorize": "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl"
   },
   {
     "doctype": "Sri Environment",
     "name": "PRO",
     "id": 2,
     "description": "Produccion",
-    "service_url": "https://cel.cert.xyz.des"
+    "service_url_recept": "https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl",
+    "service_url_authorize": "https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl"
   }
 ]

@@ -111,7 +111,7 @@ class SriXmlData():
             signature,
             xmlsig.constants.TransformSha1,
             name=reference_uri,
-            uri="#comprobante",
+            #uri="#comprobante",
         )
         xmlsig.template.add_transform(ref, xmlsig.constants.TransformEnveloped)
         ki = xmlsig.template.ensure_key_info(signature, name=certificate_id)

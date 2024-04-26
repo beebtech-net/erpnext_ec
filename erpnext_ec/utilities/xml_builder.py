@@ -1,8 +1,9 @@
+import xml.dom.minidom
 from lxml import etree
 from xml.etree.ElementTree import Element, SubElement, tostring
 from xml.etree import ElementTree
 import xml.etree.ElementTree as ET
-
+from erpnext_ec.utilities.signature_tool import *
 
 from datetime import datetime
 #from odoo.addons.ec_sri_authorizathions.models import modules_mapping
@@ -114,10 +115,30 @@ def fix_infoAdicional(xml_tree):
             campo_adicional.remove(campo_adicional.find("nombre"))
             campo_adicional.remove(campo_adicional.find("text"))
     return xml_tree
-    
+
+
+@frappe.whitelist()
+def build_xml_signed(xml_string, data, signature_doc):
+    #crear datos para asignar a data
+    # 1) desde objeto de datos
+    # 2) luego convertirlo a la estructura compatible con el SRI
+    #data = {}
+    #xml_string = build_xml_data(data, doc_name, typeDocSri, typeFile, siteName)
+    signed_xml = SriXmlData.sign_xml(SriXmlData, xml_string, data, signature_doc)
+    return signed_xml
 
 @frappe.whitelist()
 def build_xml(doc_name, typeDocSri, typeFile, siteName):
+    #crear datos para asignar a data
+    # 1) desde objeto de datos
+    # 2) luego convertirlo a la estructura compatible con el SRI
+    data = {}
+    build_xml_data(data, doc_name, typeDocSri, siteName)
+
+@frappe.whitelist()
+def build_xml_data(data_object, doc_name, typeDocSri, siteName):
+
+    typeFile = "xml"
 
     # Datos para generar el XML
     data = {
@@ -260,7 +281,11 @@ def build_xml(doc_name, typeDocSri, typeFile, siteName):
     #frappe.local.response.type = "download"
 
     xml_str = ElementTree.tostring(xml_doc.getroot(), encoding='utf-8')
+    xml_beautified = xml.dom.minidom.parseString(xml_str).toprettyxml()
 
-    print(xml_str.decode())
+    #print(xml_beautified)
+    #frappe.local.response.filename = doc_name + "." + typeFile
+    #frappe.local.response.filecontent = xml_beautified
+    #frappe.local.response.type = "download"
 
-    return xml_str.decode()
+    return xml_beautified

@@ -788,7 +788,7 @@ const Website = {
         document.Website.DownloadFile(doc, 'pdf', sitenameVar, doctype_erpnext);
         //console.log(doc);
     },
-    DownloadXml_v2(doc) {        
+    DownloadXml_v2(doc) {
         
         var siteName = frappe.boot.sitename;
         var doctype_erpnext = get_current_doc_type()[0];
@@ -830,7 +830,7 @@ const Website = {
                         }
                     }
 
-                    console.log(req.response);
+                    console.log(req);
 
                     var blob = req.response;
 

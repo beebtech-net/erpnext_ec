@@ -27,11 +27,18 @@
     "label": "Description"
   },
   {
-    "fieldname": "service_url",
+    "fieldname": "service_url_recept",
     "fieldtype": "Small Text",
     "in_list_view": 1,
     "in_preview": 1,
-    "label": "Service Url"
+    "label": "Service Url Recept"
+  },
+  {
+    "fieldname": "service_url_authorize",
+    "fieldtype": "Small Text",
+    "in_list_view": 1,
+    "in_preview": 1,
+    "label": "Service Url Authorize"
   }
  ],
  "index_web_pages_for_search": 1,

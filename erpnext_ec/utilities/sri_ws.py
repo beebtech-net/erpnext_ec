@@ -13,8 +13,9 @@ import erpnext
 import json
 from types import SimpleNamespace
 import requests
-from erpnext_ec.utilities.encryption import *
+#from erpnext_ec.utilities.encryption import *
 from erpnext_ec.utilities.signature_tool import *
+from erpnext_ec.utilities.xml_builder import *
 
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -627,7 +628,196 @@ def send_doc(doc, typeDocSri, doctype_erpnext, siteName):
 
 		#frappe.msgprint(f"{xml_response_new.id} has been created.")
 
-		return response.text
+		#return response.text
+  
+@frappe.whitelist()
+def send_doc_native(doc, typeDocSri, doctype_erpnext, siteName):	
+	
+	doc_data = None
+
+	#SE OMITE ESTE PASO
+	doc_object_build = json.loads(doc, object_hook=lambda d: SimpleNamespace(**d))
+	#print("DESDE OBJETO")
+	#print(doc_object_build.name)
+	#print(typeDocSri)
+	#   ----------------
+
+	level = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+	#time.sleep(5)
+	level += '   RESPUESTA SRI   ' # + doc.name
+	level += datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+
+	#Si se asigna correctamente el secuencial
+	if setSecuencial(doc_object_build, typeDocSri):
+		#Hacer algo?
+		pass
+	else:
+		raise ReferenceError("No se encontró configuración requerida 'Sri Sequence' para la empresa "+ doc_object_build.company)
+		
+	if typeDocSri == "FAC":
+			
+			doc_data = build_doc_fac(doc_object_build.name)
+			
+			print('-----------------------')
+			print(doc_data.secuencial)
+			print('-----------------------')
+	elif typeDocSri == "GRS":
+			doc_data = build_doc_grs(doc_object_build.name)
+			
+	elif typeDocSri == "CRE":
+			doc_data = build_doc_cre(doc_object_build.name)
+	
+	#TODO: Validacion de los datos previo al envío al SRI
+	#validate_doc(doc_data, typeDocSri, doctype_erpnext, siteName)
+
+	#Preparar documento enviarlo al servicio externo de autorización
+	#---------------------------------------------------------------
+	url_server_beebtech, server_timeout = get_api_url()
+
+	#print(url_server_beebtech)
+
+	is_simulation_mode = False
+	
+	if(is_simulation_mode):
+		#Modo de simulación
+		api_url = f"{url_server_beebtech}/Tool/Simulate"
+	else:
+		#Envío normal
+		#https://localhost:7037/api/v2/SriProcess/sendmethod
+		api_url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl"
+	
+	#print(doc_data)
+	#print(api_url)
+
+	if (doc_data):
+		sri_signatures = frappe.get_all('Sri Signature', filters={"tax_id": "0919826958001"}, fields = ['*'])
+
+		if(sri_signatures):
+			#signatureP12 = sri_signatures[0]
+			signatureP12 = json.dumps(sri_signatures[0], default=str)
+
+		#signatureP12 = get_signature(doc_data.tax_id)
+		#print(type(signatureP12))
+		#doc_data.signatureP12 = signatureP12
+		#data_str = b"Este es un mensaje de prueba"
+		#signatureP12 = base64.b64encode(data_str).decode('utf-8')
+		#doc_data.signatureP12 = signatureP12
+
+		#doc_str = json.dumps(doc_data, default=handler)
+		doc_str = json.dumps(doc_data, default=str)
+		#doc_data = json.loads(doc_str)
+		#doc_data.signatureP12 = signatureP12
+
+		#print ("NODYYYYYYYY")
+		#print (doc_data)
+		#print (doc_str)
+
+		xml_string = build_xml_data(doc_data, doc_data.name, typeDocSri, siteName)
+		#print(xml_string)
+		signed_xml = build_xml_signed(xml_string, doc_data, signatureP12)
+		print(signed_xml)
+	
+		body = f""" <soapenv:Header/>
+   <soapenv:Body>
+      <ec:validarComprobante>
+         <xml><![CDATA[{signed_xml}]]></xml>
+      </ec:validarComprobante>
+   </soapenv:Body>
+</soapenv:Envelope>"""
+
+		headers = {}
+		
+		if(is_simulation_mode):
+			response = requests.post(api_url, verify=False, stream=True, timeout=server_timeout)
+		else:
+			response = requests.post(api_url, data=body, verify=False, stream=True, headers= headers, timeout=server_timeout)
+			#response = requests.post(api_url, json=doc_data, verify=False, stream=True, headers= headers)
+
+		#for k,v in r.raw.headers.items(): print(f"{k}: {v}")
+		#print(r.text)		
+		#print(response.text);
+		#print(response.status_code);
+			
+		#print(response)
+		#print(response.text)
+
+		print('Numero de respuesta')
+		
+		print(response.text)
+
+		response_json = json.loads(response.text, object_hook=lambda d: SimpleNamespace(**d))
+		
+		#TODO: Conversión del XML para guardar en la base de datos es correcta, pero no agrega la declaracion:
+		# <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+		response_xml_data = dicttoxml.dicttoxml(json.loads(response.text)['data'], encoding="UTF-8", attr_type=False, root=False, xml_declaration=True)
+		response_xml_data_string = response_xml_data
+		# Imprimir el XML resultante
+		#response_xml_data_string = response_xml_data.decode() #no funciona 
+		#print(response_xml_data_string)
+
+		print(response.status_code)
+		print(response.ok)
+
+		response_ok = response.ok
+
+		if(response.status_code == 400):
+			registerResponse(doc_data, typeDocSri, doctype_erpnext, response_json, response_xml_data_string)
+			if(response_json.data.numeroComprobantes is not None and int(response_json.data.numeroComprobantes) > 0):
+				if( not response_json.error is None and  'ya estaba autorizada' in response_json.error):
+					print ("correcto ya registrado previamente")
+					#Se simula que el proceso fue correcto para que los datos sean actualizados
+					response.status_code = 200
+					response_ok = True
+
+		if(response.status_code == 200):
+			
+			#registerResponse(doc_data, typeDocSri, doctype_erpnext, response_json, response.text)
+			registerResponse(doc_data, typeDocSri, doctype_erpnext, response_json, response_xml_data_string)
+
+			#evaluar estado de respuesta SRI
+			if(response_ok and int(response_json.data.numeroComprobantes) > 0):
+				print ("correcto")
+
+				print(response_json)
+
+				#proceder a actualizar datos del registro	
+				print(response_json.data.claveAccesoConsultada)
+				print(response_json.data.numeroComprobantes)
+				print(response_json.data.autorizaciones.autorizacion[0].estado)
+				print(response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
+				print(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
+				print(response_json.data.autorizaciones.autorizacion[0].ambiente)
+
+				#Se agrega un nuevo Xml Response para que se lance el evento y se envie el email
+				# xml_response_new = frappe.get_doc({
+				# 	'id': 1,
+				# 	'doctype': 'Xml Responses',
+				# 	'description': "[Description]", #f"{doc.name} Added",        
+				# })							
+
+				# xml_response_new.insert()
+				# frappe.db.commit()
+
+				if(response_json.data.autorizaciones.autorizacion[0].estado == "AUTORIZADO"):
+					#updateStatusDocument(doc_object_build, typeDocSri, response_json)
+	 				updateStatusDocument(doc_data, typeDocSri, response_json)
+
+		#api_url = "https://jsonplaceholder.typicode.com/todos/10"
+		#response = requests.get(api_url)
+		
+		#print(response.json());
+
+		#{'userId': 1, 'id': 10, 'title': 'illo est ... aut', 'completed': True}
+
+		#todo = {"userId": 1, "title": "Wash car", "completed": True}
+		#response = requests.put(api_url, json=todo)
+		#print(response.json())
+		#{'userId': 1, 'title': 'Wash car', 'completed': True, 'id': 10}
+
+		#frappe.msgprint(f"{xml_response_new.id} has been created.")
+
+		#return response.text  
 
 def setSecuencial(doc, typeDocSri):
 	

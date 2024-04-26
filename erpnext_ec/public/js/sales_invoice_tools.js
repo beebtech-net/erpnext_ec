@@ -413,7 +413,7 @@ function SendSalesInvoice(doc)
                         //console.log(docApi);
 						
 						frappe.call({
-							method: "erpnext_ec.utilities.sri_ws.send_doc",
+							method: "erpnext_ec.utilities.sri_ws.send_doc_native",
 							args: 
 							{
 								doc: doc,
