@@ -1,6 +1,6 @@
 /***********************************/
 
-function SendSalesInvoiceToSri(documentIsReady, document_preview)
+function SendSalesInvoiceToSri(documentIsReady, document_preview, doc)
 {
 	var doctype_erpnext = 'Sales Invoice';
 	var typeDocSri = 'FAC';
@@ -27,7 +27,7 @@ function SendSalesInvoiceToSri(documentIsReady, document_preview)
 				//console.log('Enviando al SRI');
 								
 				frappe.call({
-					method: "erpnext_ec.utilities.sri_ws.send_doc",
+					method: "erpnext_ec.utilities.sri_ws.send_doc_native",
 					args: 
 					{
 						doc: doc,
@@ -43,15 +43,18 @@ function SendSalesInvoiceToSri(documentIsReady, document_preview)
 					{
 						//console.log(r);
 
-						jsonResponse = JSON.parse(r.message);
+						//jsonResponse = JSON.parse(r.message);
+						//console.log(jsonResponse);
+
+						jsonResponse = r.message;
 						console.log(jsonResponse);
 
 						//console.log(json_data.data.claveAccesoConsultada);
 						//console.log(json_data.data.autorizaciones.autorizacion[0].numeroAutorizacion);
 						
-						if(jsonResponse.ok && jsonResponse.data.numeroComprobantes > 0)
-						{							
-							var newNumeroAutorizacion = jsonResponse.data.autorizaciones.autorizacion[0].numeroAutorizacion;
+						if(jsonResponse.ok && jsonResponse.numeroComprobantes > 0)
+						{
+							var newNumeroAutorizacion = jsonResponse.autorizaciones.autorizacion[0].numeroAutorizacion;
 
 							$(btnProcess).parent().find('.custom-animation').remove();
 							$(btnProcess).parent().append(`
@@ -83,14 +86,15 @@ function SendSalesInvoiceToSri(documentIsReady, document_preview)
 						{
 							//MOSTRAR EL MENSAJE DE ERROR MAS DETALLADO
 							
-							var string_error = jsonResponse.error;
+							var string_error = ''; //jsonResponse.error;
 							var string_informacionAdicional = '';
 							var string_mensaje = '';
 							try
 							{
-								string_error = jsonResponse.error;
-								string_mensaje = jsonResponse.data.autorizaciones.autorizacion[0].mensajes.mensaje[0].mensaje_;
-								string_informacionAdicional = jsonResponse.data.autorizaciones.autorizacion[0].mensajes.mensaje[0].informacionAdicional;										 
+								
+								//string_error = jsonResponse.error;
+								string_mensaje = jsonResponse.comprobantes.comprobante.mensajes.mensaje.mensaje;
+								string_informacionAdicional = jsonResponse.comprobantes.comprobante.mensajes.mensaje.informacionAdicional;
 
 								string_error = string_error == null ? '' : string_error;
 								string_mensaje = string_mensaje == null ? '' : string_mensaje;
@@ -138,7 +142,7 @@ function validationSri(doc)
 		method: "erpnext_ec.utilities.doc_validator.validate_sales_invoice",
 		args: 
 		{
-			doc_name: doc,
+			doc_name: doc.name,
 			freeze: false,
 			freeze_message: "Procesando documento, espere un momento.",
 			success: function(r) {},								
@@ -182,7 +186,7 @@ function validationSri(doc)
 			data_alert +
                 `<div class="warning-sri">Por favor, verifique que toda la información esté correctamente ingresada antes de enviarla al SRI y generar el documento electrónico.</div>`;
 
-			SendSalesInvoiceToSri(r.message.documentIsReady, document_preview);
+			SendSalesInvoiceToSri(r.message.documentIsReady, document_preview, doc);
 
 			//if(r.message.documentIsReady)
 			//{				
@@ -197,6 +201,6 @@ function validationSri(doc)
 
 function SendSalesInvoice(doc) 
 {
-	validationSri(doc.name);
+	validationSri(doc);
 }
 

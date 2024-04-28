@@ -106,5 +106,21 @@
 		"is_custom_field": 1,
 		"doctype": "Custom Field",
 		"dt": "Company"
+	},
+	{
+		"name": "Company-usesimulationmode",
+		"parent": "Customize Form",
+		"parentfield": "fields",
+		"parenttype": "Customize Form",
+		"idx": 30,
+		"docstatus": 0,
+		"label": "Usar modo simulación",
+		"fieldtype": "Check",
+		"fieldname": "use_simulation_mode",
+		"inser_after": "sri_signature",
+		"is_custom_field": 1,
+		"doctype": "Custom Field",
+		"description":"Si usa este modo, los documentos no serán enviados al SRI, solo se harán una simulación",
+		"dt": "Company"
 	}
 ]

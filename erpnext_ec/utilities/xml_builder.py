@@ -4,6 +4,7 @@ from xml.etree.ElementTree import Element, SubElement, tostring
 from xml.etree import ElementTree
 import xml.etree.ElementTree as ET
 from erpnext_ec.utilities.signature_tool import *
+import re
 
 from datetime import datetime
 #from odoo.addons.ec_sri_authorizathions.models import modules_mapping
@@ -14,6 +15,11 @@ import frappe
 from frappe import _
 import erpnext
 import os
+
+from erpnext_ec.utilities.doc_builder_fac import *
+from erpnext_ec.utilities.doc_builder_grs import build_doc_grs
+from erpnext_ec.utilities.doc_builder_cre import build_doc_cre
+
 
 DOCUMENT_VERSIONS = {
     'out_invoice': '1.1.0',
@@ -73,6 +79,11 @@ class XMLGenerator:
 
     def generate_xml(self, root_tag, data_dict):
         root = etree.Element(root_tag, nsmap=self.nsmap)
+        
+        root.set("id","comprobante")
+        
+        #TODO: Hay que obtener la version desde el XSD
+        root.set("version","1.1.0")
 
         # Crear el árbol XML basado en los datos proporcionados
         self._build_xml(root, data_dict)
@@ -110,10 +121,10 @@ def fix_infoAdicional(xml_tree):
             print(campo_adicional)
             #campo_adicional.set("nombre", campo_adicional.text)
             campo_adicional.set("nombre", campo_adicional.find("nombre").text)
-            campo_adicional.text = campo_adicional.find("text").text
+            campo_adicional.text = campo_adicional.find("valor").text
             
             campo_adicional.remove(campo_adicional.find("nombre"))
-            campo_adicional.remove(campo_adicional.find("text"))
+            campo_adicional.remove(campo_adicional.find("valor"))
     return xml_tree
 
 
@@ -128,133 +139,51 @@ def build_xml_signed(xml_string, data, signature_doc):
     return signed_xml
 
 @frappe.whitelist()
+def get_doc_native(doc, doc_name, typeDocSri, doctype_erpnext, siteName):	
+	
+	doc_data = None
+	
+	#doc_object_build = json.loads(doc, object_hook=lambda d: SimpleNamespace(**d))
+	
+	if typeDocSri == "FAC":			
+		doc_data = build_doc_fac(doc_name)	
+	elif typeDocSri == "GRS":
+		doc_data = build_doc_grs(doc_name)			
+	elif typeDocSri == "CRE":
+		doc_data = build_doc_cre(doc_name)	
+
+	return doc_data
+
+
+#Download XML
+@frappe.whitelist()
 def build_xml(doc_name, typeDocSri, typeFile, siteName):
     #crear datos para asignar a data
     # 1) desde objeto de datos
     # 2) luego convertirlo a la estructura compatible con el SRI
-    data = {}
-    build_xml_data(data, doc_name, typeDocSri, siteName)
+    
+    doc = {}
+    doctype_erpnext = ''
+
+    data = get_doc_native(doc, doc_name, typeDocSri, doctype_erpnext, siteName)
+
+    xml_beautified = build_xml_data(data, doc_name, typeDocSri, siteName)
+    #print(xml_beautified)
+    #Inicia la descarga
+    frappe.local.response.filename = doc_name + "." + typeFile
+    frappe.local.response.filecontent = xml_beautified
+    frappe.local.response.type = "download"
 
 @frappe.whitelist()
 def build_xml_data(data_object, doc_name, typeDocSri, siteName):
 
     typeFile = "xml"
+    #print('Clave de acceso buscada: "2003202401179071031900122160010001408395658032312"')
+
+    #print(data_object)
 
     # Datos para generar el XML
-    data = {
-        "infoTributaria": {
-            "ambiente": "1",
-            "tipoEmision": "1",
-            "razonSocial": "Razón Social",
-            "nombreComercial":"nombreComercial",
-            "ruc":"0919826958001",
-            "claveAcceso":"2003202401179071031900122160010001408395658032312",
-            "codDoc": "01",
-            "estab" : "216",
-            "ptoEmi" : "001",
-            "secuencial" : "000140839",
-            "dirMatriz" : "KM CINCO Y MEDIO AV DE LOS SHYRIS N SN Y SECUNDARIA"
-        },
-        "infoFactura": {
-            "fechaEmision": "20/03/2024",
-            "dirEstablecimiento": "VIA A LA COSTA KM 9.8 JUNTO A LA",
-            "contribuyenteEspecial": "5368",
-            "obligadoContabilidad": "SI",
-            "tipoIdentificacionComprador": "05",
-            "razonSocialComprador": "CHONILLO VILLON RONALD STALIN",
-            "identificacionComprador": "0919826958",
-            "totalSinImpuestos": "20.69",
-            "totalDescuento": "0",
-            "totalConImpuestos": {
-                "totalImpuesto": {
-                    "codigo": "2",
-                    "codigoPorcentaje": "0",
-                    "baseImponible": "20.69",
-                    "tarifa": "0",
-                    "valor": "0.00"
-                }
-            },
-            "propina": "0.00",
-            "importeTotal": "20.69",
-            "moneda": "DOLAR",
-            "pagos": {
-                "pago": {
-                    "formaPago": "19",
-                    "total": "20.69",
-                    "plazo": "0",
-                    "unidadTiempo": "MESES"
-                }
-            }
-        },
-        "detalles": {
-            "detalle": [
-            {
-                "codigoPrincipal": "100027114",
-                "descripcion": "CONRELAX.CONRELAX PLUS TABS. 504 MG C10 SUELTAS",
-                "cantidad": "5",
-                "precioUnitario": "2.09",
-                "descuento": "0",
-                "precioTotalSinImpuesto": "10.45",
-                "impuestos": {
-                "impuesto": {
-                    "codigo": "2",
-                    "codigoPorcentaje": "0",
-                    "tarifa": "0",
-                    "baseImponible": "10.45",
-                    "valor": "0.00"
-                }
-                }
-            },
-            {
-                "codigoPrincipal": "244624",
-                "descripcion": "NEOGAIVAL.NEOGAIVAL 2 MG CJA X20 SUELTAS",
-                "cantidad": "10",
-                "precioUnitario": "0.384",
-                "descuento": "0",
-                "precioTotalSinImpuesto": "3.84",
-                "impuestos": {
-                "impuesto": {
-                    "codigo": "2",
-                    "codigoPorcentaje": "0",
-                    "tarifa": "0",
-                    "baseImponible": "3.84",
-                    "valor": "0.00"
-                }
-                }
-            },
-            {
-                "codigoPrincipal": "140376",
-                "descripcion": "PANALGESIC.PANALGESIC FORTE CREMA 32 GR",
-                "cantidad": "2",
-                "precioUnitario": "3.2",
-                "descuento": "0",
-                "precioTotalSinImpuesto": "6.4",
-                "impuestos": {
-                "impuesto": {
-                    "codigo": "2",
-                    "codigoPorcentaje": "0",
-                    "tarifa": "0",
-                    "baseImponible": "6.40",
-                    "valor": "0.00"
-                }
-                }
-            }
-            ]
-        },
-        "infoAdicional": {
-            "campoAdicional": 
-            [
-                {
-                    "nombre": "DIRECCION",
-                    "text": "SP SN SI"
-                },
-                {
-                    "nombre": "DESCUENTO",
-                    "text": "1.01"
-                }
-            ]
-        }
-    }
+    data = build_doc_fac_sri(data_object)
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -282,6 +211,9 @@ def build_xml_data(data_object, doc_name, typeDocSri, siteName):
 
     xml_str = ElementTree.tostring(xml_doc.getroot(), encoding='utf-8')
     xml_beautified = xml.dom.minidom.parseString(xml_str).toprettyxml()
+
+    #encoding="UTF-8" standalone="no"
+    #<factura id="comprobante" version="1.1.0">
 
     #print(xml_beautified)
     #frappe.local.response.filename = doc_name + "." + typeFile

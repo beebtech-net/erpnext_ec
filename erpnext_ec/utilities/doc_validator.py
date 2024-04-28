@@ -65,12 +65,17 @@ def validate_sales_invoice(doc_name):
         alerts.append({"index": 0, "description": f"Punto de emisión incorrecto ({doc.ptoemi})", "type":"error"})
         documentIsReady = False
     else:    
-        alerts.append({"index": 0, "description": f"Punto de emisión correcto ({doc.ptoemi})", "type":"info"}) #green    
+        alerts.append({"index": 0, "description": f"Punto de emisión correcto ({doc.ptoemi})", "type":"info"}) #green
 
-    header.append({"index": 0, "description": "Nombre cliente", "value":doc.customer_name})
-    header.append({"index": 1, "description": "Tip.Doc. cliente", "value":doc.tipoIdentificacionComprador})
-    header.append({"index": 2, "description": "Cédula/RUC cliente", "value":doc.customer_tax_id})
-    header.append({"index": 3, "description": "Email cliente", "value":doc.customer_email_id})
+    sri_environment = frappe.get_last_doc('Sri Environment', filters = { 'id': doc.ambiente })
+    #print(sri_environment.name)
+    #print(sri_environment.id)
+
+    header.append({"index": 0, "description": "Ambiente", "value": sri_environment.description})
+    header.append({"index": 1, "description": "Nombre cliente", "value":doc.customer_name})
+    header.append({"index": 2, "description": "Tip.Doc. cliente", "value":doc.tipoIdentificacionComprador})
+    header.append({"index": 3, "description": "Cédula/RUC cliente", "value":doc.customer_tax_id})
+    header.append({"index": 4, "description": "Email cliente", "value":doc.customer_email_id})
 
     result = {
         "header": header,
@@ -81,8 +86,6 @@ def validate_sales_invoice(doc_name):
     }
 
     return result
-
-
 
 @frappe.whitelist()
 def validate_delivery_note(doc_name):

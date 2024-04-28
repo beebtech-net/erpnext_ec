@@ -111,4 +111,151 @@ def build_doc_fac(doc_name):
 		
 		doc.sri_validated = sri_validated
 		doc.sri_validated_message = sri_validated_message
+
+		if(not doc.secuencial or doc.secuencial == 0):
+			new_secuencial = setSecuencial(doc, 'FAC')
+			if new_secuencial > 0:
+				doc.secuencial = new_secuencial			
+
+		tipoDocumento = '01'
+		tipoAmbiente = doc.ambiente
+		tipoEmision = 1
+
+		fechaEmision = doc.posting_date
+		puntoEmision = doc.ptoemi
+		secuencial = doc.secuencial
+		ruc = doc.company_tax_id
+		establecimiento = doc.estab
+
+		claveAcceso = GenerarClaveAcceso(tipoDocumento, 
+                                     fechaEmision, 
+                                     puntoEmision, 
+                                     secuencial, 
+                                     tipoEmision, 
+                       ruc,
+                       tipoAmbiente,
+                       establecimiento)
+		
+		print(f'Clave de acceso creada: {claveAcceso}')
+
+		doc.claveAcceso = claveAcceso
+
 		return doc
+
+def build_doc_fac_sri(data_object):
+	
+	#print(data_object)
+	#return ""
+
+	totalConImpuestos = []
+
+	for taxItem in data_object.taxes:
+		totalConImpuestos.append({
+			"totalImpuesto": {
+						"codigo": taxItem.sricode,
+						"codigoPorcentaje": taxItem.codigoPorcentaje,
+						"baseImponible": taxItem.baseImponible,
+						"tarifa": taxItem.rate,
+						"valor": taxItem.tax_amount
+					}
+		})
+
+	#print(data_object['items'])
+
+	detalles = []
+
+	for item in data_object['items']:
+
+		#print(item)
+		impuestos = []
+
+		for impuesto in item.impuestos:
+			#print(impuesto)
+
+			impuestos.append({
+					"impuesto": {
+						"codigo": impuesto['codigo'],
+						"codigoPorcentaje": impuesto['codigoPorcentaje'],
+						"tarifa": impuesto['tarifa'],
+						"baseImponible": impuesto['baseImponible'],
+						"valor": impuesto['valor']
+					}})
+
+		#ErpNext coloca descuento negativo cuando el precio es modificado a un precio mas alto
+		# es decir , llena el campo discount_amount pero no el discount_percentage
+		#if (item.discount_amount < 0 and item.discount_percentage == 0):
+		#	item.discount_amount = 0
+
+		detalles.append({
+                "codigoPrincipal": item.item_code,
+                "descripcion": item.description,
+                "cantidad": item.qty,
+                "precioUnitario": item.precioUnitario,
+                "descuento": item.qty * item.discount_amount,
+                "precioTotalSinImpuesto": item.PrecioTotalSinImpuesto,
+                "impuestos": impuestos                
+            })
+
+	infoAdicional = []
+	for infoAdicionalItem in data_object.infoAdicional:
+		infoAdicional.append(
+		{
+			"nombre": infoAdicionalItem['nombre'],			
+			"valor": infoAdicionalItem['valor']
+		})
+	
+	pagos = []
+	print(data_object.pagos)
+	
+	for pagoItem in data_object.pagos:
+		pagos.append({
+					"pago":
+					{
+						"formaPago": pagoItem['formaPago'],
+						"total": pagoItem['total'],
+						"plazo": pagoItem['plazo'],
+						"unidadTiempo": pagoItem['unidadTiempo']
+					}})
+
+	print(pagos)
+
+	data = {
+        "infoTributaria": {
+            "ambiente": data_object.ambiente,
+            "tipoEmision": "1",
+            "razonSocial": data_object.razonSocial,
+            "nombreComercial": data_object.nombreComercial,
+            "ruc": data_object.tax_id,
+            "claveAcceso": data_object.claveAcceso,
+            "codDoc": "01",
+            "estab" : data_object.estab,
+            "ptoEmi" : data_object.ptoemi,
+            "secuencial" : '{:09d}'.format(data_object.secuencial),
+            "dirMatriz" : data_object.DireccionMatriz,
+			"contribuyenteRimpe": "CONTRIBUYENTE RÉGIMEN RIMPE"
+        },
+        "infoFactura": {
+            "fechaEmision": data_object.posting_date.strftime("%d/%m/%Y"), # data_object.posting_date,
+            "dirEstablecimiento": data_object.dirEstablecimiento,
+            "contribuyenteEspecial": data_object.contribuyenteEspecial,
+            "obligadoContabilidad": data_object.obligadoContabilidad,
+            "tipoIdentificacionComprador": data_object.tipoIdentificacionComprador,
+            "razonSocialComprador": data_object.customer_name,
+            "identificacionComprador": data_object.customer_tax_id,
+            "totalSinImpuestos": data_object.base_total,
+            "totalDescuento": data_object.discount_amount,
+            "totalConImpuestos": totalConImpuestos,
+            "propina": "0.00",
+            "importeTotal": data_object.grand_total,
+            "moneda": "DOLAR",
+            "pagos": pagos
+        },
+        "detalles": {
+            "detalle": detalles
+        },
+        "infoAdicional": {
+            "campoAdicional": infoAdicional
+        }
+    }
+
+	return data

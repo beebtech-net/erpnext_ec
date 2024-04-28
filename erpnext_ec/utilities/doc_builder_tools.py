@@ -159,7 +159,8 @@ def get_full_company_sri(def_company):
         compania_sri['agenteRetencion'] = doc.agenteretencion
         compania_sri['contribuyenteEspecial'] = doc.contribuyenteespecial
 
-        sri_enviroment = frappe.get_all('Sri Environment', fields='*', filters={'name': doc.sri_active_environment})        
+        sri_enviroment = frappe.get_all('Sri Environment', fields='*', filters={'name': doc.sri_active_environment})
+        #Se asigna por defecto ambiente desarrollo
         sri_active_environment = 1
 
         if(sri_enviroment):
@@ -671,3 +672,142 @@ def get_full_taxes_withhold(doc_name):
             taxItem.codigoPorcentaje = int(accountApi.codigoporcentaje)
 
     return impuestos
+
+
+
+
+def GenerarClaveAcceso(tipoDocumento, fechaEmision, puntoEmision, secuencial, tipoEmision, 
+                       ruc,
+                       tipoAmbiente,
+                       establecimiento):
+    
+    #Se hace la conversión a entero para poder luego convertirlo de forma segura
+    secuencial = int(secuencial)
+
+    cadenaNumeros = "{0}{1}{2}{3}{4}{5}{6}{7}{8}".format(
+        fechaEmision.strftime("%d%m%Y"),
+        tipoDocumento,
+        ruc,
+        tipoAmbiente,
+        establecimiento,
+        puntoEmision,
+        '{:09d}'.format(secuencial),
+        "12345678",
+        tipoEmision
+    )
+    return "{0}{1}".format(cadenaNumeros, ObtenerModulo11(cadenaNumeros))
+
+def ObtenerModulo11(cadenaNumeros):
+    baseMax = 7
+    multiplicador = 2
+    total = 0
+
+    substrings = re.findall(r'\d', cadenaNumeros)
+
+    for i in range(len(substrings) - 1, 0, -1):
+        numAux = int(substrings[i])
+        if multiplicador > baseMax:
+            multiplicador = 2
+        total += numAux * multiplicador
+        multiplicador += 1
+
+    verificador = 11 - total % 11
+
+    return CheckDigitBring(verificador)
+
+def CheckDigitBring(digit):
+    if digit == 10:
+        digit = 1
+    elif digit == 11:
+        digit = 0
+    return digit
+
+def ObtenerModulo10(cadenaNumeros):
+    coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2]
+    index = 0
+    suma = 0
+    for ch in cadenaNumeros[::-1]:
+        producto = int(ch) * coeficientes[index]
+        suma += producto if producto < 10 else producto - 9
+        index += 1
+    residuo = suma % 10
+    return 10 - residuo if residuo != 0 else 0
+
+
+def setSecuencial(doc, typeDocSri):
+	
+	company_object = frappe.get_last_doc('Company', filters = { 'name': doc.company  })
+	#company_object.name
+	#company_object.sri_active_environment
+	
+	if typeDocSri ==  "FAC":
+			
+			#print(doc)
+			document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name})
+			if(document_object):
+				if(document_object.secuencial > 0):
+					print("Secuencial ya asignado!")
+					print(document_object.secuencial)
+					return True
+
+	elif typeDocSri ==  "GRS":
+			
+			#print(doc)
+			document_object = frappe.get_last_doc('Delivery Note', filters = { 'name': doc.name})
+			if(document_object):
+				if(document_object.secuencial > 0):
+					print("Secuencial ya asignado!")
+					print(document_object.secuencial)
+					return True
+
+	elif typeDocSri ==  "CRE":
+			
+			#print(doc)
+			document_object = frappe.get_last_doc('Purchase Withholding Sri Ec', filters = { 'name': doc.name})
+			if(document_object):
+				if(document_object.secuencial > 0):
+					print("Secuencial ya asignado!")
+					print(document_object.secuencial)
+					return True
+
+	#PROCESO GENERAL -----
+	#doc.ambiente ---- aun no asignado   --- probablemente desde company
+	#environment_object = frappe.get_last_doc('Sri Environment', filters = { 'id': 1  })
+	#print(environment_object.name)
+	#print(environment_object.id)
+
+	print("--------------------------")
+	nuevo_secuencial = 0
+
+	#TODO: Agregar filtro por empresa, no fue considerado al inicio, se requerirá cambios en el modelo
+	#TODO: Falta automatizar el filtro, por ahora se puso id = 1
+	#sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'id': 1, 'sri_environment_lnk': environment_object.name, 'sri_type_doc_lnk': typeDocSri })
+	
+	#sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'company_id': company_object.name, 'sri_environment_lnk': company_object.sri_active_environment, 'sri_type_doc_lnk': typeDocSri })
+	sequence_object = frappe.get_list('Sri Sequence', fields = ['*'], filters = { 'company_id': company_object.name, 'sri_environment_lnk': company_object.sri_active_environment, 'sri_type_doc_lnk': typeDocSri })
+	#sequence_object = frappe.get_list('Sri Sequence', filters = { 'reference_name': doc_name })
+
+	#print(sequence_object[0])
+	
+	if (sequence_object):
+		print(sequence_object[0].value)
+		nuevo_secuencial = sequence_object[0].value
+		nuevo_secuencial += 1
+		print(nuevo_secuencial)
+		#Se asigna al documento
+		document_object.db_set('secuencial', nuevo_secuencial)
+		#Se asigna a la tabla de secuenciales
+
+		#Actualizar dato de secuencia
+		#doc_sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'id': sequence_object[0].id })
+		doc_sequence_object = frappe.get_last_doc('Sri Sequence', 
+				filters = { 'company_id': company_object.name, 
+					  'sri_environment_lnk': company_object.sri_active_environment, 
+					  'sri_type_doc_lnk': typeDocSri })
+		doc_sequence_object.db_set('value', nuevo_secuencial)
+		frappe.db.commit()
+	#	return True
+	#else:
+	#	return False
+	return nuevo_secuencial
+    

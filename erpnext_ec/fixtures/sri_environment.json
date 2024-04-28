@@ -3,7 +3,7 @@
     "doctype": "Sri Environment",
     "name": "DES",
     "id": 1,
-    "description": "Desarrollo",
+    "description": "Desarrollo***",
     "service_url_recept": "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl",
     "service_url_authorize": "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl"
   },
