@@ -52,7 +52,7 @@
 	}
 	
 	#footer span.yshortcuts, #footer .yshortcuts span { 
-	color: #333333;font-size:11px;
+		color: #333333;font-size:11px;
 	}
 	
 	.mobile_link a[href^="tel"], .mobile_link a[href^="sms"] {
@@ -60,8 +60,7 @@
 		color: orange !important;
 		pointer-events: auto;
 		cursor: default;
-		}
-	}	
+		}	
 	
 	.mobile_link a[href^="tel"], .mobile_link a[href^="sms"] {
 		text-decoration: default;
@@ -69,7 +68,7 @@
 		pointer-events: auto;
 		cursor: default;
 		}
-	}	
+		
 </style>
 <html>
 <body>
@@ -84,7 +83,7 @@
 					<tr>
 						<td valign="middle" height="25" width="50%" align="left" style="font-size:12px;font-family: Arial, Helvetica, sans-serif;" class="">
 						<span style="color:#7e7e7e;font-size:12px;">
-						@Model.razonSocial
+							{{doc.company}}
 						</span>
 						</td>
 						<td valign="middle" height="25" width="50%" align="right" style="font-size:12px;font-family: Arial, Helvetica, sans-serif; color: #7e7e7e;" class="">
@@ -123,7 +122,7 @@
 									<tr>
 										<td>
 											<a href="https://beebtech.net/" alt="">
-												<!--<img src="http://bicyclecards.com/wp-content/themes/bicycle-2015/public/images/layout/bicycle-logo-md.png">-->
+												
 											</a>
 										</td>
 									</tr>
@@ -132,10 +131,10 @@
 						</td>
 					</tr>
 					<tr>
-						<td class="" align="left">Estimad@@: </td>						
+						<td class="" align="left">Estimad@: </td>						
 					</tr>
 					<tr>
-						<td class="" align="center" cellpadding="2" colspan="2"><strong>@Model.razonSocialComprador</strong></td>
+						<td class="" align="center" cellpadding="2" colspan="2"><strong>{{doc.customer}}</strong></td>
 					</tr>
 				</tbody>
 			</table>
@@ -149,7 +148,7 @@
 				<tbody>
 				  <tr>
 					<td width="180px"><span style="color:#000;font-size:14px;font-family: Arial, Helvetica, sans-serif;"><strong>No. de factura:</strong></span></td>
-					<td><span style="color:#000;font-size:14px;font-family: Arial, Helvetica, sans-serif;">@Model.estab-@Model.ptoEmi-@Model.secuencial.ToString().PadLeft(9, '0')</span></td>  
+					<td><span style="color:#000;font-size:14px;font-family: Arial, Helvetica, sans-serif;">{{doc.estab}}-{{doc.ptoemi}}-{{'%09d' % doc.secuencial}}</span></td>  
 				  </tr>
 				  <tr>
 					<td><span style="color:#000;font-size:14px;font-family: Arial, Helvetica, sans-serif;"><strong>No. de cuenta:</strong></span></td>
@@ -157,15 +156,15 @@
 				  </tr>
 				  <tr>
 					<td><span style="color:#000;font-size:14px;font-family: Arial, Helvetica, sans-serif;"><strong>Fecha de emisi&oacute;n:</strong></span></td>
-					<td><span style="color:#000;font-size:14px;font-family: Arial, Helvetica, sans-serif;">@Model.fechaEmision</span></td>
+					<td><span style="color:#000;font-size:14px;font-family: Arial, Helvetica, sans-serif;">{{doc.posting_date}}</span></td>
 				  </tr>
 				  <tr>
 					<td><span style="color:#000;font-size:14px;font-family: Arial, Helvetica, sans-serif;"><strong>Autorizaci&oacute;n:</strong></span></td>
-					<td><span style="color:#000;font-size:14px;font-family: Arial, Helvetica, sans-serif;">@Model.claveAcceso</span></td>
+					<td><span style="color:#000;font-size:14px;font-family: Arial, Helvetica, sans-serif;">{{doc.numeroautorizacion}}</span></td>
 				  </tr>
 				  <tr>
 					<td><span style="color:#000;font-size:14px;font-family: Arial, Helvetica, sans-serif;"><strong>Valor a pagar:</strong></span></td>
-					<td><span style="color:#000;font-size:14px;font-family: Arial, Helvetica, sans-serif;">@Model.importeTotal</span></td>
+					<td><span style="color:#000;font-size:14px;font-family: Arial, Helvetica, sans-serif;">{{doc.net_total}}</span></td>
 				  </tr>
 				  <tr>
 					<td><span style="color:#000;font-size:14px;font-family: Arial, Helvetica, sans-serif;"><strong>Fecha max. de pago:</strong></span></td>
@@ -248,7 +247,7 @@
 											<font face="arial" color="#fff" size="2">
 												<p class="yshortcuts">
 													<span style="color:#fff;font-size:15px;">
-														@Model.dirMatriz
+														{{doc.DireccionMatriz}}
 													</span>
 												</p>
 												<span style="color:#fff;font-size:11px;">

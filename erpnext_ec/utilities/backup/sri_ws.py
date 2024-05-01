@@ -898,15 +898,18 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName):
 		response_xml_data_string = ""
 		
 		message_identificador = ''
-		message_text = ''		
+		message_text = ''
+		respuestaRecepcion = json_data['soap:Envelope']['soap:Body']['ns2:validarComprobanteResponse']['RespuestaRecepcionComprobante']
+		respuestaRecepcion['ok'] = True
+		print(respuestaRecepcion)
 
-		if(response['estado'] == 'DEVUELTA'):
-			if (response['comprobantes']['comprobante'][0]['mensajes']['mensaje'][0]['tipo'] == "ERROR"):
-				if (response['comprobantes']['comprobante'][0]['mensajes']['mensaje'][0]['identificador'] == "43" or 
-					response['comprobantes']['comprobante'][0]['mensajes']['mensaje'][0]['identificador'] == "65"):
+		if(respuestaRecepcion['estado'] == 'DEVUELTA'):
+			if (respuestaRecepcion['comprobantes']['comprobante']['mensajes']['mensaje']['tipo'] == "ERROR"):
+				if (respuestaRecepcion['comprobantes']['comprobante']['mensajes']['mensaje']['identificador'] == "43" or 
+		respuestaRecepcion['comprobantes']['comprobante']['mensajes']['mensaje']['identificador'] == "65"):
 					print('PROBAR AUTORIZACION PORQUE PARECE YA AUTORIZADA')
-					message_identificador = response['comprobantes']['comprobante'][0]['mensajes']['mensaje'][0]['identificador']
-					message_text = response['comprobantes']['comprobante'][0]['mensajes']['mensaje'][0]['mensaje']
+					message_identificador = respuestaRecepcion['comprobantes']['comprobante']['mensajes']['mensaje']['identificador']
+					message_text = respuestaRecepcion['comprobantes']['comprobante']['mensajes']['mensaje']['mensaje']
 					
 					response_auto = processAuthorization(doc_data, 
 						 typeDocSri, 
@@ -922,18 +925,18 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName):
 
 				else:
 					print('ACTUALIZAR EL ESTADO DE DOCUMENTO l1')
-					response['ok'] = False
-					return response
+					respuestaRecepcion['ok'] = False
+					return respuestaRecepcion
 			else:
 				pass
 
-		if(response['estado'] == 'ERROR'):
+		if(respuestaRecepcion['estado'] == 'ERROR'):
 			print('ACTUALIZAR EL ESTADO DE DOCUMENTO l2')
-			response['ok'] = False
+			respuestaRecepcion['ok'] = False
 			#return json.dumps(respuestaRecepcion)
-			return response
+			return respuestaRecepcion
 
-		if(response['estado'] == 'RECIBIDA'):
+		if(respuestaRecepcion['estado'] == 'RECIBIDA'):
 			print('ACTUALIZAR EL ESTADO DE DOCUMENTO l3')
 		
 		#SE REQUIERE METODO PARA CREAR LA CLAVE DE ACCESO	

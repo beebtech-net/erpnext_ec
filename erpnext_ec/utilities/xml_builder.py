@@ -135,7 +135,18 @@ def build_xml_signed(xml_string, data, signature_doc):
     # 2) luego convertirlo a la estructura compatible con el SRI
     #data = {}
     #xml_string = build_xml_data(data, doc_name, typeDocSri, typeFile, siteName)
-    signed_xml = SriXmlData.sign_xml(SriXmlData, xml_string, data, signature_doc)
+    #signed_xml = SriXmlData.sign_xml(SriXmlData, xml_string, data, signature_doc)
+    signed_xml = SriXmlData.sign_xml_old(SriXmlData, xml_string, signature_doc)
+    return signed_xml
+
+@frappe.whitelist()
+def build_xml_signed_cmd(xml_string, data, signature_doc):
+    #crear datos para asignar a data
+    # 1) desde objeto de datos
+    # 2) luego convertirlo a la estructura compatible con el SRI
+    #data = {}
+    #xml_string = build_xml_data(data, doc_name, typeDocSri, typeFile, siteName)
+    signed_xml = SriXmlData.sign_xml_cmd(SriXmlData, xml_string, data, signature_doc)
     return signed_xml
 
 @frappe.whitelist()
@@ -174,6 +185,17 @@ def build_xml(doc_name, typeDocSri, typeFile, siteName):
     frappe.local.response.filecontent = xml_beautified
     frappe.local.response.type = "download"
 
+def remove_empty_elements(elem):
+    # Recorremos los hijos del elemento
+    for child in elem:
+        # Si el hijo tiene hijos, llamamos a la función recursivamente
+        if len(child) > 0:
+            remove_empty_elements(child)
+        else:
+            # Si el hijo no tiene texto o el texto es 'None', lo eliminamos
+            if not child.text or not child.text.strip() or child.text.strip() == 'None':
+                elem.remove(child)
+
 @frappe.whitelist()
 def build_xml_data(data_object, doc_name, typeDocSri, siteName):
 
@@ -209,15 +231,9 @@ def build_xml_data(data_object, doc_name, typeDocSri, siteName):
     #frappe.local.response.filecontent = response.content
     #frappe.local.response.type = "download"
 
+    #remove_empty_elements(xml_doc.getroot())
     xml_str = ElementTree.tostring(xml_doc.getroot(), encoding='utf-8')
-    xml_beautified = xml.dom.minidom.parseString(xml_str).toprettyxml()
-
-    #encoding="UTF-8" standalone="no"
-    #<factura id="comprobante" version="1.1.0">
-
-    #print(xml_beautified)
-    #frappe.local.response.filename = doc_name + "." + typeFile
-    #frappe.local.response.filecontent = xml_beautified
-    #frappe.local.response.type = "download"
-
+    xml_beautified = xml_str.decode()
+    #xml_beautified = xml.dom.minidom.parseString(xml_str).toprettyxml()
+    
     return xml_beautified

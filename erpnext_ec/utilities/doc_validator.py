@@ -27,21 +27,16 @@ def validate_sales_invoice(doc_name):
     #sitenameVar = frappe.boot.sitename
     customer_email_id = ''
 
-    #customerApi = get_full_customer_sri(doc.customer)
-    #print(customerApi);
+    #print(doc.paymentsItems)
 
-    #doc.paymentsItems = get_payments_sri(doc.name)    
-    #doc.pagos = build_pagos(doc.paymentsItems)
-    #paymentsApi = doc.paymentsItems
-
-    if (doc.paymentsItems):
+    if (not doc.paymentsItems):
         alerts.append({"index": 0, "description": "No se han definido datos de pago (solicitud de pago/entrada de pago)", "type":"error"})
         documentIsReady = False
        
     if (doc.customer_tax_id == "" or doc.customer_tax_id == "9999999999"):
         alerts.append({"index": 0, "description": f"Cédula/Ruc del cliente es {doc.tax_id}", "type":"error"})
 
-    print(doc.direccionComprador)
+    #print(doc.direccionComprador)
     if (doc.direccionComprador == None):            
         alerts.append({"index": 0, "description": "No se han definido datos de dirección del cliente", "type":"error"})
         documentIsReady = False

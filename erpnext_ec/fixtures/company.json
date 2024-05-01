@@ -122,5 +122,37 @@
 		"doctype": "Custom Field",
 		"description":"Si usa este modo, los documentos no serán enviados al SRI, solo se harán una simulación",
 		"dt": "Company"
+	},
+	{
+		"name": "Company-sri-signature",
+		"parent": "Customize Form",
+		"parentfield": "fields",
+		"parenttype": "Customize Form",
+		"idx": 29,
+		"docstatus": 0,
+		"label": "Firma Electrónica",
+		"fieldtype": "Link",
+		"fieldname": "sri_signature",
+		"inser_after": "sri_active_environment",
+		"options":"Sri Signature",		
+		"is_custom_field": 1,
+		"doctype": "Custom Field",
+		"dt": "Company"
+	},	
+	{
+		"name": "Company-regional-settings-ec",
+		"parent": "Customize Form",
+		"parentfield": "fields",
+		"parenttype": "Customize Form",
+		"idx": 30,
+		"docstatus": 0,
+		"label": "Configuración",
+		"fieldtype": "Link",
+		"fieldname": "regional_settings_ec",
+		"inser_after": "sri_signature",
+		"options":"Regional Settings Ec",		
+		"is_custom_field": 1,
+		"doctype": "Custom Field",
+		"dt": "Company"
 	}
 ]

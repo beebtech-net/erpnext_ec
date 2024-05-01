@@ -18,6 +18,14 @@
     "in_preview": 1,
     "label": "Url Server Beebtech",
     "default":"http://127.0.0.1:3044/api/v2"
+  },  
+  {
+    "fieldname": "server_timeout",
+    "fieldtype": "Int",
+    "in_list_view": 0,
+    "in_preview": 0,
+    "default": "20",
+    "label": "Server Timeout"
   },
   {	
     "fieldname": "use_external_service",
@@ -25,7 +33,8 @@
 		"label": "Usar servicio externo",
 		"in_list_view": 1,
     "in_preview": 1,
-    "default": 0
+    "default": 0,
+    "description": "Si selecciona esta opción se usará la url configurada como herramienta para las tareas de envio del SRI, como firma y autorización."
 	},
   {
     "fieldname": "usuario",
@@ -47,14 +56,6 @@
     "in_list_view": 0,
     "in_preview": 0,
     "label": "Firma"
-  },
-  {
-    "fieldname": "server_timeout",
-    "fieldtype": "Int",
-    "in_list_view": 0,
-    "in_preview": 0,
-    "default": "20",
-    "label": "Server Timeout"
   }
  ],
  "index_web_pages_for_search": 1,

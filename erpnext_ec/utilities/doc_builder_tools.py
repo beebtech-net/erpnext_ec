@@ -103,6 +103,8 @@ def get_payments_sri(doc_name):
 
         for paymentEntryReference in paymentsEntryReferenceApi:
             paymentEntries = frappe.get_all('Payment Entry', fields='*', filters = { 'name': paymentEntryReference.parent })
+            #print('Pagos' )
+            #print(paymentEntries)
             if(paymentEntries):
                 for paymentEntry in paymentEntries:
                     paymentResults.append(paymentEntry)
@@ -130,7 +132,7 @@ def build_pagos(paymentResults):
                 else:
                     pago_item['total'] = paymentEntry.paid_amount
                     
-                print(paymentEntry)           
+                #print(paymentEntry)           
                 pagos.append(pago_item)
     return pagos
 
@@ -463,10 +465,10 @@ def get_full_taxes(doc_name):
     for taxItem in impuestos:
         accountApi = frappe.get_doc('Account', taxItem.account_head)
         # print('CUENTAAAAAAAAAAAAA')
-        print(taxItem)
+        #print(taxItem)
         #print(accountApi.sricode)
         #print(accountApi.codigoporcentaje)
-        print(accountApi.tax_rate)
+        #print(accountApi.tax_rate)
 
         if accountApi.sricode:
             taxItem.sricode =  int(accountApi.sricode)
@@ -672,9 +674,6 @@ def get_full_taxes_withhold(doc_name):
             taxItem.codigoPorcentaje = int(accountApi.codigoporcentaje)
 
     return impuestos
-
-
-
 
 def GenerarClaveAcceso(tipoDocumento, fechaEmision, puntoEmision, secuencial, tipoEmision, 
                        ruc,

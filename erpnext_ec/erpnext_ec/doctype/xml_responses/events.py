@@ -26,8 +26,12 @@ def after_insert(doc, event):
     #frappe.msgprint(f"{note.title} has been created.")
     #sendmail(doc, recipients, msg, title, attachments = None)
     
-    add_email_quote(doc.name, '', '', '', doc.tip_doc, doc.doc_type, "1")
+    if(doc.sri_status == 'AUTORIZADO'):
+    #if(True):
+        #print(doc)
 
-    print("Ready for send email -- FROM EVENT!!!!")
-    print("after_insert")
-    print(doc)
+        add_email_quote(doc.doc_ref, '', '', '', doc.tip_doc, doc.doc_type, "1")
+
+        print("Ready for send email -- FROM EVENT!!!!")
+        print("after_insert")
+        print(doc)

@@ -1,4 +1,186 @@
 /***********************************/
+function resolveFromExternal(r, doc, btnProcess)
+{
+	console.log(r);
+
+
+	jsonResponse = JSON.parse(r.message);
+	console.log(jsonResponse);
+
+	//console.log(json_data.data.claveAccesoConsultada);
+	//console.log(json_data.data.autorizaciones.autorizacion[0].numeroAutorizacion);
+	
+	if(jsonResponse.ok && jsonResponse.data.numeroComprobantes > 0)
+	{		
+		//console.log(req);
+		//console.log(req.responseText)
+
+		//var stringResponse = req.responseText;
+		//stringResponse = stringResponse.replace(/(<([^>]+)>)/gi, '');											
+		//const jsonResponse = JSON.parse(stringResponse);
+		var newNumeroAutorizacion = jsonResponse.data.autorizaciones.autorizacion[0].numeroAutorizacion;
+
+		//var newNumeroAutorizacion = '000010000100000100001010101010FAKE';
+		// old icon version <use class="" href="#icon-reply-all"></use>
+		//	new icon version <i class="fa fa-paper-plane"></i>
+		$(btnProcess).parent().find('.custom-animation').remove();
+		$(btnProcess).parent().append(`
+		<button class="btn btn-xs btn-default" data-name="` + doc.name + `" title="Enviar por email" onclick="event.stopPropagation(); document.Website.SendEmail('` + doc.name + `'); ">                					
+			<i class="fa fa-paper-plane"></i></button>`);
+
+		frappe.show_alert({
+			message: __(`Documento ${doc.name} procesado <br>Nueva clave de acceso SRI: ` + newNumeroAutorizacion),
+			indicator: 'green'
+		}, 5);
+		
+		console.log('DATOS DE ERROR');
+		console.log(jsonResponse.error);
+
+		//Se mostrará alerta de error en este nivel solamente si es que
+		// jsonResponse.error contiene información que deba ser mostrada
+		if(jsonResponse.error!==null && jsonResponse.error!==undefined && jsonResponse.error !== '')
+		{
+			var string_error = jsonResponse.error;
+			frappe.show_alert({
+				message: __(string_error),
+				indicator: 'red'
+			}, 10);
+		}
+
+		//bye bye!!
+		return;
+
+	}
+	else 
+	{
+		//MOSTRAR EL MENSAJE DE ERROR MAS DETALLADO
+		//console.log(req);
+		//console.log("Error", req.statusText);
+		//console.log('1x');
+		var string_error = jsonResponse.error;
+		var string_informacionAdicional = '';
+		var string_mensaje = '';
+		try
+		{
+			string_error = jsonResponse.error;
+			string_mensaje = jsonResponse.data.autorizaciones.autorizacion[0].mensajes.mensaje[0].mensaje_;
+			string_informacionAdicional = jsonResponse.data.autorizaciones.autorizacion[0].mensajes.mensaje[0].informacionAdicional;										 
+
+			string_error = string_error == null ? '' : string_error;
+			string_mensaje = string_mensaje == null ? '' : string_mensaje;
+			string_informacionAdicional = string_informacionAdicional == null ? '' : string_informacionAdicional;
+		}
+		catch(ex_messages)
+		{
+
+		}
+
+		frappe.show_alert({
+			message: __(`Error al procesar documento ${doc.name}:` + string_error + ":" + string_mensaje + ":" + string_informacionAdicional),
+			indicator: 'red'
+		}, 10);
+	}
+
+	//console.log('Terminado proceso con el SRI!');
+	$(btnProcess).show();
+	$(btnProcess).parent().find('.custom-animation').remove();  
+}
+
+function resolveFromInternal(r, btnProcess)
+{
+	console.log(r);
+
+	//jsonResponse = JSON.parse(r.message);
+	//console.log(jsonResponse);
+
+	jsonResponse = r.message;
+	console.log(jsonResponse);
+
+	if(jsonResponse.data != undefined)
+	{
+		jsonResponse = jsonResponse.data;
+	}
+
+	//console.log(json_data.data.claveAccesoConsultada);
+	//console.log(json_data.data.autorizaciones.autorizacion[0].numeroAutorizacion);
+	
+	if(jsonResponse.ok && jsonResponse.numeroComprobantes > 0)
+	{
+		var newNumeroAutorizacion = jsonResponse.autorizaciones.autorizacion[0].numeroAutorizacion;
+
+		$(btnProcess).parent().find('.custom-animation').remove();
+		$(btnProcess).parent().append(`
+		<button class="btn btn-xs btn-default" data-name="` + doc.name + `" title="Enviar por email" onclick="event.stopPropagation(); document.Website.SendEmail('` + doc.name + `'); ">                					
+			<i class="fa fa-paper-plane"></i></button>`);
+
+		frappe.show_alert({
+			message: __(`Documento ${doc.name} procesado <br>Nueva clave de acceso SRI: ` + newNumeroAutorizacion),
+			indicator: 'green'
+		}, 5);
+		
+		console.log('DATOS DE ERROR');
+		console.log(jsonResponse.error);
+
+		//Se mostrará alerta de error en este nivel solamente si es que
+		// jsonResponse.error contiene información que deba ser mostrada
+		if(jsonResponse.error!==null && jsonResponse.error!==undefined && jsonResponse.error !== '')
+		{
+			var string_error = jsonResponse.error;
+			frappe.show_alert({
+				message: __(string_error),
+				indicator: 'red'
+			}, 10);
+		}
+
+		return;
+	}
+	else 
+	{
+		//MOSTRAR EL MENSAJE DE ERROR MAS DETALLADO
+		
+		var string_error = ''; //jsonResponse.error;
+		var string_informacionAdicional = '';
+		var string_mensaje = '';
+		try
+		{
+			
+			//string_error = jsonResponse.error;
+			if(jsonResponse.comprobantes != undefined)
+			{
+				string_mensaje = jsonResponse.comprobantes.comprobante.mensajes.mensaje.mensaje;
+				string_informacionAdicional = jsonResponse.comprobantes.comprobante.mensajes.mensaje.informacionAdicional;
+
+				string_error = string_error == null ? '' : string_error;
+				string_mensaje = string_mensaje == null ? '' : string_mensaje;
+				string_informacionAdicional = string_informacionAdicional == null ? '' : string_informacionAdicional;
+			}
+
+			if(jsonResponse.autorizacion != undefined)
+			{
+				string_error = jsonResponse.error;
+					string_mensaje = jsonResponse.autorizaciones.autorizacion[0].mensajes.mensaje[0].mensaje_;
+					string_informacionAdicional = jsonResponse.autorizaciones.autorizacion[0].mensajes.mensaje[0].informacionAdicional;										 
+
+					string_error = string_error == null ? '' : string_error;
+					string_mensaje = string_mensaje == null ? '' : string_mensaje;
+					string_informacionAdicional = string_informacionAdicional == null ? '' : string_informacionAdicional;
+			}
+		}
+		catch(ex_messages)
+		{
+
+		}
+
+		frappe.show_alert({
+			message: __(`Error al procesar documento ${doc.name}:` + string_error + ":" + string_mensaje + ":" + string_informacionAdicional),
+			indicator: 'red'
+		}, 10);
+	}
+
+	//console.log('Terminado proceso con el SRI!');
+	$(btnProcess).show();
+	$(btnProcess).parent().find('.custom-animation').remove();  
+}
 
 function SendSalesInvoiceToSri(documentIsReady, document_preview, doc)
 {
@@ -36,85 +218,12 @@ function SendSalesInvoiceToSri(documentIsReady, document_preview, doc)
 						siteName: sitenameVar,
 						freeze: true,
 						freeze_message: "Procesando documento, espere un momento.",
-						success: function(r) {},								
+						success: function(r) {},
 						always: function(r) {},
 					},
 					callback: function(r) 
 					{
-						//console.log(r);
-
-						//jsonResponse = JSON.parse(r.message);
-						//console.log(jsonResponse);
-
-						jsonResponse = r.message;
-						console.log(jsonResponse);
-
-						//console.log(json_data.data.claveAccesoConsultada);
-						//console.log(json_data.data.autorizaciones.autorizacion[0].numeroAutorizacion);
-						
-						if(jsonResponse.ok && jsonResponse.numeroComprobantes > 0)
-						{
-							var newNumeroAutorizacion = jsonResponse.autorizaciones.autorizacion[0].numeroAutorizacion;
-
-							$(btnProcess).parent().find('.custom-animation').remove();
-							$(btnProcess).parent().append(`
-							<button class="btn btn-xs btn-default" data-name="` + doc.name + `" title="Enviar por email" onclick="event.stopPropagation(); document.Website.SendEmail('` + doc.name + `'); ">                					
-								<i class="fa fa-paper-plane"></i></button>`);
-
-							frappe.show_alert({
-								message: __(`Documento ${doc.name} procesado <br>Nueva clave de acceso SRI: ` + newNumeroAutorizacion),
-								indicator: 'green'
-							}, 5);
-							
-							console.log('DATOS DE ERROR');
-							console.log(jsonResponse.error);
-
-							//Se mostrará alerta de error en este nivel solamente si es que
-							// jsonResponse.error contiene información que deba ser mostrada
-							if(jsonResponse.error!==null && jsonResponse.error!==undefined && jsonResponse.error !== '')
-							{
-								var string_error = jsonResponse.error;
-								frappe.show_alert({
-									message: __(string_error),
-									indicator: 'red'
-								}, 10);
-							}
-
-							return;
-						}
-						else 
-						{
-							//MOSTRAR EL MENSAJE DE ERROR MAS DETALLADO
-							
-							var string_error = ''; //jsonResponse.error;
-							var string_informacionAdicional = '';
-							var string_mensaje = '';
-							try
-							{
-								
-								//string_error = jsonResponse.error;
-								string_mensaje = jsonResponse.comprobantes.comprobante.mensajes.mensaje.mensaje;
-								string_informacionAdicional = jsonResponse.comprobantes.comprobante.mensajes.mensaje.informacionAdicional;
-
-								string_error = string_error == null ? '' : string_error;
-								string_mensaje = string_mensaje == null ? '' : string_mensaje;
-								string_informacionAdicional = string_informacionAdicional == null ? '' : string_informacionAdicional;
-							}
-							catch(ex_messages)
-							{
-
-							}
-
-							frappe.show_alert({
-								message: __(`Error al procesar documento ${doc.name}:` + string_error + ":" + string_mensaje + ":" + string_informacionAdicional),
-								indicator: 'red'
-							}, 10);
-						}
-
-						//console.log('Terminado proceso con el SRI!');
-						$(btnProcess).show();
-						$(btnProcess).parent().find('.custom-animation').remove();                            	
-						
+						resolveFromExternal(r, doc, btnProcess);
 					},
 					error: function(r) {
 						$(btnProcess).show();
