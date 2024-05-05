@@ -1,0 +1,88 @@
+<factura xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="comprobante" version="1.0.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>FIOVAL CORP CL</razonSocial>
+    <nombreComercial>FIOVAL CORP CL</nombreComercial>
+    <ruc>0993320919001</ruc>
+    <claveAcceso>1804202401099332091900120010020000002421234567818</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>001</estab>
+    <ptoEmi>002</ptoEmi>
+    <secuencial>000000242</secuencial>
+    <dirMatriz>AV LAS AGUAS ENTRE JIGUAS Y LAURELES EDIF 1111</dirMatriz>
+    <contribuyenteRimpe>CONTRIBUYENTE R?GIMEN RIMPE</contribuyenteRimpe>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>18/04/2024</fechaEmision>
+    <dirEstablecimiento>AV LAS AGUAS ENTRE JIGUAS Y LAURELES EDIF 1111</dirEstablecimiento>
+    <obligadoContabilidad>NO</obligadoContabilidad>
+    <tipoIdentificacionComprador>05</tipoIdentificacionComprador>
+    <razonSocialComprador>JENNY ELIZABETH FUENTES CRISTOBAL</razonSocialComprador>
+    <identificacionComprador>0909259053</identificacionComprador>
+    <direccionComprador>BARRIO ROCAFUERTE AVENIDA 6TA ENTRE CALLE 25 Y 26 S/N LA LIBERTAD LA LIBERTAD , SE 240350</direccionComprador>
+    <totalSinImpuestos>480.35</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>480.35</baseImponible>
+        <tarifa>15</tarifa>
+        <valor>72.05</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0</propina>
+    <importeTotal>552.40</importeTotal>
+    <moneda>DOLAR</moneda>
+    <placa>Placa</placa>
+    <pagos>
+      <pago>
+        <formaPago>01</formaPago>
+        <total>552.4</total>
+        <unidadTiempo>dias</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>CO4801</codigoPrincipal>
+      <codigoAuxiliar>CO4801</codigoAuxiliar>
+      <descripcion>TAPA MEDIANA - 20CM</descripcion>
+      <cantidad>1.00</cantidad>
+      <precioUnitario>141.96</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>141.96</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="Unidad" valor="Und" />
+      </detallesAdicionales>
+      <impuestos />
+    </detalle>
+    <detalle>
+      <codigoPrincipal>CO4730</codigoPrincipal>
+      <codigoAuxiliar>CO4730</codigoAuxiliar>
+      <descripcion>OLLA SARTEN 20CM - 8'' - 2QT SIN TAPA</descripcion>
+      <cantidad>1.00</cantidad>
+      <precioUnitario>338.39</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>338.39</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="Unidad" valor="Und" />
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>338.39</baseImponible>
+          <valor>50.76</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="email">JENELIFUECRIS@HOTMAIL.COM</campoAdicional>
+    <campoAdicional nombre="tel.">0989848624</campoAdicional>
+    <campoAdicional nombre="Doc. Ref.">ACC-SINV-2024-00024</campoAdicional>
+  </infoAdicional>
+</factura>

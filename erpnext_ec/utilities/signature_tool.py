@@ -28,6 +28,9 @@ from erpnext_ec.utilities.xadessri import sign_xml as sign_xml_xs
 from requests import Session
 import base64
 
+import subprocess
+import os
+
 class SriXmlData():
     
     def validate_password(self, sri_signature):
@@ -117,7 +120,28 @@ class SriXmlData():
             
             return p12
     
-    def sign_xml_cmd(self, xml_string_data, doc, signature_doc):
+    def sign_xml_cmd(self, xml_string_data, signature_doc):
+        
+        tmp_xml = 'ACC-SINV-2024-00024.xml'
+        p12 = 'beebtech_0919826958001.p12'
+        password = 'beebtech2022CB'
+        output_xml = 'ACC-SINV-2024-00024_signed.xml'
+
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+
+        # Nombre del archivo XSD
+        appPath = dir_path + "/apps/XadesSignerCmd/XadesSignerCmd"
+        tmpFolder = dir_path + "/apps/XadesSignerCmd/" 
+
+        p = subprocess.Popen([appPath,
+                              '--fileinput', tmpFolder + tmp_xml ,
+                              '--p12', tmpFolder + p12,
+                              '--password', password,
+                              '--output', tmpFolder + output_xml])
+
+        res = p.communicate()
+
+        #Leer XML Firmado
 
         return ""
 

@@ -863,7 +863,9 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName):
 		#print(xml_string)
 
 		#signed_xml = build_xml_signed(xml_string, doc_data, signatureP12)
-		signed_xml = SriXmlData.sign_xml_old(SriXmlData, xml_string, signatureP12)
+		#signed_xml = SriXmlData.sign_xml_old(SriXmlData, xml_string, signatureP12)
+		signed_xml = SriXmlData.sign_xml_cmd(SriXmlData, xml_string, signatureP12)
+
 		#print(signed_xml)
 		print(type(str(signed_xml)))
 		xml_bytes = signed_xml.encode()
@@ -876,7 +878,7 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName):
 		#print("----------------")
 		#print(xml_bytes.decode())
 
-		#return "" 
+		return "" 
 	
 		response = validaComprobanteSuds( base64_string )
 
