@@ -377,13 +377,13 @@
                         <tr>            
                             <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Fec. Emi.: {{doc_build.posting_date}}</strong></td>    
                             <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Email: {{doc_build.customer_email_id}}</strong></td>
-                        </tr>        
+                        </tr>
                     </table>
                 </td>
             </tr>
             <tr>
                 <td style="padding-top: 0px !important;">
-                    <table id="tabdetalle" style="width:100%;" style="" cellspacing="0">
+                    <table id="tabdetalle" style="width:100%;" cellspacing="0">
                         <tbody>
                             <tr>
                                 <th style="min-width:10%;">Cod.</th>
@@ -479,7 +479,7 @@
                                 </tr>
                                 <tr>
                                     <td class="summary-title">TOTAL DESCUENTO</td>
-                                <td class="summary-data">{{doc.get_formatted('discount_amount')}}</td>
+                                <td class="summary-data">{{doc.get_formatted('TotalDescuento')}}</td>
                                 </tr>
                             
                                 {% for tax_item in doc_build.taxes %}

@@ -6,6 +6,7 @@
     "usuario": "Desarrollo",
     "password":"",
     "url_server_beebtech": "http://localhost:3003/api/v2",
-    "server_timeout": 30
+    "server_timeout": 30,
+    "signature_tool": "XadesSignerCmd"
   }
 ]

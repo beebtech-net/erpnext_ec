@@ -16,32 +16,16 @@
     "fieldtype": "Data",
     "in_list_view": 1,
     "in_preview": 1,
-    "label": "Url Server Beebtech",
-    "default":"http://127.0.0.1:3044/api/v2"
-  },  
-  {
-    "fieldname": "server_timeout",
-    "fieldtype": "Int",
-    "in_list_view": 0,
-    "in_preview": 0,
-    "default": "20",
-    "label": "Server Timeout"
+    "label": "Url Server Beebtech",    
+    "docstatus": 0,
+    "is_custom_field": 1
   },
-  {	
-    "fieldname": "use_external_service",
-    "fieldtype": "Check",		
-		"label": "Usar servicio externo",
-		"in_list_view": 1,
-    "in_preview": 1,
-    "default": 0,
-    "description": "Si selecciona esta opción se usará la url configurada como herramienta para las tareas de envio del SRI, como firma y autorización."
-	},
   {
     "fieldname": "usuario",
     "fieldtype": "Data",
     "in_list_view": 1,
     "in_preview": 1,
-    "label": "usuario"
+    "label": "Usuario"
   },
   {
     "fieldname": "password",
@@ -50,6 +34,31 @@
     "in_preview": 1,
     "label": "Contraseña"
   },
+  {
+    "fieldname": "server_timeout",
+    "fieldtype": "Int",
+    "in_list_view": 0,
+    "in_preview": 0,    
+    "label": "Server Timeout"
+  },
+  {	
+    "fieldname": "use_external_service",
+    "fieldtype": "Check",		
+		"label": "Usar servicio externo",
+		"in_list_view": 1,
+    "in_preview": 1,    
+    "description": "Si selecciona esta opción se usará la url configurada como herramienta para las tareas de envio del SRI, como firma y autorización."
+	},
+  {    
+    "fieldname": "signature_tool",
+    "fieldtype": "Select",		
+		"label": "Herramienta de firma electrónica",
+		"in_list_view": 1,
+    "in_preview": 1,    
+    "description": "Opciones de herramientas de firma electrónica.....",
+    "options": "XadesSignerCmd\nPython Native (With Fails)\nExterno (No implementado)"    
+	},
+  
   {
     "fieldname": "p12",
     "fieldtype": "Attach",
