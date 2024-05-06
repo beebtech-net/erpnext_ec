@@ -86,53 +86,102 @@ function resolveFromExternal(r, doc, btnProcess)
 	$(btnProcess).parent().find('.custom-animation').remove();  
 }
 
-function resolveFromInternal(r, btnProcess)
+function resolveFromInternal(r, doc, btnProcess)
 {
-	console.log(r);
+	var r___ = {
+		"message": {
+				"claveAccesoConsultada": "2803202401091982695800110010020000001701234567818",
+				"numeroComprobantes": "1",
+				"autorizaciones": {
+					"autorizacion": {
+						"estado": "NO AUTORIZADO",
+						"fechaAutorizacion": "2024-05-05T15:31:45-05:00",
+						"ambiente": "PRUEBAS",
+						"comprobante": "<factura id=\"comprobante\" version=\"1.1.0\"></factura>",
+						"mensajes": {
+							"mensaje": {
+								"identificador": "58",
+								"mensaje": "ERROR EN LA ESTRUCTURA DE LA CLAVE DE ACCESO",
+								"informacionAdicional": "La clave de acceso 2803202401091982695800110010020000001701234567818 no cumple módulo 11",
+								"tipo": "ERROR"
+							}
+						}								
+				}				
+			},
+			"ok": true
+		}
+	}
 
-	//jsonResponse = JSON.parse(r.message);
-	//console.log(jsonResponse);
+	console.log(r);
 
 	jsonResponse = r.message;
 	console.log(jsonResponse);
 
 	if(jsonResponse.data != undefined)
 	{
-		jsonResponse = jsonResponse.data;
+		//jsonResponse = jsonResponse.data;
 	}
 
 	//console.log(json_data.data.claveAccesoConsultada);
 	//console.log(json_data.data.autorizaciones.autorizacion[0].numeroAutorizacion);
 	
-	if(jsonResponse.ok && jsonResponse.numeroComprobantes > 0)
+	if(jsonResponse.numeroComprobantes > 0)
 	{
-		var newNumeroAutorizacion = jsonResponse.autorizaciones.autorizacion[0].numeroAutorizacion;
+		if(jsonResponse.autorizaciones.autorizacion.estado == 'AUTORIZADO')
+		{
+			var newNumeroAutorizacion = jsonResponse.autorizaciones.autorizacion.numeroAutorizacion;
 
-		$(btnProcess).parent().find('.custom-animation').remove();
-		$(btnProcess).parent().append(`
-		<button class="btn btn-xs btn-default" data-name="` + doc.name + `" title="Enviar por email" onclick="event.stopPropagation(); document.Website.SendEmail('` + doc.name + `'); ">                					
-			<i class="fa fa-paper-plane"></i></button>`);
+			$(btnProcess).parent().find('.custom-animation').remove();
+			$(btnProcess).parent().append(`
+			<button class="btn btn-xs btn-default" data-name="` + doc.name + `" title="Enviar por email" onclick="event.stopPropagation(); document.Website.SendEmail('` + doc.name + `'); ">                					
+				<i class="fa fa-paper-plane"></i></button>`);
 
-		frappe.show_alert({
-			message: __(`Documento ${doc.name} procesado <br>Nueva clave de acceso SRI: ` + newNumeroAutorizacion),
-			indicator: 'green'
-		}, 5);
+			var alert_message = `Documento ${doc.name} procesado <br>Nueva clave de acceso SRI: ` + newNumeroAutorizacion;
+			
+			if(!jsonResponse.ok)
+			{
+				alert_message = jsonResponse.custom_info;
+			}
+
+			frappe.show_alert({
+				message: __(alert_message),
+				indicator: 'green'
+			}, 5);
+			
+			return;
+		}
+		//if(jsonResponse.autorizaciones.autorizacion.estado == 'NO AUTORIZADO')
+		else
+		{
+			//if(jsonResponse.autorizaciones.autorizacion.mensajes.mensaje.tipo = "ERROR")
+			//{
+				var string_error = 
+				jsonResponse.autorizaciones.autorizacion.estado + ":" +
+				jsonResponse.autorizaciones.autorizacion.mensajes.mensaje.identificador + ":" +
+				jsonResponse.autorizaciones.autorizacion.mensajes.mensaje.mensaje + ":" +
+				jsonResponse.autorizaciones.autorizacion.mensajes.mensaje.informacionAdicional;
+				frappe.show_alert({
+					message: __(string_error),
+					indicator: 'red'
+				}, 10);
+			//}
+		}
 		
-		console.log('DATOS DE ERROR');
-		console.log(jsonResponse.error);
+		//console.log('DATOS DE ERROR');
+		//console.log(jsonResponse.error);
 
 		//Se mostrará alerta de error en este nivel solamente si es que
 		// jsonResponse.error contiene información que deba ser mostrada
-		if(jsonResponse.error!==null && jsonResponse.error!==undefined && jsonResponse.error !== '')
-		{
-			var string_error = jsonResponse.error;
-			frappe.show_alert({
-				message: __(string_error),
-				indicator: 'red'
-			}, 10);
-		}
+		//if(jsonResponse.error!==null && jsonResponse.error!==undefined && jsonResponse.error !== '')
+		//{
+		//	var string_error = jsonResponse.error;
+		//	frappe.show_alert({
+		//		message: __(string_error),
+		//		indicator: 'red'
+		//	}, 10);
+		//}
 
-		return;
+		//return;
 	}
 	else 
 	{
@@ -143,7 +192,11 @@ function resolveFromInternal(r, btnProcess)
 		var string_mensaje = '';
 		try
 		{
-			
+				if(jsonResponse.custom_info != undefined)
+				{
+					string_error = jsonResponse.custom_info;
+				}
+
 			//string_error = jsonResponse.error;
 			if(jsonResponse.comprobantes != undefined)
 			{
@@ -156,23 +209,24 @@ function resolveFromInternal(r, btnProcess)
 			}
 
 			if(jsonResponse.autorizacion != undefined)
-			{
-				string_error = jsonResponse.error;
-					string_mensaje = jsonResponse.autorizaciones.autorizacion[0].mensajes.mensaje[0].mensaje_;
-					string_informacionAdicional = jsonResponse.autorizaciones.autorizacion[0].mensajes.mensaje[0].informacionAdicional;										 
+			{				
+				string_mensaje = jsonResponse.autorizaciones.autorizacion.mensajes.mensaje.mensaje;
+				string_informacionAdicional = jsonResponse.autorizaciones.autorizacion.mensajes.mensaje.informacionAdicional;										 
 
-					string_error = string_error == null ? '' : string_error;
-					string_mensaje = string_mensaje == null ? '' : string_mensaje;
-					string_informacionAdicional = string_informacionAdicional == null ? '' : string_informacionAdicional;
+				string_error = string_error == null ? '' : string_error;
+				string_mensaje = string_mensaje == null ? '' : string_mensaje;
+				string_informacionAdicional = string_informacionAdicional == null ? '' : string_informacionAdicional;
 			}
+
+			
 		}
 		catch(ex_messages)
 		{
-
+			
 		}
 
 		frappe.show_alert({
-			message: __(`Error al procesar documento ${doc.name}:` + string_error + ":" + string_mensaje + ":" + string_informacionAdicional),
+			message: __(`Error al procesar documento l2 - ${doc.name}:` + string_error + ":" + string_mensaje + ":" + string_informacionAdicional),
 			indicator: 'red'
 		}, 10);
 	}
@@ -207,7 +261,9 @@ function SendSalesInvoiceToSri(documentIsReady, document_preview, doc)
 
 				// action to perform if Yes is selected
 				//console.log('Enviando al SRI');
-								
+				//resolveFromInternal(null, doc, btnProcess);
+				//return;	
+
 				frappe.call({
 					method: "erpnext_ec.utilities.sri_ws.send_doc_native",
 					args: 
@@ -221,9 +277,10 @@ function SendSalesInvoiceToSri(documentIsReady, document_preview, doc)
 						success: function(r) {},
 						always: function(r) {},
 					},
-					callback: function(r) 
+					callback: function(r)
 					{
-						resolveFromExternal(r, doc, btnProcess);
+						//resolveFromExternal(r, doc, btnProcess);
+						resolveFromInternal(r, doc, btnProcess);
 					},
 					error: function(r) {
 						$(btnProcess).show();

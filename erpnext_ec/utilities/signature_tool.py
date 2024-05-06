@@ -30,6 +30,7 @@ import base64
 
 import subprocess
 import os
+import uuid
 
 class SriXmlData():
     
@@ -122,11 +123,18 @@ class SriXmlData():
     
     def sign_xml_cmd(self, xml_string_data, signature_doc):
         
-        tmp_xml = 'ACC-SINV-2024-00024.xml'
-        p12 = 'beebtech_0919826958001.p12'
-        password = 'beebtech2022CB'
-        output_xml = 'ACC-SINV-2024-00024_signed.xml'
+        nombre_temporal = str(uuid.uuid4())
 
+        tmp_xml = frappe.get_site_path() + '/private/files/' + f'{nombre_temporal}.xml'
+        output_xml = frappe.get_site_path() + '/private/files/' + f'{nombre_temporal}_signed.xml'
+
+        with open(tmp_xml, "w") as text_file:
+            text_file.write(xml_string_data)
+
+        p12 = frappe.get_site_path() + signature_doc.p12        
+        from frappe.utils.password import get_decrypted_password       
+        password = get_decrypted_password('Sri Signature', signature_doc.name, "password")
+        
         dir_path = os.path.dirname(os.path.realpath(__file__))
 
         # Nombre del archivo XSD
@@ -134,16 +142,31 @@ class SriXmlData():
         tmpFolder = dir_path + "/apps/XadesSignerCmd/" 
 
         p = subprocess.Popen([appPath,
-                              '--fileinput', tmpFolder + tmp_xml ,
-                              '--p12', tmpFolder + p12,
+                              '--fileinput', tmp_xml ,
+                              '--p12', p12,
                               '--password', password,
-                              '--output', tmpFolder + output_xml])
+                              '--output', output_xml])
 
         res = p.communicate()
 
         #Leer XML Firmado
+        file = open(output_xml, "r")
+        content = file.read()
+        #print(content)
+        file.close()
 
-        return ""
+        try:
+            os.remove(tmp_xml)
+            os.remove(output_xml)
+            #print("El archivo se ha eliminado exitosamente.")
+        except FileNotFoundError:
+            #print("El archivo no existe.")
+            pass
+        except Exception as e:
+            #print("Ocurrió un error al intentar eliminar el archivo:", e)
+            pass
+
+        return content
 
     def sign_xml(self, xml_string_data, doc, signature_doc):
         def new_range():

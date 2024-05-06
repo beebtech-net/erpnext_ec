@@ -191,8 +191,8 @@ function allowSendSri(docApi)
 
 function SetFormSriButtons(frm, DocTypeErpNext)
 {
-	console.log('allowSendSri');
-	console.log(allowSendSri(frm.doc));
+	//console.log('allowSendSri');
+	//console.log(allowSendSri(frm.doc));
 
 	if(allowSendSri(frm.doc))
 	{
@@ -218,13 +218,13 @@ function SetFormSriButtons(frm, DocTypeErpNext)
 		//console.log(frm.doc.name);
 
 		//document.Website.DownloadXml('` + frm.doc.name + `');
-		document.Website.DownloadXml(frm.doc.name);
+		document.Website.DownloadXml_v2(frm.doc.name);
 
 	},__('<svg class="icon  icon-sm" style=""><use class="" href="#icon-organization"></use></svg>Sri')); //NO SOPORTA AWESOME ICONS
 
 	frm.add_custom_button(__('<i class="fa fa-file-pdf-o"></i> Descargar PDF'), function() 
 	{		
-		document.Website.DownloadPdf(frm.doc.name);
+		document.Website.DownloadPdf_v2(frm.doc.name);
 	},__('<svg class="icon  icon-sm" style=""><use class="" href="#icon-organization"></use></svg>Sri'));
 }
 

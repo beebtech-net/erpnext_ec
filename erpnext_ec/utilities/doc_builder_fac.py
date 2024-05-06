@@ -132,9 +132,9 @@ def build_doc_fac(doc_name):
                                      puntoEmision, 
                                      secuencial, 
                                      tipoEmision, 
-                       ruc,
-                       tipoAmbiente,
-                       establecimiento)
+									ruc,
+									tipoAmbiente,
+									establecimiento)
 		
 		print(f'Clave de acceso creada: {claveAcceso}')
 

@@ -697,11 +697,14 @@ def processAuthorization(doc_data,
 
 	response_auto = autorizacionComprobante(sri_environment, claveAccesoComprobante, server_timeout)
 
-	print(response_auto.text)
+	#print(response_auto.text)
+	
+	response_xml_data_string = response_auto.text
 
 	response_json_auto = xmltodict.parse(response_auto.text)
-	print(response_json_auto)
+	#print(response_json_auto)
 	response_json_auto_comprobantes = response_json_auto['soap:Envelope']['soap:Body']['ns2:autorizacionComprobanteResponse']['RespuestaAutorizacionComprobante']
+	response_json_auto_final = response_json_auto['soap:Envelope']['soap:Body']['ns2:autorizacionComprobanteResponse']['RespuestaAutorizacionComprobante']	
 
 	# Imprimir el XML resultante		
 	#print(response_xml_data_string)
@@ -724,39 +727,40 @@ def processAuthorization(doc_data,
 		registerResponse_native(doc_data, typeDocSri, doctype_erpnext, response_json_auto_comprobantes, response_xml_data_string)
 
 		#evaluar estado de respuesta SRI
-		if(response_ok and int(response_json_auto_comprobantes.numeroComprobantes) > 0):
+		if(response_ok and int(response_json_auto_comprobantes['numeroComprobantes']) > 0):
 			print ("correcto")
 
 			print(response_json_auto_comprobantes)
 
 			#proceder a actualizar datos del registro	
-			print(response_json_auto_comprobantes.claveAccesoConsultada)
-			print(response_json_auto_comprobantes.numeroComprobantes)
-			print(response_json_auto_comprobantes.autorizaciones.autorizacion[0].estado)
-			print(response_json_auto_comprobantes.autorizaciones.autorizacion[0].numeroAutorizacion)
-			print(response_json_auto_comprobantes.autorizaciones.autorizacion[0].fechaAutorizacion)
-			print(response_json_auto_comprobantes.autorizaciones.autorizacion[0].ambiente)
+			print(response_json_auto_comprobantes['claveAccesoConsultada'])
+			print(response_json_auto_comprobantes['numeroComprobantes'])
+			print(response_json_auto_comprobantes['autorizaciones']['autorizacion']['estado'])
+			#print(response_json_auto_comprobantes['claveAccesoConsultada'])
+			print(response_json_auto_comprobantes['autorizaciones']['autorizacion']['fechaAutorizacion'])
+			print(response_json_auto_comprobantes['autorizaciones']['autorizacion']['ambiente'])
 
-			if(response_json_auto_comprobantes.autorizaciones.autorizacion[0].estado == "AUTORIZADO"):
+			if(response_json_auto_comprobantes['autorizaciones']['autorizacion']['estado'] == "AUTORIZADO"):
 				#updateStatusDocument(doc_object_build, typeDocSri, response_json)
 				updateStatusDocument_native(doc_data, typeDocSri, response_json_auto_comprobantes)
 	
-	response_json_auto['ok'] = True
+	response_json_auto_final['ok'] = True
 	if(message_identificador == '43' or message_identificador == '65'):		
-		if(response_json_auto_comprobantes.ok and int(response_json_auto_comprobantes.numeroComprobantes) > 0):
-			if(response_json_auto_comprobantes.autorizaciones.autorizacion[0].estado == 'AUTORIZADO'):
+		#if(response_json_auto_comprobantes.ok and int(response_json_auto_comprobantes['numeroComprobantes']) > 0):
+		if(int(response_json_auto_comprobantes['numeroComprobantes']) > 0):
+			if(response_json_auto_comprobantes['autorizaciones']['autorizacion']['estado'] == 'AUTORIZADO'):
 				
-				docIdSri = doc_data.estab + "-" + doc_data.ptoemi + "-" + doc_data.secuencial
+				docIdSri = doc_data.estab + "-" + doc_data.ptoemi + "-" + str(doc_data.secuencial)
 
 				custom_info = f"La factura {docIdSri} ya estaba autorizada, {claveAccesoComprobante}."
-				response_json_auto['custom_info'] = custom_info
-				response_json_auto['ok'] = False
+				response_json_auto_final['custom_info'] = custom_info
+				response_json_auto_final['ok'] = False
 		else:
 			custom_info = f"Error {message_identificador} {message_text}, {doc_data.name}. No ha sido emitida previamente {claveAccesoComprobante}."
-			response_json_auto['custom_info'] = custom_info
-			response_json_auto['ok'] = False
+			response_json_auto_final['custom_info'] = custom_info
+			response_json_auto_final['ok'] = False
 
-	return response_json_auto
+	return response_json_auto_final
 
 def BuildSimulationResponse():
 	
@@ -815,10 +819,10 @@ def send_doc_native(doc, typeDocSri, doctype_erpnext, siteName):
 				return send_doc_external(doc, typeDocSri, doctype_erpnext, siteName)
 			else:
 				#Se utilizará el servicio interno
-				return send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName)
+				return send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName, regional_settings_ec)
 
 @frappe.whitelist()
-def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName):
+def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName, regional_settings_ec):
 
 	doc_data = None
 
@@ -860,11 +864,15 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName):
 		#doc_str = json.dumps(doc_data, default=str)
 
 		xml_string = build_xml_data(doc_data, doc_data.name, typeDocSri, siteName)
+
+		#Se firma el documento con la aplicacion externa XadesSignerCmd
+		if(regional_settings_ec.signature_tool == "XadesSignerCmd"):
+			signed_xml = SriXmlData.sign_xml_cmd(SriXmlData, xml_string, sri_signatures[0])
+
 		#print(xml_string)
 
 		#signed_xml = build_xml_signed(xml_string, doc_data, signatureP12)
-		#signed_xml = SriXmlData.sign_xml_old(SriXmlData, xml_string, signatureP12)
-		signed_xml = SriXmlData.sign_xml_cmd(SriXmlData, xml_string, signatureP12)
+		#signed_xml = SriXmlData.sign_xml_old(SriXmlData, xml_string, signatureP12)  		
 
 		#print(signed_xml)
 		print(type(str(signed_xml)))
@@ -878,20 +886,22 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName):
 		#print("----------------")
 		#print(xml_bytes.decode())
 
-		return "" 
+		#return "" 
 	
-		response = validaComprobanteSuds( base64_string )
+		#response = validaComprobanteSuds( base64_string )
+		response = validaComprobante(sri_environment, base64_string, server_timeout)
 
 		print('Numero de respuesta')
 		
 		print(response)
-			
-		json_data = response
-		#print(json_data)
+		
+		response_valida_json_auto = xmltodict.parse(response.text)
+		
+		print(response_valida_json_auto)
 
 		#informacion_adicional = json_data['soap:Envelope']['soap:Body']['ns2:validarComprobanteResponse']['RespuestaRecepcionComprobante']['comprobantes']['comprobante']['mensajes']['mensaje']['informacionAdicional']
 		#estado = json_data['soap:Envelope']['soap:Body']['ns2:validarComprobanteResponse']['RespuestaRecepcionComprobante']['estado']
-
+		response_valida = response_valida_json_auto['soap:Envelope']['soap:Body']['ns2:validarComprobanteResponse']['RespuestaRecepcionComprobante']
 		#print("Información Adicional:", informacion_adicional)
 		#print("estado:", estado)
 		
@@ -902,13 +912,13 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName):
 		message_identificador = ''
 		message_text = ''		
 
-		if(response['estado'] == 'DEVUELTA'):
-			if (response['comprobantes']['comprobante'][0]['mensajes']['mensaje'][0]['tipo'] == "ERROR"):
-				if (response['comprobantes']['comprobante'][0]['mensajes']['mensaje'][0]['identificador'] == "43" or 
-					response['comprobantes']['comprobante'][0]['mensajes']['mensaje'][0]['identificador'] == "65"):
+		if(response_valida['estado'] == 'DEVUELTA'):
+			if (response_valida['comprobantes']['comprobante']['mensajes']['mensaje']['tipo'] == "ERROR"):
+				if (response_valida['comprobantes']['comprobante']['mensajes']['mensaje']['identificador'] == "43" or 
+					response_valida['comprobantes']['comprobante']['mensajes']['mensaje']['identificador'] == "65"):
 					print('PROBAR AUTORIZACION PORQUE PARECE YA AUTORIZADA')
-					message_identificador = response['comprobantes']['comprobante'][0]['mensajes']['mensaje'][0]['identificador']
-					message_text = response['comprobantes']['comprobante'][0]['mensajes']['mensaje'][0]['mensaje']
+					message_identificador = response_valida['comprobantes']['comprobante']['mensajes']['mensaje']['identificador']
+					message_text = response_valida['comprobantes']['comprobante']['mensajes']['mensaje']['mensaje']
 					
 					response_auto = processAuthorization(doc_data, 
 						 typeDocSri, 
@@ -924,33 +934,37 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName):
 
 				else:
 					print('ACTUALIZAR EL ESTADO DE DOCUMENTO l1')
-					response['ok'] = False
-					return response
+					#response['ok'] = False
+					response_valida['ok'] = False
+					return response_valida
+					#return response
 			else:
 				pass
 
-		if(response['estado'] == 'ERROR'):
+		if(response_valida['estado'] == 'ERROR'):
 			print('ACTUALIZAR EL ESTADO DE DOCUMENTO l2')
-			response['ok'] = False
+			#response['ok'] = False
+			response_valida['ok'] = False
+			return response_valida
 			#return json.dumps(respuestaRecepcion)
-			return response
+			#return response
 
-		if(response['estado'] == 'RECIBIDA'):
+		if(response_valida['estado'] == 'RECIBIDA'):
 			print('ACTUALIZAR EL ESTADO DE DOCUMENTO l3')
 		
-		#SE REQUIERE METODO PARA CREAR LA CLAVE DE ACCESO	
+			#SE REQUIERE METODO PARA CREAR LA CLAVE DE ACCESO	
 
-		response_auto = processAuthorization(doc_data, 
-						 typeDocSri, 
-						 doctype_erpnext, 
-						 sri_environment, 
-						 claveAccesoComprobante, 
-						 server_timeout, 
-						 response_xml_data_string, 
-						 message_identificador,
-						 message_text)
+			response_auto = processAuthorization(doc_data, 
+							typeDocSri, 
+							doctype_erpnext, 
+							sri_environment, 
+							claveAccesoComprobante, 
+							server_timeout, 
+							response_xml_data_string, 
+							message_identificador,
+							message_text)
 		
-		return response_auto
+			return response_auto
 
 def registerResponse(doc, typeDocSri, doctype_erpnext, response_json, response_json_text):
 	#TODO: El XML se guarda de forma incorrecta, pero al parecer es un comportamiento normal
@@ -1040,7 +1054,7 @@ def registerResponse_native(doc, typeDocSri, doctype_erpnext, response_json, res
 					'doc_ref': doc.name,
 					#'xmldata': response_json.autorizaciones.autorizacion[0].comprobante,
 					'xmldata': response_json_text,
-					'sri_status': response_json.autorizaciones.autorizacion[0].estado,
+					'sri_status': response_json['autorizaciones']['autorizacion']['estado'],
 					'tip_doc': typeDocSri,
 					'doc_type': doctype_erpnext
 				})
@@ -1052,17 +1066,17 @@ def updateStatusDocument_native(doc, typeDocSri, response_json):
 	if typeDocSri ==  "FAC":
 			document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name })
 			if(document_object):
-				document_object.db_set('numeroautorizacion', response_json.autorizaciones.autorizacion[0].numeroAutorizacion)
+				document_object.db_set('numeroautorizacion', response_json['autorizaciones']['autorizacion']['numeroAutorizacion'])
 				document_object.db_set('sri_estado', 200)
-				document_object.db_set('sri_response', response_json.autorizaciones.autorizacion[0].estado)
+				document_object.db_set('sri_response', response_json['autorizaciones']['autorizacion']['estado'])
 				#TODO: Corregir
 				document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
 
 				#fechaAutorizacion = parser.parse(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
 
-				print(response_json.autorizaciones.autorizacion[0].fechaAutorizacion)
+				print(response_json['autorizaciones']['autorizacion']['fechaAutorizacion'])
 
-				fecha_string = response_json.autorizaciones.autorizacion[0].fechaAutorizacion				
+				fecha_string = response_json['autorizaciones']['autorizacion']['fechaAutorizacion']				
 				#fecha_con_zona = datetime.strptime(fecha_string, "%Y-%m-%dT%H:%M:%S")
 				fecha_con_zona = parser.parse(fecha_string)
 

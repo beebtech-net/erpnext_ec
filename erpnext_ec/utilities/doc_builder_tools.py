@@ -697,18 +697,18 @@ def GenerarClaveAcceso(tipoDocumento, fechaEmision, puntoEmision, secuencial, ti
     return "{0}{1}".format(cadenaNumeros, ObtenerModulo11(cadenaNumeros))
 
 def ObtenerModulo11(cadenaNumeros):
-    baseMax = 7
+    base_max = 7
     multiplicador = 2
     total = 0
-
-    substrings = re.findall(r'\d', cadenaNumeros)
+    substrings = re.split("", cadenaNumeros)
 
     for i in range(len(substrings) - 1, 0, -1):
-        numAux = int(substrings[i])
-        if multiplicador > baseMax:
-            multiplicador = 2
-        total += numAux * multiplicador
-        multiplicador += 1
+        if substrings[i] != "":
+            if multiplicador > base_max:
+                multiplicador = 2
+            num_aux = int(substrings[i])
+            total += (num_aux * multiplicador)
+            multiplicador += 1
 
     verificador = 11 - total % 11
 

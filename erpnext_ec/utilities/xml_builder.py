@@ -231,7 +231,7 @@ def build_xml_data(data_object, doc_name, typeDocSri, siteName):
     #frappe.local.response.filecontent = response.content
     #frappe.local.response.type = "download"
 
-    #remove_empty_elements(xml_doc.getroot())
+    remove_empty_elements(xml_doc.getroot())
     xml_str = ElementTree.tostring(xml_doc.getroot(), encoding='utf-8')
     xml_beautified = xml_str.decode()
     #xml_beautified = xml.dom.minidom.parseString(xml_str).toprettyxml()
