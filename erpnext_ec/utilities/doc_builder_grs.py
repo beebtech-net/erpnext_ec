@@ -19,15 +19,9 @@ def build_doc_grs(doc_name):
 	sri_validated_message = ''
 
 	if docs:
-		doc = docs[0]
-		#print("ITEEEEMMMMSSSS")
+		doc = docs[0]		
 		doc.items = get_full_items_delivery_note(doc.name)
-		#print(doc.items)
-        
-		#doc.taxes = get_full_taxes(doc.name)
-		#print("TAXEEESSS")
-		#print(doc.taxes)
-
+		
 		#Datos completos de la compañia emisora
 		company_full = get_full_company_sri(doc.company)
 
@@ -61,6 +55,34 @@ def build_doc_grs(doc_name):
 
 		doc.deliveryTrips = get_full_delivery_trips(doc)
 
+		destinatarios = []
+		for deliveryTripItem in doc.deliveryTrips:
+			for deliveryStopItem in deliveryTripItem.delivery_stops:
+				detalles = []
+
+				for itemDetalle in doc['items']:
+					detalles.append(
+								{
+								"codigoInterno": itemDetalle.item_code,
+								"descripcion": itemDetalle.description,
+								"cantidad": itemDetalle.qty
+							})
+
+				new_destinatarios = {
+					"identificacionDestinatario": doc.customer_tax_id,
+					"razonSocialDestinatario": doc.customer_name,
+					"dirDestinatario": deliveryStopItem.dirDestinatario,
+					"motivoTraslado": deliveryStopItem.motivotraslado,
+					"codDocSustento": "01", #deliveryStopItem.numAutDocSustento,
+					"numDocSustento": deliveryStopItem.numDocSustento,
+					"fechaEmisionDocSustento": doc.posting_date.strftime("%d/%m/%Y"),
+					"detalles" : {"detalle": detalles}
+				}
+			
+				destinatarios.append(new_destinatarios)
+
+		doc.destinatarios = destinatarios
+
 		# print(doc.infoAdicional)
 
 		#Simulando error
@@ -78,4 +100,106 @@ def build_doc_grs(doc_name):
 		
 		doc.sri_validated = sri_validated
 		doc.sri_validated_message = sri_validated_message
+
+		if(not doc.secuencial or doc.secuencial == 0):
+			new_secuencial = setSecuencial(doc, 'GRS')
+			if new_secuencial > 0:
+				doc.secuencial = new_secuencial			
+
+		tipoDocumento = '06'
+		tipoAmbiente = doc.ambiente
+		tipoEmision = 1
+
+		fechaEmision = doc.posting_date
+		puntoEmision = doc.ptoemi
+		secuencial = doc.secuencial
+		ruc = doc.tax_id
+		establecimiento = doc.estab		
+
+		claveAcceso = GenerarClaveAcceso(tipoDocumento, 
+                                     fechaEmision, 
+                                     puntoEmision, 
+                                     secuencial, 
+                                     tipoEmision, 
+									ruc,
+									tipoAmbiente,
+									establecimiento)
+		
+		print(f'Clave de acceso creada: {claveAcceso}')
+
+		doc.claveAcceso = claveAcceso
+
 		return doc
+
+
+def build_doc_grs_sri(data_object):
+	
+	#print(data_object)
+	#return ""
+
+	#print(data_object['items'])
+
+	infoAdicional = []
+	for infoAdicionalItem in data_object.infoAdicional:
+		if(infoAdicionalItem['valor']):
+			infoAdicional.append(
+			{
+				"nombre": infoAdicionalItem['nombre'],
+				"valor": infoAdicionalItem['valor'].upper()
+			})	
+
+	obligadoContabilidad = 'NO'
+	if(data_object.obligadoContabilidad == 1):
+		obligadoContabilidad = 'SI'
+
+	data = {
+        "infoTributaria": {
+            "ambiente": data_object.ambiente,
+            "tipoEmision": "1",
+            "razonSocial": data_object.razonSocial.upper(),
+            "nombreComercial": data_object.nombreComercial.upper(),
+            "ruc": data_object.tax_id,
+            "claveAcceso": data_object.claveAcceso,
+            "codDoc": "06",
+            "estab" : data_object.estab,
+            "ptoEmi" : data_object.ptoemi,
+            "secuencial" : '{:09d}'.format(data_object.secuencial),
+            "dirMatriz" : data_object.DireccionMatriz.upper(),
+			"contribuyenteRimpe": "CONTRIBUYENTE RÉGIMEN RIMPE"
+        },
+        "infoGuiaRemision": {
+            #"fechaEmision": data_object.posting_date.strftime("%d/%m/%Y"), # data_object.posting_date,			
+			#"dirEstablecimiento": data_object.dirEstablecimiento.upper(),
+			"dirPartida": data_object.dirEstablecimiento.upper(),
+			"razonSocialTransportista":"",
+			"tipoIdentificacionTransportista":"",
+			"rucTransportista":"",
+			"fechaIniTransporte": "01/04/2024",
+        	"fechaFinTransporte":" 01/04/2024",
+        	"placa": "XXX-000",
+			"rise":"",
+
+            "contribuyenteEspecial": data_object.contribuyenteEspecial,
+            "obligadoContabilidad": obligadoContabilidad,
+            "tipoIdentificacionComprador": data_object.tipoIdentificacionComprador,
+            
+			#"razonSocialComprador": data_object.customer_name.upper(),
+            #"identificacionComprador": data_object.customer_tax_id,
+
+            #"totalSinImpuestos": "{:.2f}".format(data_object.base_total),
+            #"totalDescuento": "{:.2f}".format(data_object.discount_amount),
+            #"totalConImpuestos": totalConImpuestos,
+            #"propina": "0.00",
+            #"importeTotal": data_object.grand_total,
+            #"moneda": "DOLAR",
+            #"pagos": pagos
+        },
+        "destinatarios": {
+            "destinatario": data_object.destinatarios
+        },
+        "infoAdicional": {
+            "campoAdicional": infoAdicional
+        }
+    }
+
+	return data

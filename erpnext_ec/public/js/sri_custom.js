@@ -53,6 +53,9 @@ function get_current_doc_type()
     if(doctype_erpnext == 'Delivery Note')
         typeDocSri = 'GRS';
 
+    if(doctype_erpnext == 'Purchase Withholding Sri Ec')
+        typeDocSri = 'CRE';
+
     //console.log([doctype_erpnext, typeDocSri]);
     
     return [doctype_erpnext, typeDocSri];

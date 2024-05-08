@@ -17,8 +17,8 @@ import erpnext
 import os
 
 from erpnext_ec.utilities.doc_builder_fac import *
-from erpnext_ec.utilities.doc_builder_grs import build_doc_grs
-from erpnext_ec.utilities.doc_builder_cre import build_doc_cre
+from erpnext_ec.utilities.doc_builder_grs import *
+from erpnext_ec.utilities.doc_builder_cre import *
 
 
 DOCUMENT_VERSIONS = {
@@ -157,11 +157,11 @@ def get_doc_native(doc, doc_name, typeDocSri, doctype_erpnext, siteName):
 	#doc_object_build = json.loads(doc, object_hook=lambda d: SimpleNamespace(**d))
 	
 	if typeDocSri == "FAC":			
-		doc_data = build_doc_fac(doc_name)	
+		doc_data = build_doc_fac(doc_name)
 	elif typeDocSri == "GRS":
-		doc_data = build_doc_grs(doc_name)			
+		doc_data = build_doc_grs(doc_name)
 	elif typeDocSri == "CRE":
-		doc_data = build_doc_cre(doc_name)	
+		doc_data = build_doc_cre(doc_name)
 
 	return doc_data
 
@@ -179,6 +179,7 @@ def build_xml(doc_name, typeDocSri, typeFile, siteName):
     data = get_doc_native(doc, doc_name, typeDocSri, doctype_erpnext, siteName)
 
     xml_beautified = build_xml_data(data, doc_name, typeDocSri, siteName)
+
     #print(xml_beautified)
     #Inicia la descarga
     frappe.local.response.filename = doc_name + "." + typeFile
@@ -198,26 +199,36 @@ def remove_empty_elements(elem):
 
 @frappe.whitelist()
 def build_xml_data(data_object, doc_name, typeDocSri, siteName):
-
-    typeFile = "xml"
-    #print('Clave de acceso buscada: "2003202401179071031900122160010001408395658032312"')
-
-    #print(data_object)
-
-    # Datos para generar el XML
-    data = build_doc_fac_sri(data_object)
-
     dir_path = os.path.dirname(os.path.realpath(__file__))
+    
+    # Datos para generar el XML
+    #data = build_doc_fac_sri(data_object)
+    #print("-------------------------")
+    #print(typeDocSri)
 
-    # Nombre del archivo XSD
-    xsd_file = dir_path + "/xsd/factura_V1/1/0.xsd"
+    if typeDocSri == "FAC":
+        data = build_doc_fac_sri(data_object)
+        xsd_file = dir_path + "/xsd/factura_V1/1/0.xsd"
+        element_name = "factura"
+    elif typeDocSri == "GRS":
+        data = build_doc_grs_sri(data_object)
+        xsd_file = dir_path + "/xsd/guiaRemision_V1/1/0.xsd"
+        element_name = "guiaRemision"
+    elif typeDocSri == "CRE":
+        data = build_doc_cre_sri(data_object)
+        xsd_file = dir_path + "/xsd/comprobanteRetencion_V1/0/0.xsd"
+        element_name = "comprobanteRetencion"
+
+    typeFile = "xml"    
     xmldsig_xsd_path = dir_path + "/xsd/xmldsig-core-schema.xsd"
+
+    #print(data_object)    
     
     # Crear instancia del generador XML
     xml_generator = XMLGenerator(xsd_file) #, xmldsig_xsd_path)
 
     # Generar el XML
-    xml_doc = xml_generator.generate_xml("factura", data)
+    xml_doc = xml_generator.generate_xml(element_name, data)
 
     xml_doc = fix_infoAdicional(xml_doc)
 
@@ -233,7 +244,7 @@ def build_xml_data(data_object, doc_name, typeDocSri, siteName):
 
     remove_empty_elements(xml_doc.getroot())
     xml_str = ElementTree.tostring(xml_doc.getroot(), encoding='utf-8')
-    xml_beautified = xml_str.decode()
-    #xml_beautified = xml.dom.minidom.parseString(xml_str).toprettyxml()
+    #xml_beautified = xml_str.decode()
+    xml_beautified = xml.dom.minidom.parseString(xml_str).toprettyxml()
     
     return xml_beautified

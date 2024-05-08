@@ -282,7 +282,7 @@ class SriXmlData():
                 p12 = f.read()
                 #print(pfx_data)
 
-        password = "beebtech2022CB".encode()
+        password = "password".encode()
         print(type(xml_string_data))
         print("---------------------------------------------------")
         signed = sign_xml_xs(p12, password, xml_string_data)

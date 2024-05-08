@@ -15,6 +15,7 @@ class PurchaseWithholdingSriEc(Document):
 	def validate(self):
 		print('validate 1')
 		#super(PurchaseWithholdingSriEc, self).validate()
+		print (self)
 		print('validate 2')
 
 	def on_submit(self):

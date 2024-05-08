@@ -663,7 +663,7 @@ def get_full_taxes_withhold(doc_name):
     for taxItem in impuestos:
         accountApi = frappe.get_doc('Account', taxItem.codigoRetencion)
         # print('CUENTAAAAAAAAAAAAA')
-        # print(accountApi)
+        print(accountApi)
         # print(accountApi.sricode)
         # print(accountApi.codigoporcentaje)
 
@@ -672,6 +672,9 @@ def get_full_taxes_withhold(doc_name):
               
         if accountApi.codigoporcentaje:
             taxItem.codigoPorcentaje = int(accountApi.codigoporcentaje)
+        
+        if accountApi.codigoretencion:
+             taxItem.codigoRetencionId = int(accountApi.codigoretencion)
 
     return impuestos
 
