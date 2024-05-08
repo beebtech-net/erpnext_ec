@@ -55,8 +55,31 @@ def build_doc_grs(doc_name):
 
 		doc.deliveryTrips = get_full_delivery_trips(doc)
 
+		placa_vehiculo = ""
+		conductor_nombre = ""
+		
 		destinatarios = []
 		for deliveryTripItem in doc.deliveryTrips:
+			placa_vehiculo = deliveryTripItem.vehicle
+			conductor_nombre = deliveryTripItem.driver_name
+
+			for driverItem in deliveryTripItem.trip_driver:
+				print(driverItem.transporter)
+				supplier_trip = frappe.get_all('Supplier', filters={'name': driverItem.transporter}, fields=['*'])
+				print(supplier_trip)
+				if(supplier_trip):
+					for supplierItem in supplier_trip:
+						#print (supplierItem.tax_id)
+						razonSocialTransportista = supplierItem.name
+						tipoIdentificacionTransportista = supplierItem.typeidtax
+						rucTransportista = supplierItem.tax_id
+
+						doc.razonSocialTransportista = razonSocialTransportista
+						doc.tipoIdentificacionTransportista = tipoIdentificacionTransportista
+						doc.rucTransportista = rucTransportista
+						break
+				break
+
 			for deliveryStopItem in deliveryTripItem.delivery_stops:
 				detalles = []
 
@@ -70,11 +93,11 @@ def build_doc_grs(doc_name):
 
 				new_destinatarios = {
 					"identificacionDestinatario": doc.customer_tax_id,
-					"razonSocialDestinatario": doc.customer_name,
-					"dirDestinatario": deliveryStopItem.dirDestinatario,
-					"motivoTraslado": deliveryStopItem.motivotraslado,
+					"razonSocialDestinatario": doc.customer_name.upper().strip(),
+					"dirDestinatario": deliveryStopItem.dirDestinatario.upper().strip(),
+					"motivoTraslado": deliveryStopItem.motivotraslado.upper().strip(),
 					"codDocSustento": "01", #deliveryStopItem.numAutDocSustento,
-					"numDocSustento": deliveryStopItem.numDocSustento,
+					"numDocSustento": deliveryStopItem.numDocSustento.strip(),
 					"fechaEmisionDocSustento": doc.posting_date.strftime("%d/%m/%Y"),
 					"detalles" : {"detalle": detalles}
 				}
@@ -82,6 +105,8 @@ def build_doc_grs(doc_name):
 				destinatarios.append(new_destinatarios)
 
 		doc.destinatarios = destinatarios
+		doc.placa_vehiculo = placa_vehiculo
+		doc.conductor_nombre = conductor_nombre
 
 		# print(doc.infoAdicional)
 
@@ -152,47 +177,38 @@ def build_doc_grs_sri(data_object):
 	if(data_object.obligadoContabilidad == 1):
 		obligadoContabilidad = 'SI'
 
+	contribuyenteRimpe = "CONTRIBUYENTE RÉGIMEN RIMPE"
+
 	data = {
         "infoTributaria": {
             "ambiente": data_object.ambiente,
             "tipoEmision": "1",
-            "razonSocial": data_object.razonSocial.upper(),
-            "nombreComercial": data_object.nombreComercial.upper(),
+            "razonSocial": data_object.razonSocial.upper().strip(),
+            "nombreComercial": data_object.nombreComercial.upper().strip(),
             "ruc": data_object.tax_id,
             "claveAcceso": data_object.claveAcceso,
             "codDoc": "06",
             "estab" : data_object.estab,
             "ptoEmi" : data_object.ptoemi,
             "secuencial" : '{:09d}'.format(data_object.secuencial),
-            "dirMatriz" : data_object.DireccionMatriz.upper(),
-			"contribuyenteRimpe": "CONTRIBUYENTE RÉGIMEN RIMPE"
+            "dirMatriz" : data_object.DireccionMatriz.upper().strip(),
+			"contribuyenteRimpe": contribuyenteRimpe
         },
         "infoGuiaRemision": {
             #"fechaEmision": data_object.posting_date.strftime("%d/%m/%Y"), # data_object.posting_date,			
 			#"dirEstablecimiento": data_object.dirEstablecimiento.upper(),
-			"dirPartida": data_object.dirEstablecimiento.upper(),
-			"razonSocialTransportista":"",
-			"tipoIdentificacionTransportista":"",
-			"rucTransportista":"",
+			"dirPartida": data_object.dirEstablecimiento.upper().strip(),
+			"razonSocialTransportista": data_object.razonSocialTransportista.upper().strip(),
+			"tipoIdentificacionTransportista": data_object.tipoIdentificacionTransportista,
+			"rucTransportista": data_object.rucTransportista,
 			"fechaIniTransporte": "01/04/2024",
         	"fechaFinTransporte":" 01/04/2024",
-        	"placa": "XXX-000",
-			"rise":"",
+        	"placa": data_object.placa_vehiculo,
+			#"rise":"Contribuyente Regimen Simplificado RISE",
 
             "contribuyenteEspecial": data_object.contribuyenteEspecial,
             "obligadoContabilidad": obligadoContabilidad,
-            "tipoIdentificacionComprador": data_object.tipoIdentificacionComprador,
-            
-			#"razonSocialComprador": data_object.customer_name.upper(),
-            #"identificacionComprador": data_object.customer_tax_id,
-
-            #"totalSinImpuestos": "{:.2f}".format(data_object.base_total),
-            #"totalDescuento": "{:.2f}".format(data_object.discount_amount),
-            #"totalConImpuestos": totalConImpuestos,
-            #"propina": "0.00",
-            #"importeTotal": data_object.grand_total,
-            #"moneda": "DOLAR",
-            #"pagos": pagos
+            "tipoIdentificacionComprador": data_object.tipoIdentificacionComprador,            
         },
         "destinatarios": {
             "destinatario": data_object.destinatarios
