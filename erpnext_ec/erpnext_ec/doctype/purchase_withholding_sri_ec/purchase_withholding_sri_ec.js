@@ -230,6 +230,8 @@ frappe.ui.form.on("Purchase Taxes and Charges Ec", "numDocSustentoLink", functio
                 indicator: 'red',
                 message: __(document_preview)
             });
+
+            return;
         }
 
     });

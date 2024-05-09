@@ -223,7 +223,20 @@
     "reqd": 0,
     "in_list_view": 1,
     "read_only": 1
-  },  
+  },
+  {
+		"name": "Purchase-Withholding-column_break_01",
+		"parent": "Customize Form",
+		"parentfield": "fields",
+		"parenttype": "Customize Form",
+		"idx": 30,
+		"docstatus": 0,
+		"label": "",
+		"fieldtype": "Column Break",
+		"fieldname": "column_break_01",
+		"non_negative": 0,
+		"reqd": 0
+	},
   {
       "name": "Purchase-Withholding-estab",
       "parent": "Customize Form",
