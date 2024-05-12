@@ -129,14 +129,38 @@ def fix_infoAdicional(xml_tree):
 
 
 @frappe.whitelist()
-def build_xml_signed(xml_string, data, signature_doc):
+def build_xml_signed(doc_name, typeDocSri, typeFile, siteName):
     #crear datos para asignar a data
     # 1) desde objeto de datos
     # 2) luego convertirlo a la estructura compatible con el SRI
     #data = {}
     #xml_string = build_xml_data(data, doc_name, typeDocSri, typeFile, siteName)
     #signed_xml = SriXmlData.sign_xml(SriXmlData, xml_string, data, signature_doc)
-    signed_xml = SriXmlData.sign_xml_old(SriXmlData, xml_string, signature_doc)
+    #signed_xml = SriXmlData.sign_xml_old(SriXmlData, xml_string, signature_doc)
+    doc = {}
+    doctype_erpnext = ''
+
+    data = get_doc_native(doc, doc_name, typeDocSri, doctype_erpnext, siteName)
+
+    xml_beautified = build_xml_data(data, doc_name, typeDocSri, siteName)
+
+    #print(xml_beautified)
+    #Inicia la descarga
+    company_object = frappe.get_last_doc('Company', filters = { 'name': data.company  })
+    if(company_object):
+        #signed_xml = build_xml_signed_cmd(xml_beautified, data, signature_doc)
+        sri_signatures = frappe.get_all('Sri Signature', filters={"name": company_object.sri_signature}, fields = ['*'])
+
+		#if(sri_signatures):
+			#signatureP12 = sri_signatures[0]
+		#	signatureP12 = json.dumps(sri_signatures[0], default=str)
+               
+    signed_xml = SriXmlData.sign_xml_cmd(SriXmlData, xml_beautified, sri_signatures[0])
+    
+    typeFile = 'xml'
+    frappe.local.response.filename = doc_name + "_sign." + typeFile
+    frappe.local.response.filecontent = signed_xml
+    frappe.local.response.type = "download"
     return signed_xml
 
 @frappe.whitelist()

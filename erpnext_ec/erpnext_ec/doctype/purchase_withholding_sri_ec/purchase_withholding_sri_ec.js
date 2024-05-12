@@ -2,6 +2,30 @@
 //NO USAR AQUI
 //SetListSriButtons('Purchase Withholding Sri Ec');
 
+function setPurchaseInvoicesFilter()
+{
+    console.log('SHOW');
+    
+    //console.log(cur_frm.fields_dict);
+
+    var purchase_withholding_supplier = cur_frm.doc.purchase_withholding_supplier;
+    if(purchase_withholding_supplier.length == 0)
+    {
+        purchase_withholding_supplier = '44566%^78iu';
+    }
+
+    console.log(purchase_withholding_supplier);
+
+    cur_frm.fields_dict['taxes'].grid.get_field("numDocSustentoLink").get_query = function(doc, cdt, cdn) 
+        {
+            return {
+                filters: {
+                "supplier": purchase_withholding_supplier
+                }
+            }
+        }
+}
+
 //Prepare in form mode
 frappe.ui.form.on('Purchase Withholding Sri Ec', 
 {
@@ -44,6 +68,8 @@ frappe.ui.form.on('Purchase Withholding Sri Ec',
                 }
             }
         }
+
+        setPurchaseInvoicesFilter();
 
         var def_company = frappe.defaults.get_user_default("Company");
             
@@ -95,6 +121,8 @@ frappe.ui.form.on('Purchase Withholding Sri Ec',
                 frm.set_value('identificacionSujetoRetenido',  docs[0].tax_id);
 			}
 		});
+
+        setPurchaseInvoicesFilter();
 	},
 	estab: function(frm)
 	{
@@ -198,7 +226,7 @@ frappe.ui.form.on("Purchase Taxes and Charges Ec", "numDocSustentoLink", functio
             else
             {
                 var document_preview = `
-                    <p>Confirmar para procesar el documento ${item.numDocSustentoLink}</p>
+                    <p>Verifique los datos del documento ${item.numDocSustentoLink}</p>
                     <table>
                         <tr>
                             <td>Nombre proveedor:</td>

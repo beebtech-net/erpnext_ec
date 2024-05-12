@@ -108,6 +108,8 @@ function SetupCustomButtons(doc, DocTypeErpNext)
     <a class="dropdown-item hide" href="javascript:document.Website.DownloadPdf('` + doc.name + `'); "><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Pdf ${doc.name}</a>
     <div class="dropdown-divider documentation-links"></div>
 	<a class="dropdown-item" href="javascript:document.Website.ShowInfo('` + doc.name + `'); "><i class="fa fa-info-circle" aria-hidden="true"></i> Ver información</a>
+	<div class="dropdown-divider documentation-links"></div>
+	<a class="dropdown-item hide" href="javascript:document.Website.DownloadXmlSigned('` + doc.name + `'); "><i class="fa fa-file-code-o" aria-hidden="true"></i> Xml Signed ${doc.name}</a>
   </div>
 </div>
 `;

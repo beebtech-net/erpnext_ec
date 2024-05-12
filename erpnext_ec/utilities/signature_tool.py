@@ -154,6 +154,9 @@ class SriXmlData():
         content = file.read()
         #print(content)
         file.close()
+        
+        #En caso de usar firmas UANATACA
+        #content = content.replace('organizationIdentifier=VATES-A66721499', '2.5.4.97=#0c0f56415445532d413636373231343939')
 
         try:
             os.remove(tmp_xml)

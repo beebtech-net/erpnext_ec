@@ -811,6 +811,11 @@ const Website = {
             url = `/api/method/erpnext_ec.utilities.sri_ws.download_pdf`;
         }
 
+        if(typeFile == 'xmlsign')
+        {
+            url = `/api/method/erpnext_ec.utilities.xml_builder.build_xml_signed`;
+        }
+
         var req = new XMLHttpRequest();
         req.open("POST", url, true);
         req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -877,6 +882,10 @@ const Website = {
     DownloadPdf_v2(doc) {
         document.Website.DownloadFile_v2(doc, 'pdf');
 
+        return;
+    },
+    DownloadXmlSigned(doc) {
+        document.Website.DownloadFile_v2(doc, 'xmlsign');
         return;
     },
     DownloadXml_v2(doc) {
