@@ -363,13 +363,22 @@ def get_full_supplier_sri(def_customer):
                 supplier_address_primary = supplier_address[0]
             else:
                 print('---')
-                
+        
+        #print('supplier_address_primary')
+        #print(supplier_address_primary)
+
         if supplier_address_primary:
             supplier_sri['supplier_email_id']  = supplier_address_primary.email_id
             supplier_sri['supplier_phone']  = supplier_address_primary.phone
+            supplier_sri['address_line1']  = supplier_address_primary.address_line1 if supplier_address_primary.address_line1 is not None else ''
+            supplier_sri['address_line2']  = supplier_address_primary.address_line2 if supplier_address_primary.address_line2 is not None else ''
+            supplier_sri['direccionSujetoRetenido']  = supplier_sri['address_line1'] + ' ' + supplier_sri['address_line2']
         else:
             supplier_sri['supplier_email_id']  = ''
             supplier_sri['supplier_phone']  = ''
+            supplier_sri['address_line1']  = ''
+            supplier_sri['address_line2']  = ''
+            supplier_sri['direccionSujetoRetenido']  = ''
 
         #print(compania_sri)
         return supplier_sri

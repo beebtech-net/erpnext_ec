@@ -239,9 +239,13 @@ def download_pdf(doc_name, typeDocSri, typeFile, siteName):
 			
 	elif typeDocSri == "GRS":
 			doc_data = build_doc_grs(doc_name)
+			doctype_erpnext = 'Delivery Note'
+			print_format_name = 'Guia de Remision SRI'
 			
 	elif typeDocSri == "CRE":
 			doc_data = build_doc_cre(doc_name)			
+			doctype_erpnext = 'Purchase Withholding Sri Ec'
+			print_format_name = 'Retencion SRI'
 			
 	templates = frappe.get_list('Email Template', fields = ['*'], filters = { 'name': template_name })
 
@@ -934,6 +938,13 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName, regional_setti
 
 				else:
 					print('ACTUALIZAR EL ESTADO DE DOCUMENTO l1')
+					
+					response_xml_data_string = response.text
+
+					registerResponse_native(doc_data, typeDocSri, doctype_erpnext, 
+							 response_valida, #response_valida_json_auto, 
+							 response_xml_data_string)
+
 					#response['ok'] = False
 					response_valida['ok'] = False
 					return response_valida
@@ -1042,19 +1053,35 @@ def updateStatusDocument(doc, typeDocSri, response_json):
 
 				document_object.db_set('fechaautorizacion', fechaAutorizacion)
 
-		#case "CRE":
-			#doc_data = build_doc_cre(doc_object_build.name)
-   
+	elif typeDocSri ==  "CRE":
+			print(response_json)
+			document_object = frappe.get_last_doc('Purchase Withholding Sri Ec', filters = { 'name': doc.name })
+			if(document_object):				
+				document_object.db_set('numeroAutorizacion', response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
+				document_object.db_set('sri_estado', 200)
+				document_object.db_set('sri_response', response_json.data.autorizaciones.autorizacion[0].estado)
+				document_object.db_set('numDoc', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial))
+				fechaAutorizacion = parser.parse(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)				
+				document_object.db_set('fechaAutorizacion', fechaAutorizacion)   
 
 def registerResponse_native(doc, typeDocSri, doctype_erpnext, response_json, response_json_text):
 	#TODO: El XML se guarda de forma incorrecta, pero al parecer es un comportamiento normal
 	# del frappe, hay que verificar.
+	sri_status = ''
+
+	#Si es que tiene itemes de autorizaciones
+	if('autorizaciones' in response_json):
+		sri_status = response_json['autorizaciones']['autorizacion']['estado']
+
+	if('estado' in response_json):
+		sri_status = response_json['estado']
+
 	xml_response_new = frappe.get_doc({
 					'doctype': 'Xml Responses',
 					'doc_ref': doc.name,
 					#'xmldata': response_json.autorizaciones.autorizacion[0].comprobante,
 					'xmldata': response_json_text,
-					'sri_status': response_json['autorizaciones']['autorizacion']['estado'],
+					'sri_status': sri_status,
 					'tip_doc': typeDocSri,
 					'doc_type': doctype_erpnext
 				})
@@ -1117,6 +1144,16 @@ def updateStatusDocument_native(doc, typeDocSri, response_json):
 
 				document_object.db_set('fechaautorizacion', fechaAutorizacion)
 
-		#case "CRE":
-			#doc_data = build_doc_cre(doc_object_build.name)
+	elif typeDocSri ==  "CRE":
+			print(response_json)
+			document_object = frappe.get_last_doc('Purchase Withholding Sri Ec', filters = { 'name': doc.name })
+			if(document_object):
+				document_object.db_set('numeroAutorizacion', response_json['autorizaciones']['autorizacion']['numeroAutorizacion'])
+				document_object.db_set('sri_estado', 200)
+				document_object.db_set('sri_response', response_json['autorizaciones']['autorizacion']['estado'])				
+				document_object.db_set('numDoc', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
+				fecha_string = response_json['autorizaciones']['autorizacion']['fechaAutorizacion']				
+				fecha_con_zona = parser.parse(fecha_string)
+				fechaAutorizacion = fecha_con_zona.replace(tzinfo=None)
+				document_object.db_set('fechaautorizacion', fechaAutorizacion)
 

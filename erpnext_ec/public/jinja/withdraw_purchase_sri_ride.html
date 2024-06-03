@@ -1,92 +1,65 @@
-@using System;
-@using System.Text.Json;
-@using System.Text.RegularExpressions;
-@using System.Globalization;
-<html>
-<head>
-    <style>
-        body {
-            font-family: sans-serif;
-            font-size: 10pt;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
+<style>
+    body {
+        font-family: sans-serif;
+        font-size: 10pt;
+        background-repeat: no-repeat;
+        background-position: center;
+        line-height: 0.1em;
+    }
 
-        .round-box {
-            height: 1in;
-            margin: 0pt;
-            border: 0.1em solid;
-            border-color: #000;
-            border-radius: 0.3em 0.3em 0.3em 0.3em;
-            font-size: 8pt;
-            padding-left: 8px;
-            padding-right: 8px;
-            padding-top: 2px;
-            padding-bottom: 1px;
-        }
+    .gray-box {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        /*height: 1in;*/
+                
+        border-style: none;
+        border-width: 0px;
+        border-color: #f2f2f2;
 
-        .card-box {
-            height: 1in;
-            margin: 0pt;
-            border: 0.1em solid;
-            background-color: #f7f7f7;
-            /*border-color: #000;*/
-            border-radius: 0.3em 0.3em 0.3em 0.3em;
-            font-size: 8pt;
-            padding-left: 8px;
-            padding-right: 8px;
-            padding-top: 2px;
-            padding-bottom: 1px;
-        }
+        font-size: 8pt;        
+        /*margin: 2pt;
+        padding-left: 8px;
+        padding-right: 8px;
+        padding-top: 2px;
+        padding-bottom: 4px;*/        
+        background-color: #eaeaea;
+    }
+    
+    .table-compressed
+    {
+        /*padding: 2px !important;*/
+    }
+    
+    .table-compressed td, .table-compressed th 
+    {
+        padding: 6px !important; 
+    }    
 
-        p {
-            page-break-after: always;
-        }
+    a {
+        color: blue !important;
+        text-decoration: underline;
+        cursor: auto;
+    }
 
-        .footer {
-            /*position: fixed;*/
-            /*bottom: 5px;*/
-            /*padding-bottom: 10px;*/
-            position: running(footer);
-        }
+    #tabdetalle {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        font-size: 1.3em;
+    }
 
-        @@page {
-                @@bottom-center {
-                    content: element(footer);
-                }
-            }
-
-        .pagenum:before {
-            content: counter(page);
-        }
-
-        a {
-            color: blue !important;
-            text-decoration: underline;
-            cursor: auto;
-        }
-
-        .tabdetalle {
-            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-            border-collapse: collapse;
-            font-size: 1.3em;
-        }
-
-        .tabdetalle td, .tabdetalle th {
-            border: 1px solid #000;
+        #tabdetalle td, #tabdetalle th {            
             padding: 8px;
             font-size: 0.7em;
         }
 
-        .tabdetalle tr:nth-child(even) {
+        #tabdetalle tr {
             background-color: #f2f2f2;
         }
 
-        .tabdetalle tr:hover {
+        #tabdetalle tr:hover {
             background-color: #ddd;
         }
 
-        .tabdetalle th {
+        #tabdetalle th {
             font-weight: bold;
             font-size: 0.7em;
             padding-top: 3px;
@@ -96,164 +69,177 @@
             color: #000;
         }
 
-        .infoAdicional {
-            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-            border-collapse: collapse;
-            font-size: 1.3em;
-            margin: 10px;
-        }
-
-            .infoAdicional td, .infoAdicional th {
-                border: 1px solid #000;
-                padding: 8px;
-                font-size: 0.7em;
-            }
-
-            .infoAdicional tr:nth-child(even) {
-                background-color: #f2f2f2;
-            }
-
-            .infoAdicional tr:hover {
-                background-color: #ddd;
-            }
-
-            .infoAdicional th {
-                font-weight: bold;
-                font-size: 0.7em;
-                padding-top: 3px;
-                padding-bottom: 3px;
-                text-align: left;
-                background-color: #ddd;
-                color: #000;
-            }
-
-        .summary-title-top {
-            text-align: left;
-            border-left: none;
-            border-right: none;
-            border-bottom: 0.1pt solid;
-            border-top: 2px solid;
-            border-top-width: medium;
-            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-            font-size: 1em;
-            font-weight: bold;
-        }
-
-        .summary-data-top {
-            text-align: right;
-            padding-right: 3px;
-            border-right: none;
-            border-bottom: 0.1pt solid;
-            border-top: 2px solid;
-            border-top-width: medium;
-            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-            font-size: 1em;
-            font-weight: bold;
-        }
-
-        .summary-title {
-            text-align: left;
-            border-right: none;
-            border-bottom: 0.1pt solid;
-            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-            font-size: 0.9em;
-        }
-
-        .summary-data {
-            text-align: right;
-            padding-right: 3px;
-            border-right: none;
-            border-bottom: 0.1pt solid;
-            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-            font-size: 0.9em;
-        }
-
-        .summary-title-bottom {
-            text-align: left;
-            border-right: none;
-            border-bottom: 0.1pt solid;
-            border-bottom-width: medium;
-            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-            font-size: 1.0em;
-            font-weight: bold;
-        }
-
-        .summary-data-bottom {
-            text-align: right;
-            padding-right: 3px;
-            border-right: none;
-            border-bottom: 0.1pt solid;
-            border-bottom-width: medium;
-            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-            font-size: 1.0em;
-            font-weight: bold;
-        }
-
-        #body {
-            width: 820px;
-        }
-
-        @@media print { body { -webkit-print-color-adjust: exact; } }
-
-    </style>
-</head>
-@{
-    string specifier = "0.00";
-    CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
-    
-    JsonElement infoAdicional = new JsonElement();
-    if (!(Model.infoAdicional is DBNull) && Model.infoAdicional != "")    
-    {
-        infoAdicional = JsonSerializer.Deserialize<dynamic>(Model.infoAdicional);
+    .infoAdicional {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        font-size: 1.3em;
+        margin-bottom: 10px;
     }
 
-    double TotalRetencion = 0;
-
-    Dictionary<string, string> formasPago = new Dictionary<string, string>();
-    formasPago.Add("01", "SIN UTILIZACION DEL SISTEMA FINANCIERO");
-    formasPago.Add("15", "COMPENSACIÓN DE DEUDAS");
-    formasPago.Add("16", "TARJETA DE DÉBITO");
-    formasPago.Add("17", "DINERO ELECTRÓNICO");
-    formasPago.Add("18", "TARJETA PREPAGO");
-    formasPago.Add("19", "TARJETA DE CRÉDITO");    
-    formasPago.Add("20", "OTROS CON UTILIZACION DEL SISTEMA FINANCIERO");
-    formasPago.Add("21", "ENDOSO DE TÍTULOS");
-
-    string PhoneCli = "";
-
-    //Buscar telefono dentro de la informacionAdicional
-    foreach(var jsonItem in infoAdicional.EnumerateObject())
-    {
-        //jsonItem.Name
-        //jsonItem.Value
-        if(!(jsonItem.Value is DBNull))
-        {
-            string itemValue = jsonItem.Value.ToString();
-            bool includesPhone = Regex.IsMatch(itemValue, "[0-9]{7,}");
-            if(includesPhone)
-            {
-                PhoneCli = jsonItem.Value.ToString();
-                break;
-            }
-        }
-    }
-}
-<body>
-    <div id="body">
+    .infoAdicional td, .infoAdicional th {
         
-        <table style="font-size: 8pt;width:86%;" cellspacing="0">
+        padding: 8px;
+        font-size: 0.7em;
+    }
+
+    .infoAdicional tr {
+        background-color: #f2f2f2;
+    }
+
+    .infoAdicional tr:hover {
+        background-color: #ddd;
+    }
+
+    .infoAdicional th {
+        font-weight: bold;
+        font-size: 0.7em;
+        padding-top: 3px;
+        padding-bottom: 3px;
+        text-align: left;
+        background-color: #ddd;
+        color: #000;
+    }
+
+    .subsection-title {
+        background-color: #eaeaea;
+        font-weight: bold;
+    }
+
+    .summary-title-top {
+        background-color: #f2f2f2;
+        text-align: left;
+        border-left: none;
+        border-right: none;        
+        border-top-width: medium;
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        font-size: 1em;
+        font-weight: bold;
+    }
+
+    .summary-data-top {
+        text-align: right;
+        padding-right: 3px;
+        background-color: #eaeaea;        
+        border-top-width: medium;
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        font-size: 1em;
+        font-weight: bold;
+    }
+
+    .summary-title {
+        background-color: #f2f2f2;
+        text-align: left;
+        border-right: none;
+        /*border-bottom: 0.1pt solid;*/
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        font-size: 0.9em;
+    }
+
+    .summary-data {
+        background-color: #eaeaea;
+        text-align: right;
+        padding-right: 3px;
+        border-right: none;        
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        font-size: 0.9em;
+    }
+
+    .summary-title-bottom {
+        background-color: #f2f2f2;
+        text-align: left;
+        border-right: none;        
+        border-bottom-width: medium;
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        font-size: 1.0em;
+        font-weight: bold;
+    }
+
+    .summary-data-bottom {
+        background-color: #eaeaea;
+        text-align: right;
+        padding-right: 3px;
+        border-right: none;        
+        border-bottom-width: medium;
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        font-size: 1.0em;
+        font-weight: bold;
+    }
+
+    @media print { body { -webkit-print-color-adjust: exact; } }
+    
+    .page-header, .page-header-space {
+        /*height: 15px;*/ /* Max is 230px */
+        margin: 0;
+    }
+
+    .page-header {
+        position: relative;
+        top: 0mm;
+        width: 100%;
+        border-bottom: 1px solid; /* for demo */
+        border-color: #eaeaea;
+        margin-bottom:10px;
+        line-height: 0.7em;
+        font-size: 0.7em;
+    }
+
+    .page-footer, .page-footer-space {
+        height: 20px; /* Max is 230px */
+        margin: 0;
+    }
+
+    .page-footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        border-top: 1px solid; /* for demo */
+        border-color: #eaeaea;
+    }
+
+    .page {    
+        font-family: sans-serif;
+        font-size: 10pt;
+        page-break-after: always;
+        margin-top:5px;
+        position: relative;
+        /*min-height: 1000px;*/ /*Estatico*/
+    }
+
+    .page-content {    
+        /*font-family: sans-serif;*/
+        /*font-size: 10pt;    */
+        position: relative;
+        padding:1.em;
+        margin-top: 30px;
+    }
+
+@page {
+    /* this affects the margin in the printer settings */ 
+    /*margin: 20mm 0mm 30mm 0mm;*/
+    /*margin: 0mm 0mm 0mm 0mm */
+}
+
+</style>
+
+{% set doc_build = build_doc_cre_with_images(doc.name) %}
+
+<div class="page">    
+    <div class="page-header">
+        <p>Documento electrónico <strong>No.{{doc.estab}}-{{doc.ptoemi}}-{{'%09d' % doc.secuencial}}</strong></p>
+    </div>
+    
+    <div class="page-content">
+        <table style="font-size: 8pt;width:100%;height:100%" cellspacing="0">
             <tr>
                 <td align="center" valign="middle" style="width: 50%;vertical-align:bottom">
-                    <table style="width: 100%;" cellspacing="0">
+                    <table style="width: 100%;" cellspacing="0" cellpadding="0" >
                         <tr>
                             <td>
-                                <table style="height:150px">
+                                <table class="table-compressed">
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <h1>Raul Borbor</h1>
-                                                <img src="../wwwroot/resources/img/Logo-Raul-Borbor-min.png" width="200px"/>
-                                                <p>@System.AppContext.BaseDirectory</p>
+                                                <img src="{{ frappe.db.get_value("Company", doc.company, "company_logo") or "" }}" width="220px" />
                                             </td>
                                         </tr>
                                     </tbody>
@@ -261,273 +247,231 @@
                             </td>
                         </tr>
                         <tr>
-                            <td style="vertical-align:bottom">
-                                <table class="round-box" style="width:100%;" cellpadding="0" cellspacing="0">
+                            <td class="gray-box" style="vertical-align:bottom;padding:0">
+                                <table class="gray-box table-compressed" style="width:100%;" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
-                                        <td valign="top" style="width:310px;font-size: 10pt;"><strong>@Model.razonSocial</strong></td>
-                                    </tr>
-                                    <!--
-                                    <tr>
-                                        <td>@Model.nombreComercial</td>
-                                    </tr>
-                                    -->
-                                    <tr>
-                                        <td align="left"><strong>RUC:</strong>&nbsp;&nbsp;&nbsp;@Model.ruc</td>
+                                        <td height="40px" valign="top" style="width:310px;font-size: 10pt;"><strong>{{ doc.company }}</strong></td>
                                     </tr>
                                     <tr>
-                                        <td><strong>Direcci&oacute;n Matriz:</strong></td>
+                                        <td align="left"><strong>R.U.C.:</strong>&nbsp;&nbsp;&nbsp; {{ frappe.db.get_value("Company", {'name': doc.company}, "tax_id") or "" }}</td>
                                     </tr>
                                     <tr>
-                                        <td height="30px" valign="top">@Model.dirMatriz</td>
+                                        <td align="left"><strong>Matriz:</strong> {{doc_build.DireccionMatriz}}</td>
                                     </tr>
-                                    <tr>
-                                        <td><strong>CONTRIBUYENTE ESPECIAL</strong></td>
-                                    </tr>
-                                    <tr>
-                                    @if(Model.contribuyenteEspecial == "000")
-                                    {
-                                        <td><strong>NO</strong></td>
-                                    }
-                                    else
-                                    {
-                                        <td><strong>@Model.contribuyenteEspecial</strong></td>
-                                    }
-                                    </tr>
-                                    <tr>
-                                        <td><strong>OBLIGADO A LLEVAR CONTABILIDAD</strong></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>@Model.obligadoContabilidad</strong></td>
-                                    </tr>
-                                    @if(Model.contribuyenteRimpe)
-                                    {
-                                    <tr>
-                                        <td><strong>CONTRIBUYENTE RÉGIMEN MICROEMPRESA</strong></td>
-                                    </tr>
-                                    }
                                     
-                                    @if (!(Model.agenteRetencion is DBNull) && Model.agenteRetencion != "")
-                                    {
+                                    {% if doc_build.contribuyenteEspecial %}
                                     <tr>
-                                        <td><strong>Agente de Retenci&oacute;n Resoluci&oacute;n No.</strong></td>
+                                        <td align="left"><strong>CONTRIBUYENTE ESPECIAL No:</strong>
+                                            <span align="left"><strong>{{doc_build.contribuyenteEspecial}}</strong></span>
+                                        </td>
                                     </tr>
+                                    {% endif %}
                                     <tr>
-                                        <td><strong>@Model.agenteRetencion</strong></td>
+                                    
                                     </tr>
-                                    }
+                                    {% if doc_build.obligadoContabilidad %}
+                                    <tr>
+                                        <td align="left"><strong>OBLIGADO A LLEVAR CONTABILIDAD: SI</strong></td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td align="left"><strong>OBLIGADO A LLEVAR CONTABILIDAD: NO</strong></td>
+                                    </tr>
+                                    {% endif %}
+                                    
+                                    {% if doc_build.contribuyenteRimpe %}
+                                    <tr>
+                                        <td align="left"><strong>CONTRIBUYENTE RÉGIMEN RIMPE</strong></td>
+                                    </tr>
+                                    {% endif %}
+                                    
+                                    {% if doc_build.agenteRetencion %}
+                                    <tr>
+                                        <td align="left"><strong>Agente de Retenci&oacute;n Resoluci&oacute;n No. {{doc_build.agenteRetencion}}</strong></td>
+                                    </tr>
+                                    {% endif %}
                                 </table>
                             </td>
-
                         </tr>
                     </table>
                 </td>
                 <td style="width:50%">
-                    <table cellspacing="0" class="round-box" style="width:100%;">
-                        
+                    <table class="gray-box table-compressed" style="width:100%;height:100%;" cellpadding="0" cellspacing="0" border="0">
                         <tr>
-                            <td align="center" style="font-size: 13pt;"><strong>R E T E N C I Ó N:</strong></td>
+                            <td>
+                                <table style="font-size: 8pt;width:100%" padding="0" cellspacing="0">
+                                    <tr>
+                                        <td><strong>FACTURA:</strong></td>
+                                        <td valign="top" align="right"><strong>No.</strong>{{doc.estab}}-{{doc.ptoemi}}-{{'%09d' % doc.secuencial}}</td>
+                                    </tr>                                    
+                                </table>
+                            </td>
+                        </tr>
+                                        
+                        <tr>
+                            <td align="left"><strong>N&Uacute;MERO DE AUTORIZACI&Oacute;N</strong></td>
                         </tr>
                         <tr>
-                            <td align="left"><strong>No.:</strong>&nbsp;&nbsp;&nbsp;@Model.estab-@Model.ptoEmi-@Model.secuencial.ToString().PadLeft(9, '0')</td>
+                            <td align="left"><strong style="letter-spacing: -1px;">{{doc_build.numeroAutorizacion}}</strong></td>
+                        </tr>
+                        <tr>                           
+                            <td align="" style="font-size:9px">&nbsp;</td>
                         </tr>
                         <tr>
-                            <td align="center"><strong>N&Uacute;MERO DE AUTORIZACI&Oacute;N</strong></td>
+                            <td style="font-size:9px"><strong>Fecha y hora de autorizaci&oacute;n:</strong></td>                            
+                        </tr>
+                        <tr>                           
+                            <td align="" style="font-size:9px"><strong>{{doc_build.fechaautorizacion}}</strong></td>
+                        </tr>
+                        <tr>                           
+                            <td align="" style="font-size:9px">&nbsp;</td>
                         </tr>
                         <tr>
-                            <td align="center"><strong>@Model.claveAcceso</strong></td>
+                            <td align="left"><strong>AMBIENTE:</strong>
+                                {% if doc_build.ambiente == 2 %}
+                                    <span>PRODUCCI&Oacute;N</span>
+                                {% else %}
+                                    <span>PRUEBAS</span>
+                                {% endif %}
+                            </td>
                         </tr>
+                        <td style="font-size:9px" colspan="2"><strong>EMISI&Oacute;N:</strong>&nbsp;&nbsp;&nbsp;NORMAL</td>
                         <tr>
                             <td align="center" style="font-size:9px">CLAVE DE ACCESO</td>
                         </tr>
                         <tr>
-                            <td align="center">
-                                <img src="data:image/jpeg;base64,@Model.claveAccesoB64" width="320" height="12" />
+                            <td align="center" style="width:100%;padding: 0px !important;">
+                                {% if doc_build.numeroautorizacion_img is not none %}
+                                    <img src="data:image/png;base64,{{doc_build.numeroautorizacion_img}}" height="60px" style="width:  95% !important;"/>
+                                {% endif %}
                             </td>
                         </tr>
                         <tr>
-                            <td align="center" style="font-size: .9em;font-weight: bold;font-family:helvetica;">
-                                @Model.claveAcceso
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="written_field" style="padding-left: 2.5in;font-size:.1em;">&nbsp;</td>
-                        </tr>
-                        
-                        <tr>
-                            <td>
-                                <table width="100%" cellspacing="0" style="font-size: 8pt;" padding="0">
-                                    <tr>
-                                        <td colspan="2">
-                                            <table style="width:100%;font-size: 8pt;" padding="0" cellspacing="0">
-                                               
-                                                <tr>
-                                                    <td align="left"><strong>AMBIENTE:</strong></td>
-                                                    @switch(@Model.ambiente)
-                                                    {
-                                                        case 1:
-                                                            <td align="left">PRUEBA</td>
-                                                        break;
-                                                        case 2:
-                                                            <td align="left">PRODUCCI&Oacute;N</td>
-                                                        break;
-                                                    }
-                                                    
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-size:7px"><strong>FEC./HORA DE AUTOR.:</strong></td>
-                                        <td align="right" style="font-size:7px"><strong>@Model.fechaAutorizacion</strong></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-size:7px" colspan="2"><strong>EMISI&Oacute;N:</strong>&nbsp;&nbsp;&nbsp;NORMAL</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-size:7px">&nbsp;</td>
-                                    </tr>
-                                </table>
+                            <td align="center" style="font-size: .7em;font-weight: bold;font-family:helvetica;padding: 0px !important;">
+                                {{doc_build.numeroAutorizacion}}
                             </td>
                         </tr>
                     </table>
                 </td>
             </tr>
+        </table>
+        
+        <table class="table table-condensed gray-box" style="width:100%;" cellpadding="0" cellspacing="0">
             <tr>
+                <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Raz&oacute;n Social: {{ doc_build.razonSocialSujetoRetenido }}</strong></td>
+                <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>RUC/CI: {{doc_build.identificacionSujetoRetenido}}</strong></td>
             </tr>
-        </table>
+            <tr>            
+                <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Direcci&oacute;n: {{doc_build.direccionSujetoRetenido}}</strong></td>    
+                <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Tel&eacute;fono: +593 {{doc_build.supplier_phone}}</strong></td>
+            </tr>
+            <tr>            
+                <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Fecha Emisión.: {{doc_build.fechaEmision}}</strong></td>    
+                <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Email: {{doc_build.supplier_email_id}}</strong></td>
+            </tr>
+            <tr>            
+                <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Ejercicio Fiscal: {{doc_build.periodoFiscal}}</strong></td>
+            </tr>
+        </table>                       
 
-        <table class="card-box" style="width: 86%" cellspacing="0">
-            <tbody>
-                <tr>
-                    <td style=""><strong>Razón Social:</strong></td>
-                    <td style="">@Model.razonSocialComprador</td>
-                    <td style="">RUC/CI:</td>
-                    <td style="">@Model.identificacionComprador</td>
-                </tr>
-                <tr>
-                    <td style="">Dirección:</td>
-                    <td style="">@Model.direccionComprador</td>
-                    <td style="">Teléfono:</td>
-                    <td style="">@PhoneCli</td>
-                </tr>
-                <tr>
-                    <td style="">Fecha Emisión:</td>
-                    <td style="">@Model.fechaEmision.ToString("dd/MM/yyyy")
-                    <strong>Ejercicio Fiscal:</strong>
-                    @Model.fechaEmision.ToString("MM/yyyy")</td>
-                    <td style="">Email:</td>
-                    <td style="">@Model.email</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <table class="tabdetalle" style="width: 86%" cellspacing="0">
-            <tbody>
-                <tr>
-                    <th style="width:50px;text-align: center;">Comprobante</th>
-                    <th style="width:50px;text-align: center;">Número</th>
-                    <th style="width:50px;text-align: center;">Fec.Emi.</th>
-                    <th style="width:60px;text-align: center;">Base Imp. para la ret.</th>
-                    <th style="width:40px;text-align: center;">Impuesto</th>
-                    <th style="width:60px;text-align: center;">Código</th>
-                    <th style="width:60px;text-align: center;">Porcentaje Retención</th>
-                    <th style="width:60px;text-align: center;">Valor Retenido</th>
-                </tr>
-                @foreach (var item in Model.taxes)
-                {
-                    double itemTotal = 0;
-
-                    //if (!(item.cantidad is DBNull) && !(item.precioUnitario is DBNull) && !(item.descuento is DBNull))
-                    //{
-                    //    itemTotal = Convert.ToDouble(item.cantidad) * (Convert.ToDouble(item.precioUnitario) - Convert.ToDouble(item.descuento));
-                    //}
+        <div data-fieldname="items" data-fieldtype="Table">
+            <table class="table table-bordered table-condensed">
+                <thead>
                     <tr>
-                        <td style="padding-left:3px;">FACTURA</td>
-                        <td style="padding-left:3px;">@Model.numDocSustento</td>
-                        <td style="text-align: center;">@Model.fechaEmisionDocSustento.ToString("dd/MM/yyyy")</td>
-                        <td style="text-align: right;padding-right:3px;">$@item.baseImponible.ToString(specifier, culture)</td>
-                        <td style="text-align: center;">RENTA/IVA</td>
-                        <td style="text-align: center;">@item.codigoRetencion</td>
-                        <td style="text-align: right;padding-right:3px;">@item.tasa.ToString(specifier, culture)</td>
-                        <td style="text-align: right;padding-right:3px;">$@item.valor.ToString(specifier, culture)</td>
+                        <th style="width: 80px;" class="text-center" data-fieldname="items" data-fieldtype="Table">Comprobante</th>
+                        <th style="width: 150px;" class="text-center" data-fieldname="items" data-fieldtype="Table">Número</th>
+                        <th style="width: 80px;" class="text-center" data-fieldname="items" data-fieldtype="Table">Fecha Emisión</th>
+                        <th style="width: 100px;" class="text-center" data-fieldname="items" data-fieldtype="Table">Base Imponible para la retención</th>
+                        <th style="width: 80px;" class="text-right" data-fieldname="items" data-fieldtype="Table">Impuesto</th>
+                        <th style="width: 80px;" class="text-center" data-fieldname="items" data-fieldtype="Table">Código</th>
+                        <th style="width: 80px;" class="text-right" data-fieldname="items" data-fieldtype="Table">Porcentaje Retención</th>
+                        <th style="width: 80px;" class="text-center" data-fieldname="items" data-fieldtype="Table">Valor Retenido</th>                        
                     </tr>
-
-                    
-                        double baseImponible = 0;
-                        if (!(item.baseImponible is DBNull))
-                        {
-                            baseImponible = Convert.ToDouble(item.baseImponible);
-                        }
+                </thead>
+                <tbody>
+                    {% for item in doc_build.impuestos %}
+                    <tr>
+                        <td class="text-center">{{ item.codDocSustentoLink }}</td>
+                        <td class="text-center" data-fieldname="items" data-fieldtype="Table">                            
+                            <div class="value">{{ item.numDocSustento }}</div>
+                        </td>                           
+                        <td class="text-center" data-fieldname="items" data-fieldtype="Table">                            
+                            <div class="value"><div class="ql-snow">{{ item.fechaEmisionDocSustento.strftime('%d/%m/%Y') }}</div></div>
+                        </td>
+                        <td class="text-right" data-fieldname="items" data-fieldtype="Table">
+                            <div class="value">{{ frappe.format(item.baseImponible,'Currency') }}</div>
+                        </td>                        
+                        <td class="text-center" data-fieldname="items" data-fieldtype="Table">                            
+                            <div class="value">RENTA/IVA</div>
+                        </td>
+                        <td class="text-center" data-fieldname="items" data-fieldtype="Table">                            
+                            <div class="value">{{ item.codigoRetencionId }}</div>
+                        </td>
+                        <td class="text-right" data-fieldname="items" data-fieldtype="Table">                            
+                            <div class="value">{{ item.porcentajeRetener }}</div>
+                        </td>
+                        <td class="text-right" data-fieldname="items" data-fieldtype="Table">                            
+                            <div class="value">{{ frappe.format(item.valorRetenido,'Currency') }}</div>
+                        </td>
                         
-                        //double.TryParse(item.baseImponible.ToString()), out baseImponible);
-                        
-                        TotalRetencion += baseImponible;
-                                       
-                }
-            </tbody>
-        </table>
+                        <td class="text-center hidden" data-fieldname="items" data-fieldtype="Table">                            
+                            <div class="value">
+                                <svg viewBox="0 0 16 16" fill="transparent" stroke="#1F272E" stroke-width="2" xmlns="http://www.w3.org/2000/svg" id="icon-tick" style="width: 12px; height: 12px; margin-top: 5px;">
+                                    <path d="M2 9.66667L5.33333 13L14 3" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </div>
+                        </td>                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="row section-break" data-label="">
+			<div class="col-xs-4 column-break">
+			    <div class="row  data-field" data-fieldname="total_qty" data-fieldtype="Float">
+				    <div class="col-xs-12">					
+					    
+				    </div>                    
+                </div>
+            </div>		
+            <div class="col-xs-4 column-break"></div>		
+			<div class="col-xs-4 column-break">			
+                <div class="row">	
+                    <div class="col-xs-5">
+                        <label>Total</label>
+                    </div>
+                    <div class="col-xs-7 text-right">{{frappe.format(doc_build.total_valorRetenido,'Currency')}}</div>
+                </div>			
+            </div>		
+        </div>
 
-        <table border="0" cellpadding="0" cellspacing="0" style="width: 86%">
+
+        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%">
             <tbody>
                 <tr>
-                    <td style="width:50%">
-                        @if(!(Model.pagos is DBNull) && Model.pagos.Count > 0)
-                        {
-                        <table class="infoAdicional">
+                    <td style="width:50%">                                                
+                        <table class="infoAdicional" style="width:90%">
                             <tbody>
                                 <tr>
-                                    <td style="text-align: center;" colspan="2">Pagos</td>
-                                </tr>                           
-                            
-                            @foreach(var jsonItem in Model.pagos)
-                            {
-                                <tr>
-                                    <td style="text-align: center;">F. Pago</td>
-                                    <td style="text-align: center;font-size: 9px;">@formasPago[@jsonItem.formaPago]</td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: center;">Total</td>
-                                    <td style="text-align: center;">@jsonItem.total.ToString(specifier, culture)</td>
-                                </tr>
-                            }
-                            </tbody>
-                        </table>
-                        }
-
-                        <table class="infoAdicional" style="display:none;">
-                            <tbody>
-                                <tr>
-                                    <td style="text-align: center;" colspan="2">Informaci&oacute;n Adicional</td>
-                                </tr>                           
-                            
-                            @foreach(var jsonItem in infoAdicional.EnumerateObject())
-                            {
-                                <tr>
-                                    <td style="text-align: center;">@jsonItem.Name</td>
-                                    <td style="text-align: center;">@jsonItem.Value</td>
-                                </tr>
-                            }
+                                    <td class="subsection-title" colspan="2">Informaci&oacute;n Adicional</td>
+                                </tr>                        
+                                {% for jsonItem in doc_build.infoAdicional %}
+                                    <tr>
+                                        <td style="text-align: left;">{{jsonItem.nombre}}</td>
+                                        <td style="text-align: left;">{{jsonItem.valor}}</td>
+                                    </tr>
+                                {% endfor %}
                             </tbody>
                         </table>                        
                     </td>
-                    <td style="width:50%" valign="top">
-                        <table cellpadding="1" cellspacing="0" style="width:100%">
-                            <tbody>
-                                <tr>
-                                    <td class="summary-title-top">Total Retenido:</td>
-                                    <td class="summary-data-top">$ @TotalRetencion.ToString(specifier, culture)</td>
-                                </tr>                                  
-                            </tbody>
-                        </table>
-                    </td>
                 </tr>
             </tbody>
         </table>
+    </div>  
+
+    <div class="page-footer" style="display:none;">
+        <div style="margin-top:10px">Powered by <a href="https://beebtech.net/" target="_blank">https://beebtech.net</a></div>
     </div>
-    <div class="footer">
-            <div style="display:none;">Consulte sus facturas en <a href="http://clientes.tusitioweb.com">http://clientes.tusitioweb.com</a></div>
-            <br>
-            P&aacute;gina: <span class="pagenum"></span>
-    </div>
-</body>
-</html>
+ </div>
+    
+

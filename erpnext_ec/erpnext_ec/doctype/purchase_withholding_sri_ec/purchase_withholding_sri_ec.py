@@ -11,15 +11,38 @@ class PurchaseWithholdingSriEc(Document):
 	# This code is auto-generated. Do not modify anything in this block.
 
 	pass
+	
+	def set_status(self, update=False, status=None, update_modified=True):
+		#if self.is_new():
+		#	if self.get("amended_from"):
+		#		self.status = "Draft"
+		#	return
 
-	def validate(self):
-		print('validate 1')
-		#super(PurchaseWithholdingSriEc, self).validate()
-		print (self)
-		print('validate 2')
+		self.status = "Submitted"
+
+		if update:
+			self.db_set("status", self.status, update_modified=update_modified)
 
 	def on_submit(self):
 		print('submit!!')
+	
+	def set_purchase_withholding_supplier(self):
+		print('set_purchase_withholding_supplier')
+		pass
+
+	def validate(self):
+		print('validate_link')
+		self.set_status()
+		pass
+
+	def before_save(self):
+		print('before_save')
+        # Acceder a los datos del detalle y realizar acciones en función de los cambios
+        #for row in self.table_fieldname:
+            # Realizar acciones necesarias en función de los valores de los campos en el detalle
+        #    if row.my_fieldname:
+                # Realizar alguna acción si el campo my_fieldname tiene un valor específico
+        #        pass
 
 # <infoTributaria>
 # 		<ambiente>2</ambiente>

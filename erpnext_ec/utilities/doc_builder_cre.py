@@ -4,6 +4,19 @@ import erpnext
 import json
 from types import SimpleNamespace
 from erpnext_ec.utilities.doc_builder_tools import *
+from erpnext_ec.utilities.doc_render_tools import *
+
+@frappe.whitelist()
+def build_doc_cre_with_images(doc_name):
+	doc_response = build_doc_cre(doc_name)
+	if(not doc_response.numeroAutorizacion):
+		doc_response.numeroAutorizacion = "0"
+	
+	doc_response.numeroautorizacion_img = get_barcode_base64(doc_response.numeroAutorizacion)
+	doc_response.logo_img = get_barcode_base64(doc_response.numeroAutorizacion)
+
+	#print(doc_response.numeroautorizacion_img)
+	return doc_response
 
 #Comprobante de retencion
 def build_doc_cre(doc_name):
@@ -27,7 +40,13 @@ def build_doc_cre(doc_name):
 		#print(doc.items)
         
 		doc.impuestos = get_full_taxes_withhold(doc.name)
+		
+		total_valorRetenido = 0
+		for impuesto in doc.impuestos:
+			total_valorRetenido += impuesto.valorRetenido
 
+		doc.total_valorRetenido = total_valorRetenido
+		
 		#print(doc.company)
 		#print(doc)
 		#Datos completos de la compañia emisora
@@ -48,17 +67,24 @@ def build_doc_cre(doc_name):
 
 		#Datos completos del cliente
 		supplier_full = get_full_supplier_sri(doc.purchase_withholding_supplier)
-		#print(supplier_full)
+		print(supplier_full)
 
-		doc.supplier_tax_id = supplier_full['supplier_tax_id']		
-		doc.tipoIdentificacionSujetoRetenido = supplier_full['tipoIdentificacionProveedor']
-		#doc.direccionComprador = supplier_full['direccionProveedor']
-		supplier_phone = supplier_full['supplier_phone']
-		supplier_email_id = supplier_full['supplier_email_id']
-
-		doc.paymentsItems = get_payments_sri(doc.name)
-
+		supplier_phone = ''
+		supplier_email_id = ''
+		
+		if(supplier_full):
+			doc.supplier_tax_id = supplier_full['supplier_tax_id']
+			doc.tipoIdentificacionSujetoRetenido = supplier_full['tipoIdentificacionProveedor']
+			doc.direccionSujetoRetenido = supplier_full['direccionSujetoRetenido']
+			supplier_phone = supplier_full['supplier_phone']
+			supplier_email_id = supplier_full['supplier_email_id']
+		
 		doc.infoAdicional = build_infoAdicional_sri(doc_name, supplier_email_id, supplier_phone)
+
+		doc.supplier_phone = supplier_phone
+		doc.supplier_email_id = supplier_email_id
+
+		#doc.paymentsItems = get_payments_sri(doc.name)		
 
 		# print(doc.infoAdicional)
 
@@ -111,6 +137,7 @@ def build_doc_cre(doc_name):
 	#Sino es encontrado
 	return None
 
+#Función para armar los datos compatibles con el XML para el SRI
 def build_doc_cre_sri(data_object):
 	print("----------------------------------------------")
 	print(data_object)
@@ -118,12 +145,12 @@ def build_doc_cre_sri(data_object):
 	#return ""
 
 	impuestos = []
-
+	
 	for taxItem in data_object.impuestos:
 		#fechaEmisionDocSustento = datetime.strptime(fecha_string, "%Y-%m-%dT%H:%M:%S")
 		
 		impuestos.append({			
-			"codigo": taxItem.codigoRetencionId,
+			"codigo": taxItem.idx,
 			"codigoRetencion": taxItem.codigoRetencionId,
 			"baseImponible": "{:.2f}".format(taxItem.baseImponible),
 			"porcentajeRetener": "{:.2f}".format(taxItem.porcentajeRetener),
@@ -150,6 +177,9 @@ def build_doc_cre_sri(data_object):
 	
 	agenteRetencion = None
 	contribuyenteRimpe = "CONTRIBUYENTE RÉGIMEN RIMPE"
+	if(data_object.contribuyenteRimpe != 1):
+		contribuyenteRimpe = ""
+
 	codDoc = "07"
 
 	data = {
@@ -176,7 +206,7 @@ def build_doc_cre_sri(data_object):
             "tipoIdentificacionSujetoRetenido": data_object.tipoIdentificacionSujetoRetenido,
             "razonSocialSujetoRetenido": data_object.razonSocialSujetoRetenido.upper(),
             "identificacionSujetoRetenido": data_object.identificacionSujetoRetenido,
-            "periodoFiscal":"05/2024"
+            "periodoFiscal": data_object.periodoFiscal
         },
         "impuestos": {
             "impuesto": impuestos

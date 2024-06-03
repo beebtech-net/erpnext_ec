@@ -1,5 +1,6 @@
 {
  "actions": [], 
+ "allow_import": 1,
  "autoname": "naming_series:",
  "creation": "2013-05-21 16:16:04",
  "doctype": "DocType",
@@ -194,6 +195,7 @@
   {
     "idx": 109,
     "name": "Purchase-Withholding-numeroAutorizacion",
+    "default": "0",
     "fieldname": "numeroAutorizacion",
     "fieldtype": "Data",
     "label": "Numero Autorizacion",   
@@ -224,6 +226,36 @@
     "in_list_view": 1,
     "read_only": 1
   },
+  {
+		"name": "Purchase-Withholding-sri_estado",
+		"parent": "Customize Form",
+		"parentfield": "fields",
+		"parenttype": "Customize Form",
+		"idx": 30,
+		"docstatus": 0,
+		"label": "sri_estado",
+		"fieldtype": "Int",
+		"fieldname": "sri_estado",
+		"inser_after": "numdocsustento",
+		"is_custom_field": 1,
+		"no_copy": 1,
+		"read_only": 1
+	},
+  {
+		"name": "Purchase-Withholding-sri_response",
+		"parent": "Customize Form",
+		"parentfield": "fields",
+		"parenttype": "Customize Form",
+		"idx": 14,
+		"docstatus": 0,
+		"label": "sri_response",
+		"fieldtype": "Data",
+		"fieldname": "sri_response",
+		"inser_after": "sri_estado",
+		"is_custom_field": 1,		
+		"no_copy": 1,
+		"read_only": 1
+	},
   {
 		"name": "Purchase-Withholding-column_break_01",
 		"parent": "Customize Form",
@@ -399,16 +431,26 @@
   "in_list_view": 1,
   "read_only": 1
 },
-
 {
   "idx": 406,
+  "name": "Purchase-Withholding-anio-fiscal",
+  "fieldname": "anio_fiscal",
+  "fieldtype": "Link",
+  "label": "Año Fiscal",
+  "reqd": 0,
+  "in_list_view": 1,
+  "read_only": 0,
+  "options":"Fiscal Year"
+},
+{
+  "idx": 407,
   "name": "Purchase-Withholding-periodoFiscal",
   "fieldname": "periodoFiscal",
   "fieldtype": "Data",
-  "label": "periodoFiscal",   
+  "label": "periodoFiscal",
   "reqd": 0,
   "in_list_view": 1,
-  "read_only": 1
+  "read_only": 0
 },
 {
   "name": "Sales Invoice-withhold-section",
@@ -489,20 +531,24 @@
  "owner": "Administrator",
  "permissions": [
     {
-    "create": 1,
-    "delete": 1,
-    "email": 1,
-    "export": 1,
-    "print": 1,
-    "read": 1,
-    "report": 1,
-    "role": "System Manager",
-    "share": 1,
-    "write": 1
+      "amend": 1,
+      "cancel": 1,
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "submit": 1,
+      "write": 1
     }
  ],
  "search_fields":"purchase_withholding_supplier",
  "sort_field": "modified",
  "sort_order": "DESC",
- "track_changes": 1
+ "track_changes": 1,
+ "track_seen": 1
 }

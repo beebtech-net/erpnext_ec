@@ -443,6 +443,14 @@ const Website = {
                 document_responses += `</tbody></table>`
                 
                 /*******************/
+                //*Se aplica esta validación ya que en el caso de las
+                // retenciones el campo se llama numeroAutorizacion
+                // porque este doctype no es nativo
+                if(jsonResponse.numeroautorizacion == undefined)
+                {
+                    jsonResponse.numeroautorizacion = jsonResponse.numeroAutorizacion;
+                }
+
                 var num_autorizacion = jsonResponse.numeroautorizacion;
                 var sri_estado = jsonResponse.sri_estado;
                 var sri_response = jsonResponse.sri_response;

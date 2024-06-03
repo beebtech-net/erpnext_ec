@@ -4,19 +4,20 @@ function PrepareDocumentForSendV2(doc, DocTypeErpNext)
 	{
 		case 'Sales Invoice':
 			{
-				console.log('MEtodo Facturas de venta');
+				console.log('Método Facturas de venta');
 				SendSalesInvoice(doc);
 			}
 			break;
 		case 'Delivery Note':
 			{
-				console.log('MEtodo Guia de remision');
+				console.log('Método Guia de remisión');
 				SendDeliveryNote(doc);
 			}
 			break;
 		case 'Purchase Withholding Sri Ec':
 			{
-				console.log('MEtodo COmprobante de Retencion');
+				console.log('Método Comprobante de Retencion');
+				SendWithholding(doc);
 			}
 			break;
 	}

@@ -83,7 +83,7 @@ class XMLGenerator:
         root.set("id","comprobante")
         
         #TODO: Hay que obtener la version desde el XSD
-        root.set("version","1.1.0")
+        root.set("version","1.0.0")
 
         # Crear el árbol XML basado en los datos proporcionados
         self._build_xml(root, data_dict)

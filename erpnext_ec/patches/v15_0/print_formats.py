@@ -24,7 +24,19 @@ def execute():
                   "source_path" : "sales_invoice_sri_ride.html",
 				  "disabled": 0,
 				  "raw_printing": 0,
-			},					
+			},
+			{
+                  "doc_type" : "Purchase Withholding Sri Ec",
+                  "name" : "Retención SRI",
+                  "module" : "Accounts",
+				  "standard": "No",
+				  "custom_format": True,
+				  "print_format_type": "Jinja",
+				  "default_print_language":"es-EC",
+                  "source_path" : "withdraw_purchase_sri_ride.html",
+				  "disabled": 0,
+				  "raw_printing": 0,
+			},
 	]
     
 	print ("client_script")
@@ -44,7 +56,12 @@ def create_print_format(doc_data, template_content):
 	#if not frappe.get_all("Client Script", filters={"name": script_name}):
 	if resultData:
 		#resultData.remove()
-		frappe.delete_doc("Print Format", doc_data['name'])
+		#frappe.delete_doc("Print Format", doc_data['name'])
+		update_doc = frappe.get_doc("Print Format", doc_data['name'])
+		update_doc.html = template_content
+		update_doc.save()
+		return
+		
 
     # Define el documento Client Script en formato JSON
 	client_script_data = {

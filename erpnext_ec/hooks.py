@@ -21,16 +21,19 @@ app_include_js = [
     "/assets/erpnext_ec/js/sri_custom.js",
     "/assets/erpnext_ec/js/sales_invoice_tools.js",
     "/assets/erpnext_ec/js/delivery_note_tools.js",
+    "/assets/erpnext_ec/js/withholding_tools.js",
     "/assets/erpnext_ec/js/frappe_sri_ui_tools.js",
     #"/assets/erpnext_ec/js/erpnext_ec.bundle.js",
 
     "/assets/erpnext_ec/js/libs/jsonTree/jsonTree.js",
+    "/assets/erpnext_ec/js/libs/monthpicker/jquery.ui.monthpicker.min.js",
     "/assets/erpnext_ec/js/utils/desk.custom.js",
 ]
 
 app_include_css = [
-
     "/assets/erpnext_ec/js/libs/jsonTree/jsonTree.css",
+    "/assets/erpnext_ec/js/libs/monthpicker/qunit.min.css",
+    "/assets/erpnext_ec/js/libs/monthpicker/jquery-ui.css",
 ]
 
 
@@ -117,12 +120,15 @@ jinja = {
 #if(frappe_version_int > 13):
 #if(False):
 from erpnext_ec.utilities.doc_builder_fac import build_doc_fac 
+from erpnext_ec.utilities.doc_builder_cre import build_doc_cre
 
 #Frappe <=13
 jenv = {
     "methods": [
         "build_doc_fac:erpnext_ec.utilities.doc_builder_fac.build_doc_fac",
-        "build_doc_fac_with_images:erpnext_ec.utilities.doc_builder_fac.build_doc_fac_with_images"
+        "build_doc_fac_with_images:erpnext_ec.utilities.doc_builder_fac.build_doc_fac_with_images",
+        "build_doc_cre:erpnext_ec.utilities.doc_builder_cre.build_doc_cre"
+        "build_doc_cre_with_images:erpnext_ec.utilities.doc_builder_cre.build_doc_cre_with_images"
     ],
     "filters": [
     ]

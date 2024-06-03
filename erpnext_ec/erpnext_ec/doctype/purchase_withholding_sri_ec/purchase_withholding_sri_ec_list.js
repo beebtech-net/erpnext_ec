@@ -148,10 +148,12 @@ frappe.listview_settings[DocTypeErpNext].button = {
     show(doc) {
         //console.log("Lista:" + Date().toString());
         //return doc.status != 'Paid';
+        //console.log(doc);
+        console.log(doc.status);
 
-        //if (doc.status == 'Cancelled' || doc.status == 'Draft') {
-        //    return false;
-        //}
+        if (doc.status == 'Cancelled' || doc.status == 'Draft') {
+            return false;
+        }
 
         SetupCustomButtons(doc, 'Purchase Withholding Sri Ec');
         return true;

@@ -21,10 +21,12 @@
   {   
    "fieldname": "codigo",
    "fieldtype": "Int",
+   "in_list_view": 0,
    "label": "Code",   
    "reqd": 0
   },
-  {   
+  {
+    "columns": 1,
    "fieldname": "codDocSustentoLink",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -35,13 +37,14 @@
   {   
    "fieldname": "codDocSustento",
    "fieldtype": "Data",
-   "in_list_view": 1,
+   "in_list_view": 0,
    "label": "Cod Doc Sustento",   
    "reqd": 0,
    "read_only": 1,
    "hidden": 0
   },
-  {   
+  {
+    "columns": 2,
    "fieldname": "numDocSustentoLink",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -57,7 +60,8 @@
    "reqd": 0,
    "read_only": 1
   },
-  {   
+  {
+    "columns": 2,  
    "fieldname": "fechaEmisionDocSustento",
    "fieldtype": "Datetime",
    "in_list_view": 1,
@@ -65,7 +69,8 @@
    "reqd": 0,
    "read_only": 1
   },
-  {   
+  {
+    "columns": 2,
    "fieldname": "codigoRetencion",
    "fieldtype": "Link",
    "options": "Account",
@@ -74,27 +79,44 @@
    "reqd": 0
   },
   {
-    "columns": 2,
+    "columns": 1,
+    "fieldname": "totalFactura",
+    "fieldtype": "Currency",
+    "in_list_view": 0,
+    "label": "Total Factura",    
+    "read_only": 1
+   },
+   {
+    "columns": 1,
+    "fieldname": "totalIvaFactura",
+    "fieldtype": "Currency",
+    "in_list_view": 0,
+    "label": "Total Iva Factura",    
+    "read_only": 1
+   },
+  {
+    "columns": 1,
     "fieldname": "baseImponible",
     "fieldtype": "Currency",
     "in_list_view": 1,
-    "label": "Base Imponible",    
-    "read_only": 0
+    "label": "B. Imp.",    
+    "read_only": 1
    },
    {
-    "columns": 2,
+    "columns": 1,
     "fieldname": "porcentajeRetener",
     "fieldtype": "Float",
     "in_list_view": 1,
-    "label": "Porcentaje Retener"    
+    "label": "% Ret.",
+    "read_only": 1
    },
    {
-    "columns": 2,
+    "columns": 1,
     "fieldname": "valorRetenido",
     "fieldtype": "Currency",
     "in_list_view": 1,
-    "label": "Valor Retenido",    
-    "read_only": 0
+    "label": "Val. Ret.",
+    "read_only": 1
    }
  ],
  "idx": 1,

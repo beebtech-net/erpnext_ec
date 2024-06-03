@@ -75,11 +75,29 @@
 		"dt": "Account"
 	},
 	{
-		"name": "Account-isretencion",
+		"name": "Company-column_break_10001",
 		"parent": "Customize Form",
 		"parentfield": "fields",
 		"parenttype": "Customize Form",
 		"idx": 11,
+		"docstatus": 0,
+		"label": "",
+		"fieldtype": "Column Break",
+		"fieldname": "column_break_10001",		
+		"description": "Datos de Retención",
+		"print_hide": 0,
+		"print_hide_if_no_value": 0,
+		"columns": 0,
+		"is_custom_field": 1,
+		"doctype": "Custom Field",
+		"dt": "Account"
+	},
+	{
+		"name": "Account-isretencion",
+		"parent": "Customize Form",
+		"parentfield": "fields",
+		"parenttype": "Customize Form",
+		"idx": 12,
 		"docstatus": 0,
 		"label": "Es cuenta de Retención",
 		"fieldtype": "Check",
@@ -88,5 +106,36 @@
 		"is_custom_field": 1,
 		"doctype": "Custom Field",
 		"dt": "Account"
-	}
+	},
+	{
+		"name": "Account-withholding-tax-base",
+		"parent": "Customize Form",
+		"parentfield": "fields",
+		"parenttype": "Customize Form",
+		"idx": 13,
+		"docstatus": 0,
+		"label": "Base de Retención",
+		"fieldtype": "Select",
+		"fieldname": "withholding_tax_base",
+		"inser_after": "is_withhold_account",
+		"is_custom_field": 1,
+		"options":"Total de Factura\nIva\nValor Fijo",
+		"doctype": "Custom Field",
+		"dt": "Account"
+	},
+	{
+		"name": "Account-base-imponible-fija-retencion",
+		"description":"Este campo debe ser llenado si es que se selecciona Valor Fijo como base de retención.",
+		"fieldname": "baseImponibleFijaRetencion",
+		"fieldtype": "Currency",		
+		"parent": "Customize Form",
+		"parentfield": "fields",
+		"parenttype": "Customize Form",
+		"idx": 14,
+		"docstatus": 0,
+		"label": "Valor Fijo Retención",
+		"read_only": 0,
+		"doctype": "Custom Field",
+		"dt": "Account"
+	   }
 ]
