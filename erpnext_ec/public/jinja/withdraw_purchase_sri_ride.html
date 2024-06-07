@@ -4,7 +4,7 @@
         font-size: 10pt;
         background-repeat: no-repeat;
         background-position: center;
-        line-height: 0.1em;
+        /*line-height: 0.1em;*/
     }
 
     .gray-box {
@@ -229,150 +229,224 @@
     </div>
     
     <div class="page-content">
-        <table style="font-size: 8pt;width:100%;height:100%" cellspacing="0">
-            <tr>
-                <td align="center" valign="middle" style="width: 50%;vertical-align:bottom">
-                    <table style="width: 100%;" cellspacing="0" cellpadding="0" >
-                        <tr>
-                            <td>
-                                <table class="table-compressed">
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <img src="{{ frappe.db.get_value("Company", doc.company, "company_logo") or "" }}" width="220px" />
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="gray-box" style="vertical-align:bottom;padding:0">
-                                <table class="gray-box table-compressed" style="width:100%;" cellpadding="0" cellspacing="0" border="0">
-                                    <tr>
-                                        <td height="40px" valign="top" style="width:310px;font-size: 10pt;"><strong>{{ doc.company }}</strong></td>
-                                    </tr>
-                                    <tr>
-                                        <td align="left"><strong>R.U.C.:</strong>&nbsp;&nbsp;&nbsp; {{ frappe.db.get_value("Company", {'name': doc.company}, "tax_id") or "" }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td align="left"><strong>Matriz:</strong> {{doc_build.DireccionMatriz}}</td>
-                                    </tr>
-                                    
-                                    {% if doc_build.contribuyenteEspecial %}
-                                    <tr>
-                                        <td align="left"><strong>CONTRIBUYENTE ESPECIAL No:</strong>
-                                            <span align="left"><strong>{{doc_build.contribuyenteEspecial}}</strong></span>
-                                        </td>
-                                    </tr>
-                                    {% endif %}
-                                    <tr>
-                                    
-                                    </tr>
-                                    {% if doc_build.obligadoContabilidad %}
-                                    <tr>
-                                        <td align="left"><strong>OBLIGADO A LLEVAR CONTABILIDAD: SI</strong></td>
-                                    </tr>
-                                    {% else %}
-                                    <tr>
-                                        <td align="left"><strong>OBLIGADO A LLEVAR CONTABILIDAD: NO</strong></td>
-                                    </tr>
-                                    {% endif %}
-                                    
-                                    {% if doc_build.contribuyenteRimpe %}
-                                    <tr>
-                                        <td align="left"><strong>CONTRIBUYENTE RÉGIMEN RIMPE</strong></td>
-                                    </tr>
-                                    {% endif %}
-                                    
-                                    {% if doc_build.agenteRetencion %}
-                                    <tr>
-                                        <td align="left"><strong>Agente de Retenci&oacute;n Resoluci&oacute;n No. {{doc_build.agenteRetencion}}</strong></td>
-                                    </tr>
-                                    {% endif %}
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td style="width:50%">
-                    <table class="gray-box table-compressed" style="width:100%;height:100%;" cellpadding="0" cellspacing="0" border="0">
-                        <tr>
-                            <td>
-                                <table style="font-size: 8pt;width:100%" padding="0" cellspacing="0">
-                                    <tr>
-                                        <td><strong>FACTURA:</strong></td>
-                                        <td valign="top" align="right"><strong>No.</strong>{{doc.estab}}-{{doc.ptoemi}}-{{'%09d' % doc.secuencial}}</td>
-                                    </tr>                                    
-                                </table>
-                            </td>
-                        </tr>
-                                        
-                        <tr>
-                            <td align="left"><strong>N&Uacute;MERO DE AUTORIZACI&Oacute;N</strong></td>
-                        </tr>
-                        <tr>
-                            <td align="left"><strong style="letter-spacing: -1px;">{{doc_build.numeroAutorizacion}}</strong></td>
-                        </tr>
-                        <tr>                           
-                            <td align="" style="font-size:9px">&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td style="font-size:9px"><strong>Fecha y hora de autorizaci&oacute;n:</strong></td>                            
-                        </tr>
-                        <tr>                           
-                            <td align="" style="font-size:9px"><strong>{{doc_build.fechaautorizacion}}</strong></td>
-                        </tr>
-                        <tr>                           
-                            <td align="" style="font-size:9px">&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td align="left"><strong>AMBIENTE:</strong>
-                                {% if doc_build.ambiente == 2 %}
-                                    <span>PRODUCCI&Oacute;N</span>
-                                {% else %}
-                                    <span>PRUEBAS</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        <td style="font-size:9px" colspan="2"><strong>EMISI&Oacute;N:</strong>&nbsp;&nbsp;&nbsp;NORMAL</td>
-                        <tr>
-                            <td align="center" style="font-size:9px">CLAVE DE ACCESO</td>
-                        </tr>
-                        <tr>
-                            <td align="center" style="width:100%;padding: 0px !important;">
-                                {% if doc_build.numeroautorizacion_img is not none %}
-                                    <img src="data:image/png;base64,{{doc_build.numeroautorizacion_img}}" height="60px" style="width:  95% !important;"/>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="center" style="font-size: .7em;font-weight: bold;font-family:helvetica;padding: 0px !important;">
-                                {{doc_build.numeroAutorizacion}}
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-        
-        <table class="table table-condensed gray-box" style="width:100%;" cellpadding="0" cellspacing="0">
-            <tr>
-                <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Raz&oacute;n Social: {{ doc_build.razonSocialSujetoRetenido }}</strong></td>
-                <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>RUC/CI: {{doc_build.identificacionSujetoRetenido}}</strong></td>
-            </tr>
-            <tr>            
-                <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Direcci&oacute;n: {{doc_build.direccionSujetoRetenido}}</strong></td>    
-                <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Tel&eacute;fono: +593 {{doc_build.supplier_phone}}</strong></td>
-            </tr>
-            <tr>            
-                <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Fecha Emisión.: {{doc_build.fechaEmision}}</strong></td>    
-                <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Email: {{doc_build.supplier_email_id}}</strong></td>
-            </tr>
-            <tr>            
-                <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Ejercicio Fiscal: {{doc_build.periodoFiscal}}</strong></td>
-            </tr>
-        </table>                       
+        <div class="row section-break gray-box p-2 m-1">
+			<div class="col-xs-6 column-break">
+                <div class="row data-field" style="background-color: #fff;">
+				    <div class="col-xs-12">					
+					    <img src="{{ frappe.db.get_value("Company", doc.company, "company_logo") or "" }}" height="100px" />
+				    </div>
+				    <div class="col-xs-12 value">					    
+				    </div>
+			    </div>               
+
+			    <div class="row data-field">
+				    <div class="col-xs-12">					
+					    <label>Emisor:</label>					
+				    </div>
+				    <div class="col-xs-12 value">
+					    {{ doc.company }}
+				    </div>
+			    </div>		
+			    <div class="row data-field" data-fieldname="fechaautorizacion" data-fieldtype="Datetime">
+                    <div class="col-xs-12">					
+                        <label>Ruc:</label>					
+                    </div>
+                    <div class="col-xs-12 value">
+                        {{ frappe.db.get_value("Company", {'name': doc.company}, "tax_id") or "" }}
+                    </div>
+                </div>		
+			<div class="row data-field" data-fieldname="fechaEmision" data-fieldtype="Datetime">
+				<div class="col-xs-12">					
+					<label>Matriz: </label>					
+				</div>
+				<div class="col-xs-12 value">
+					{{doc_build.DireccionMatriz}}
+				</div>
+			</div>		
+			
+            {% if doc_build.contribuyenteEspecial %}
+                <div class="row  data-field" data-fieldname="sri_estado" data-fieldtype="Int">
+                    <div class="col-xs-12">					
+                        <label>CONTRIBUYENTE ESPECIAL No: </label>					
+                    </div>
+                    <div class="col-xs-12 value">
+                        {{doc_build.contribuyenteEspecial}}	
+                    </div>
+                </div>
+            {% endif %}
+            
+            {% if doc_build.obligadoContabilidad %}
+                <div class="row  data-field" data-fieldname="sri_estado" data-fieldtype="Int">
+                    <div class="col-xs-12">					
+                        <label>OBLIGADO A LLEVAR CONTABILIDAD: SI</label>					
+                    </div>
+                    <div class="col-xs-12 value">                        
+                    </div>
+                </div>
+            {% else %}
+                <div class="row  data-field" data-fieldname="sri_estado" data-fieldtype="Int">
+                    <div class="col-xs-12">					
+                        <label>OBLIGADO A LLEVAR CONTABILIDAD: NO</label>					
+                    </div>
+                    <div class="col-xs-12 value">                        
+                    </div>
+                </div>
+            {% endif %}
+            
+            {% if doc_build.contribuyenteRimpe %}            
+                <div class="row  data-field" data-fieldname="sri_estado" data-fieldtype="Int">
+                    <div class="col-xs-12">					
+                        <label>CONTRIBUYENTE RÉGIMEN RIMPE</label>					
+                    </div>
+                    <div class="col-xs-12 value">                        
+                    </div>
+                </div>
+            {% endif %}
+            
+            {% if doc_build.agenteRetencion %}
+                <div class="row  data-field">
+                    <div class="col-xs-12">					
+                        <label>Agente de Retenci&oacute;n Resoluci&oacute;n No. {{doc_build.agenteRetencion}}</label>
+                    </div>
+                    <div class="col-xs-12 value">                        
+                    </div>
+                </div>
+            {% endif %}
+		</div>
+
+		<div class="col-xs-6 column-break">            
+            <div class="row data-field">
+                <div class="col-xs-6">                    
+                    <strong>RETENCIÓN:</strong>                    
+                </div>
+                <div class="col-xs-6" style="text-align: right;">
+                    <strong>No.</strong>{{doc.estab}}-{{doc.ptoemi}}-{{'%09d' % doc.secuencial}}
+                </div>
+            </div>                            
+			<div class="row data-field">
+				<div class="col-xs-12">					
+					<label>N&Uacute;MERO DE AUTORIZACI&Oacute;N</label>					
+				</div>
+				<div class="col-xs-12 value">
+					{{doc_build.numeroAutorizacion}}
+				</div>
+			</div>		
+			<div class="row  data-field">
+				<div class="col-xs-12">					
+					<label>Fecha y hora de autorizaci&oacute;n:</label>					
+				</div>
+				<div class="col-xs-12 value">
+					{{doc_build.fechaautorizacion}}
+				</div>
+			</div>
+			<div class="row  data-field">
+				<div class="col-xs-12">					
+					<label>AMBIENTE:</label>					
+				</div>
+				
+                {% if doc_build.ambiente == 2 %}
+                <div class="col-xs-12 value">PRODUCCI&Oacute;N</div>
+                {% else %}
+                <div class="col-xs-12 value">PRUEBAS</div>
+                {% endif %}
+				
+			</div>		
+			<div class="row  data-field">
+				<div class="col-xs-12">					
+					<label>EMISI&Oacute;N:</label>
+				</div>
+				<div class="col-xs-12 value">
+					NORMAL
+				</div>
+			</div>
+
+            <div class="row  data-field">
+				<div class="col-xs-12" style="text-align: center;">					
+					<label>CLAVE DE ACCESO</label>
+				</div>
+				<div class="col-xs-12 value" style-x="width:100%;padding: 0px !important;">
+					{% if doc_build.numeroautorizacion_img is not none %}
+                        <img src="data:image/png;base64,{{doc_build.numeroautorizacion_img}}" height="60px" style="width:  95% !important;"/>
+                    {% endif %}
+				</div>
+                <div class="col-xs-12 value" style="text-align: center;">
+					{{doc_build.numeroAutorizacion}}
+				</div>
+			</div>
+		</div>		
+	</div>
+
+        <div class="row section-break gray-box p-2 m-1" data-label="Información Tributaria">
+			<div class="col-xs-6 column-break">
+			    <div class="row  data-field" data-fieldname="sri_response" data-fieldtype="Data">
+				    <div class="col-xs-12">					
+					    <label>Raz&oacute;n Social:</label>					
+				    </div>
+				    <div class="col-xs-12 value">
+					    {{ doc_build.razonSocialSujetoRetenido }} 
+				    </div>
+			    </div>		
+			    <div class="row data-field" data-fieldname="fechaautorizacion" data-fieldtype="Datetime">
+                    <div class="col-xs-12">					
+                        <label>Direcci&oacute;n:</label>					
+                    </div>
+                    <div class="col-xs-12 value">
+                        {{doc_build.direccionSujetoRetenido}}
+                    </div>
+                </div>		
+			<div class="row data-field" data-fieldname="fechaEmision" data-fieldtype="Datetime">
+				<div class="col-xs-12">					
+					<label>Fecha Emisi&oacute;n: </label>					
+				</div>
+				<div class="col-xs-12 value">
+					{{doc_build.fechaEmision}}
+				</div>
+			</div>		
+			<div class="row  data-field" data-fieldname="sri_estado" data-fieldtype="Int">
+				<div class="col-xs-12">					
+					<label>Ejercicio Fiscal: </label>					
+				</div>
+				<div class="col-xs-12 value">
+					{{doc_build.periodoFiscal}}	
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6 column-break">		
+			<div class="row  data-field" data-fieldname="estab" data-fieldtype="Link">
+				<div class="col-xs-12">					
+					<label>RUC/CI:</label>					
+				</div>
+				<div class="col-xs-12 value">
+					{{doc_build.identificacionSujetoRetenido}}
+				</div>
+			</div>		
+			<div class="row  data-field" data-fieldname="ptoemi" data-fieldtype="Link">
+				<div class="col-xs-12">					
+					<label>Tel&eacute;fono:</label>					
+				</div>
+				<div class="col-xs-12 value">
+					+593 {{doc_build.supplier_phone}}
+				</div>
+			</div>
+			<div class="row  data-field" data-fieldname="ambiente" data-fieldtype="Int">
+				<div class="col-xs-12">					
+					<label>Email:</label>					
+				</div>
+				<div class="col-xs-12 value">
+					{{doc_build.supplier_email_id}}
+				</div>
+			</div>		
+			<div class="row  data-field" data-fieldname="tipoEmision" data-fieldtype="Int">
+				<div class="col-xs-12">					
+					<label>&nbsp;</label>
+				</div>
+				<div class="col-xs-12 value">
+					&nbsp;
+				</div>
+			</div>		
+		</div>		
+	</div>
+                      
 
         <div data-fieldname="items" data-fieldtype="Table">
             <table class="table table-bordered table-condensed">
