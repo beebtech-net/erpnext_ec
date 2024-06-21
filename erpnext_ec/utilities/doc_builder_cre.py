@@ -19,6 +19,7 @@ def build_doc_cre_with_images(doc_name):
 	return doc_response
 
 #Comprobante de retencion
+@frappe.whitelist()
 def build_doc_cre(doc_name):
 	# DireccionMatriz = ''
 	# dirEstablecimiento = ''
