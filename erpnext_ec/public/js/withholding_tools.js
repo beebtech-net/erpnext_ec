@@ -278,7 +278,7 @@ function SendWithholdingToSri(documentIsReady, document_preview, doc)
 	}
 }
 
-function validationSri(doc)
+function validationSri_wh(doc)
 {
 	frappe.call({
 		method: "erpnext_ec.utilities.doc_validator.validate_purchase_whithold_sri_ec",

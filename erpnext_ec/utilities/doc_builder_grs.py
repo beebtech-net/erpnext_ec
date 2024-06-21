@@ -171,7 +171,7 @@ def build_doc_grs_sri(data_object):
 			{
 				"nombre": infoAdicionalItem['nombre'],
 				"valor": infoAdicionalItem['valor'].upper()
-			})	
+			})
 
 	obligadoContabilidad = 'NO'
 	if(data_object.obligadoContabilidad == 1):

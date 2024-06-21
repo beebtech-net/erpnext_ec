@@ -99,6 +99,9 @@ function SetupCustomButtons(doc, DocTypeErpNext)
                 removeMainButton = true;
             }            
 
+			var test_mode = 'hide';
+			test_mode = '';
+
             var buttonGroup = `<div class="dropdown show" data-name="` + doc.name + `" style="display: inline-block;position: unset !important;">
   <a class="btn btn-secondary dropdown-toggle btn-xs" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
   </a>
@@ -109,8 +112,8 @@ function SetupCustomButtons(doc, DocTypeErpNext)
     <a class="dropdown-item hide" href="javascript:document.Website.DownloadPdf('` + doc.name + `'); "><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Pdf ${doc.name}</a>
     <div class="dropdown-divider documentation-links"></div>
 	<a class="dropdown-item" href="javascript:document.Website.ShowInfo('` + doc.name + `'); "><i class="fa fa-info-circle" aria-hidden="true"></i> Ver información</a>
-	<div class="dropdown-divider documentation-links"></div>
-	<a class="dropdown-item hide" href="javascript:document.Website.DownloadXmlSigned('` + doc.name + `'); "><i class="fa fa-file-code-o" aria-hidden="true"></i> Xml Signed ${doc.name}</a>
+	<div class="dropdown-divider documentation-links ${test_mode}"></div>
+	<a class="dropdown-item ${test_mode}" href="javascript:document.Website.DownloadXmlSigned('` + doc.name + `'); "><i class="fa fa-file-code-o" aria-hidden="true"></i> Xml Signed ${doc.name}</a>
   </div>
 </div>
 `;
