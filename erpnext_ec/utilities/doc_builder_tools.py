@@ -712,7 +712,7 @@ def ObtenerModulo11(cadenaNumeros):
     base_max = 7
     multiplicador = 2
     total = 0
-    substrings = re.split("", cadenaNumeros)
+    substrings = list(map(int, list(cadenaNumeros))) #re.split("", cadenaNumeros)
 
     for i in range(len(substrings) - 1, 0, -1):
         if substrings[i] != "":
