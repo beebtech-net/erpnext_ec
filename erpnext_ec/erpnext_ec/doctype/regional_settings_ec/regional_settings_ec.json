@@ -47,7 +47,7 @@
 		"label": "Usar servicio externo",
 		"in_list_view": 1,
     "in_preview": 1,    
-    "description": "Si selecciona esta opción se usará la url configurada como herramienta para las tareas de envio del SRI, como firma y autorización."
+    "description": "Si selecciona esta opción se usará la url configurada como herramienta para las tareas de envio del SRI, como firma y autorización..."
 	},
   {    
     "fieldname": "signature_tool",
