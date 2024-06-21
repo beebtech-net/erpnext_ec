@@ -124,19 +124,19 @@ frappe_version_int = int(frappe_version.split('.')[0])
 
 #Frappe <=13
 jenv = {
-#     "methods": [
+     "methods": [
 #         "build_doc_fac:erpnext_ec.utilities.doc_builder_fac.build_doc_fac",
 #         "build_doc_fac_with_images:erpnext_ec.utilities.doc_builder_fac.build_doc_fac_with_images",
 #         "build_doc_cre:erpnext_ec.utilities.doc_builder_cre.build_doc_cre"
 #         "build_doc_cre_with_images:erpnext_ec.utilities.doc_builder_cre.build_doc_cre_with_images"
-#     ],
-#     "filters": [
-#     ]
+     ],
+     "filters": [
+     ]
 }
 
-#def jenv_customizations(jenv):
+def jenv_customizations(jenv):
     #    jenv.globals['build_doc_fac'] = build_doc_fac
-#    print ("no usado")
+    print ("no usado")
 
 
 # Installation
