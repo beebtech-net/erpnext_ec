@@ -38,7 +38,7 @@
     "fieldname": "server_timeout",
     "fieldtype": "Int",
     "in_list_view": 0,
-    "in_preview": 0,    
+    "in_preview": 0,
     "label": "Server Timeout"
   },
   {	
@@ -46,7 +46,7 @@
     "fieldtype": "Check",		
 		"label": "Usar servicio externo",
 		"in_list_view": 1,
-    "in_preview": 1,    
+    "in_preview": 1,
     "description": "Si selecciona esta opción se usará la url configurada como herramienta para las tareas de envio del SRI, como firma y autorización..."
 	},
   {    
@@ -57,8 +57,7 @@
     "in_preview": 1,    
     "description": "Opciones de herramientas de firma electrónica.....",
     "options": "XadesSignerCmd\nPython Native (With Fails)\nExterno (No implementado)"    
-	},
-  
+	},  
   {
     "fieldname": "p12",
     "fieldtype": "Attach",
