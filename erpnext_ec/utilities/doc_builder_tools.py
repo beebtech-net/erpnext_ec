@@ -712,19 +712,22 @@ def ObtenerModulo11(cadenaNumeros):
     base_max = 7
     multiplicador = 2
     total = 0
-    substrings = list(map(int, list(cadenaNumeros))) #re.split("", cadenaNumeros)
+    substrings = list(map(int, list(cadenaNumeros)))  # Convierte la cadena de números en una lista de enteros
 
-    for i in range(len(substrings) - 1, 0, -1):
-        if substrings[i] != "":
-            if multiplicador > base_max:
-                multiplicador = 2
-            num_aux = int(substrings[i])
-            total += (num_aux * multiplicador)
-            multiplicador += 1
+    # Recorre la lista de números desde el final hacia el principio
+    for i in range(len(substrings) - 1, -1, -1):  # Recorre desde el último índice hasta el primero
+        num_aux = substrings[i]
+        total += (num_aux * multiplicador)
+        multiplicador += 1
+        if multiplicador > base_max:
+            multiplicador = 2
 
+    # Calcula el dígito verificador
     verificador = 11 - total % 11
+    if verificador >= 10:
+        verificador = 0
 
-    return CheckDigitBring(verificador)
+    return str(verificador) 
 
 def CheckDigitBring(digit):
     if digit == 10:
