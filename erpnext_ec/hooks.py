@@ -123,7 +123,7 @@ frappe_version_int = int(frappe_version.split('.')[0])
 # from erpnext_ec.utilities.doc_builder_cre import build_doc_cre
 
 #Frappe <=13
-# jenv = {
+jenv = {
 #     "methods": [
 #         "build_doc_fac:erpnext_ec.utilities.doc_builder_fac.build_doc_fac",
 #         "build_doc_fac_with_images:erpnext_ec.utilities.doc_builder_fac.build_doc_fac_with_images",
@@ -132,7 +132,7 @@ frappe_version_int = int(frappe_version.split('.')[0])
 #     ],
 #     "filters": [
 #     ]
-# }
+}
 
 #def jenv_customizations(jenv):
     #    jenv.globals['build_doc_fac'] = build_doc_fac
