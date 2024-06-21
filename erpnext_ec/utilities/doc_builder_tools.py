@@ -729,6 +729,7 @@ def ObtenerModulo11(cadenaNumeros):
 
     return str(verificador) 
 
+#Deprecated
 def CheckDigitBring(digit):
     if digit == 10:
         digit = 1
@@ -746,7 +747,6 @@ def ObtenerModulo10(cadenaNumeros):
         index += 1
     residuo = suma % 10
     return 10 - residuo if residuo != 0 else 0
-
 
 def setSecuencial(doc, typeDocSri):
 	
