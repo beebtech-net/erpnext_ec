@@ -120,14 +120,14 @@ frappe_version_int = int(frappe_version.split('.')[0])
 #if(frappe_version_int > 13):
 #if(False):
 #from erpnext_ec.utilities.doc_builder_fac import build_doc_fac 
-# from erpnext_ec.utilities.doc_builder_cre import build_doc_cre
+#from erpnext_ec.utilities.doc_builder_cre import build_doc_cre
 
 #Frappe <=13
 jenv = {
      "methods": [
          "build_doc_fac:erpnext_ec.utilities.doc_builder_fac.build_doc_fac",
          "build_doc_fac_with_images:erpnext_ec.utilities.doc_builder_fac.build_doc_fac_with_images",
-         #"build_doc_cre:erpnext_ec.utilities.doc_builder_cre.build_doc_cre"
+         "build_doc_cre:erpnext_ec.utilities.doc_builder_cre.build_doc_cre"
          #"build_doc_cre_with_images:erpnext_ec.utilities.doc_builder_cre.build_doc_cre_with_images"
      ],
      "filters": [
