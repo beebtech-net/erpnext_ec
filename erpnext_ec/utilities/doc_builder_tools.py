@@ -706,7 +706,9 @@ def GenerarClaveAcceso(tipoDocumento, fechaEmision, puntoEmision, secuencial, ti
         "12345678",
         tipoEmision
     )
-    return "{0}{1}".format(cadenaNumeros, ObtenerModulo11(cadenaNumeros))
+    
+    return "{0}{1}".format(cadenaNumeros, ObtenerModulo11(cadenaNumeros))    
+    #return "{0}{1}".format(cadenaNumeros, compute_mod11(cadenaNumeros))
 
 def ObtenerModulo11(cadenaNumeros):
     base_max = 7
@@ -714,16 +716,16 @@ def ObtenerModulo11(cadenaNumeros):
     total = 0
     substrings = list(cadenaNumeros) #substrings = re.split("", cadenaNumeros)
 
-    for i in range(len(substrings) - 1, -1, -1): #for i in range(len(substrings) - 1, 0, -1):
-        if substrings[i] != "":
-            if multiplicador > base_max:
-                multiplicador = 2
-                num_aux = int(substrings[i])
-                total += (num_aux * multiplicador)
-                multiplicador += 1
+    for i in range(len(substrings) - 1, 0, -1): #for i in range(len(substrings) - 1, 0, -1):        
+        #if substrings[i] != "":        
+        num_aux = int(substrings[i])
+        total += (num_aux * multiplicador)
+        multiplicador += 1
+        if multiplicador > base_max:
+            multiplicador = 2
 
     verificador = 11 - total % 11
-
+    print(verificador)
     return CheckDigitBring(verificador)
 
 def CheckDigitBring(digit):
@@ -733,6 +735,42 @@ def CheckDigitBring(digit):
         digit = 0
     return digit
 
+_MODULO_11 = {
+        'BASE': 11,
+        'FACTOR': 2,
+        'RETORNO11': 0,
+        'RETORNO10': 1,
+        'PESO': 2,
+        'MAX_WEIGHT': 7
+    }
+
+
+def compute_mod11(dato):
+        """
+        Calculo mod 11
+        return int
+        """
+        total = 0
+        weight = _MODULO_11['PESO']
+        
+        for item in reversed(dato):
+            total += int(item) * weight
+            weight += 1
+            if weight > _MODULO_11['MAX_WEIGHT']:
+                weight = _MODULO_11['PESO']
+        mod = 11 - total % _MODULO_11['BASE']
+
+        mod = _eval_mod11(mod)
+        return mod
+
+def _eval_mod11(modulo):
+        if modulo == _MODULO_11['BASE']:
+            return _MODULO_11['RETORNO11']
+        elif modulo == _MODULO_11['BASE'] - 1:
+            return _MODULO_11['RETORNO10']
+        else:
+            return modulo
+        
 def ObtenerModulo10(cadenaNumeros):
     coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2]
     index = 0
