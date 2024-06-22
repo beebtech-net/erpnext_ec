@@ -3,6 +3,9 @@ import socket
 
 @frappe.whitelist()
 def get_full_url():
+
+    return frappe.utils.get_host_name_from_request()
+
     # Obtener la URL base del sitio
     base_url = frappe.utils.get_url()
     
