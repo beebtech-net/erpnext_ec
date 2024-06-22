@@ -707,8 +707,8 @@ def GenerarClaveAcceso(tipoDocumento, fechaEmision, puntoEmision, secuencial, ti
         tipoEmision
     )
     
-    return "{0}{1}".format(cadenaNumeros, ObtenerModulo11(cadenaNumeros))    
-    #return "{0}{1}".format(cadenaNumeros, compute_mod11(cadenaNumeros))
+    #return "{0}{1}".format(cadenaNumeros, ObtenerModulo11(cadenaNumeros))    
+    return "{0}{1}".format(cadenaNumeros, compute_mod11(cadenaNumeros))
 
 def ObtenerModulo11(cadenaNumeros):
     base_max = 7
