@@ -228,6 +228,7 @@
 </style>
 
 {% set doc_build = build_doc_fac_with_images(doc.name) %}
+{% set base_url = get_full_url() %}
 
 <div class="page">    
     <div class="page-header">
@@ -245,7 +246,9 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <img src="{{ frappe.db.get_value("Company", doc.company, "company_logo") or "" }}" width="220px" />
+                                                {% set logo_path = frappe.db.get_value("Company", doc.company, "company_logo") or "" %}
+                                                {% set logo_url = base_url + logo_path %}
+                                                <img src="{{ logo_url }}" width="220px" />
                                             </td>
                                         </tr>
                                     </tbody>
