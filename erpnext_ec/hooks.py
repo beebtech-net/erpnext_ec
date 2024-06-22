@@ -62,7 +62,6 @@ doctype_list_js = {
     "Purchase Invoice" : "public/js/overrides/purchase_invoice_list_sri.js",
     "Delivery Note" : "public/js/overrides/delivery_note_list_sri.js",
 
-
     "Print Format" : "public/js/overrides/print_format_list_sri.js",
     "Account" : "public/js/overrides/account_list_sri.js",
     }
@@ -128,7 +127,7 @@ jenv = {
          "build_doc_fac:erpnext_ec.utilities.doc_builder_fac.build_doc_fac",
          "build_doc_fac_with_images:erpnext_ec.utilities.doc_builder_fac.build_doc_fac_with_images",
          "build_doc_cre:erpnext_ec.utilities.doc_builder_cre.build_doc_cre"
-         "build_doc_cre_with_images:erpnext_ec.utilities.doc_builder_cre.build_doc_cre_with_images"
+         #"build_doc_cre_with_images:erpnext_ec.utilities.doc_builder_cre.build_doc_cre_with_images"
      ],
      "filters": [
      ]
@@ -137,7 +136,6 @@ jenv = {
 def jenv_customizations(jenv):
     #    jenv.globals['build_doc_fac'] = build_doc_fac
     print ("no usado")
-
 
 # Installation
 # ------------
