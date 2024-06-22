@@ -8,7 +8,7 @@ from erpnext_ec.utilities.doc_render_tools import *
 
 @frappe.whitelist()
 def build_doc_fac_with_images(doc_name):
-	doc_response = build_doc_fac(doc_name)	
+	doc_response = build_doc_fac(doc_name)
 	doc_response.numeroautorizacion_img = get_barcode_base64(doc_response.numeroautorizacion)
 	doc_response.logo_img = get_barcode_base64(doc_response.numeroautorizacion)
 	return doc_response

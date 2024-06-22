@@ -10,11 +10,9 @@ from erpnext_ec.utilities.doc_render_tools import *
 def build_doc_cre_with_images(doc_name):
 	doc_response = build_doc_cre(doc_name)
 	if(not doc_response.numeroAutorizacion):
-		doc_response.numeroAutorizacion = "0"
-	
+		doc_response.numeroAutorizacion = "0"	
 	doc_response.numeroautorizacion_img = get_barcode_base64(doc_response.numeroAutorizacion)
 	doc_response.logo_img = get_barcode_base64(doc_response.numeroAutorizacion)
-
 	#print(doc_response.numeroautorizacion_img)
 	return doc_response
 
