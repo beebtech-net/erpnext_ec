@@ -112,6 +112,7 @@ jinja = {
                 "erpnext_ec.utilities.doc_builder_fac",
                 "erpnext_ec.utilities.doc_builder_cre",
                 "erpnext_ec.utilities.doc_builder_grs",
+                "erpnext_ec.utilities.tools",
                 ]
     #"filters": "erpnext_ec.utils.jinja_filters"
 }
@@ -126,8 +127,9 @@ jenv = {
      "methods": [
          "build_doc_fac:erpnext_ec.utilities.doc_builder_fac.build_doc_fac",
          "build_doc_fac_with_images:erpnext_ec.utilities.doc_builder_fac.build_doc_fac_with_images",
-         "build_doc_cre:erpnext_ec.utilities.doc_builder_cre.build_doc_cre"
-         #"build_doc_cre_with_images:erpnext_ec.utilities.doc_builder_cre.build_doc_cre_with_images"
+         "build_doc_cre:erpnext_ec.utilities.doc_builder_cre.build_doc_cre",
+         "build_doc_cre_with_images:erpnext_ec.utilities.doc_builder_cre.build_doc_cre_with_images",
+         "get_full_url:erpnext_ec.utilities.tools.get_full_url",
      ],
      "filters": [
      ]
