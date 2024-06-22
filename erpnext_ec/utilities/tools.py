@@ -9,7 +9,7 @@ def get_full_url():
 
     # Verificar si está en modo DNS multitenant
     if not frappe.local.conf.get('dns_multitenant'):    
-        port = ':'+frappe.local.conf.nginx_port
+        port = ':' + str(frappe.local.conf.nginx_port)
 
     # Construir la URL completa con el protocolo y el puerto
     full_url = f"{host_name}{port}"
