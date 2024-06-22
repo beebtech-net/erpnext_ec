@@ -1,9 +1,16 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+{# <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39&family=Poppins&display=swap" rel="stylesheet"> #}
+{# <link href="/assets/erpnext_ec/css/google-fonts-local.css" rel="stylesheet"> #}
+
 <style>
     body {
         font-family: sans-serif;
         font-size: 10pt;
         background-repeat: no-repeat;
         background-position: center;
+        line-height: 0.1em;
     }
 
     .gray-box {
@@ -358,61 +365,118 @@
             </tr>
         </table>
 
-        <div class="row section-break gray-box p-2 m-1" data-label="Información Tributaria">
-            <div class="col-xs-6 column-break">
-                <div class="row data-field" data-fieldname="customer_name" data-fieldtype="Data">
-                    <div class="col-xs-12">
-                        <label>Raz&oacute;n Social:</label>
-                    </div>
-                    <div class="col-xs-12 value">
-                        {{ doc_build.customer_name }}
-                    </div>
-                </div>
-                <div class="row data-field" data-fieldname="direccionComprador" data-fieldtype="Data">
-                    <div class="col-xs-12">
-                        <label>Direcci&oacute;n:</label>
-                    </div>
-                    <div class="col-xs-12 value">
-                        {{ doc_build.direccionComprador }}
-                    </div>
-                </div>
-                <div class="row data-field" data-fieldname="posting_date" data-fieldtype="Datetime">
-                    <div class="col-xs-12">
-                        <label>Fec. Emi.:</label>
-                    </div>
-                    <div class="col-xs-12 value">
-                        {{ doc_build.posting_date }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-xs-6 column-break">
-                <div class="row data-field" data-fieldname="customer_tax_id" data-fieldtype="Data">
-                    <div class="col-xs-12">
-                        <label>RUC/CI:</label>
-                    </div>
-                    <div class="col-xs-12 value">
-                        {{ doc_build.customer_tax_id }}
-                    </div>
-                </div>
-                <div class="row data-field" data-fieldname="customer_phone" data-fieldtype="Data">
-                    <div class="col-xs-12">
-                        <label>Tel&eacute;fono:</label>
-                    </div>
-                    <div class="col-xs-12 value">
-                        +593 {{ doc_build.customer_phone }}
-                    </div>
-                </div>
-                <div class="row data-field" data-fieldname="customer_email_id" data-fieldtype="Data">
-                    <div class="col-xs-12">
-                        <label>Email:</label>
-                    </div>
-                    <div class="col-xs-12 value">
-                        {{ doc_build.customer_email_id }}
-                    </div>
-                </div>
-            </div>
+        <table style="width:100%" cellspacing="0" cellpading="0">
+            <tr>
+                <td style="padding-bottom: 0px !important;">
+                    <table class="gray-box" style="width:100%;" cellpadding="0" cellspacing="0">
+                        <tr>            
+                            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Raz&oacute;n Social: {{ doc_build.customer_name }}</strong></td>    
+                            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>RUC/CI: {{doc_build.customer_tax_id}}</strong></td>
+                        </tr>
+                        <tr>            
+                            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Direcci&oacute;n: {{doc_build.direccionComprador}}</strong></td>    
+                            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Tel&eacute;fono: +593 {{doc_build.customer_phone}}</strong></td>
+                        </tr>
+                        <tr>            
+                            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Fec. Emi.: {{doc_build.posting_date}}</strong></td>    
+                            <td height="30px" valign="top" style="width:50%;font-size: 8pt;"><strong>Email: {{doc_build.customer_email_id}}</strong></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding-top: 0px !important;">
+                    <table id="tabdetalle" style="width:100%;" cellspacing="0">
+                        <tbody>
+                            <tr>
+                                <th style="min-width:10%;">Cod.</th>
+                                <th style="min-width:10%;">Cant.</th>
+                                <th style="min-width:40%;">Descripci&oacute;n</th>
+                                <th style="min-width:10%;">P. Un.</th>
+                                <th style="min-width:10%;">Desc.</th>
+                                <th style="min-width:10%;">Total</th>
+                            </tr>
+                            
+                            {% for item in doc.items %}
+                                <tr>
+                                    <td>{{ item.item_code }}</td>
+                                    <td class="text-right">{{ item.qty }}</td>
+                                    <td>{{ item.item_name }}</td>
+                                    
+                                    {% if item.price_list_rate > 0 %}
+                                        <td class="text-right">{{ item.get_formatted('price_list_rate') }}</td>
+                                    {% else %}
+                                        <td class="text-right">{{ item.get_formatted('net_rate') }}</td>
+                                    {% endif %}
+                                    
+                                    <td class="text-right">{{ item.get_formatted('discount_amount') }}</td>
+                                    <td class="text-right">{{ item.get_formatted('amount') }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <div data-fieldname="items" data-fieldtype="Table">
+            <table class="table table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th style="width: 40px" class="table-sr">Sr</th>
+                        <th style="width: 150px;" class="" data-fieldname="items" data-fieldtype="Table">Producto</th>
+                        <th style="width: 200px;" class="" data-fieldname="items" data-fieldtype="Table">Descripción</th>
+                        <th style="width: 80px;" class="text-right" data-fieldname="items" data-fieldtype="Table">Cantidad</th>
+                        <th style="width: 150px;" class="" data-fieldname="items" data-fieldtype="Table">Unidad de media utilizada en el almacen</th>
+                        <th style="width: 150px;" class="" data-fieldname="items" data-fieldtype="Table">UOM</th>
+                        <th style="width: 80px;" class="text-right" data-fieldname="items" data-fieldtype="Table">Descuento</th>
+                        <th style="width: 80px;" class="text-right" data-fieldname="items" data-fieldtype="Table">Precio</th>
+                        <th style="width: 80px;" class="text-right" data-fieldname="items" data-fieldtype="Table">Importe</th>
+                        <th style="width: 80px;" class="text-right" data-fieldname="items" data-fieldtype="Table">Rate of Stock UOM</th>
+                        <th style="width: 80px;" class="text-center" data-fieldname="items" data-fieldtype="Table">Grant Commission</th>                        
+                    </tr>
+                </thead>
+                <tbody>                    
+                    <tr>
+                        <td class="table-sr">1</td>
+                        <td class="" data-fieldname="items" data-fieldtype="Table">                            
+                            <div class="value">001N</div>
+                        </td>                        
+                        <td class="" data-fieldname="items" data-fieldtype="Table">                            
+                            <div class="value"><div class="ql-snow">PRUEBAS001</div></div>
+                        </td>
+                        <td class="text-right" data-fieldname="items" data-fieldtype="Table">
+                            <div class="value"><small class="pull-left">Nos.</small>1</div>
+                        </td>
+                        <td class="" data-fieldname="items" data-fieldtype="Table">                            
+                            <div class="value">Nos.</div>
+                        </td>
+                        <td class="" data-fieldname="items" data-fieldtype="Table">                            
+                            <div class="value">Nos.</div>
+                        </td>
+                        <td class="text-right" data-fieldname="items" data-fieldtype="Table">                            
+                            <div class="value">$ 0.00</div>
+                        </td>
+                        <td class="text-right" data-fieldname="items" data-fieldtype="Table">                            
+                            <div class="value">$ 1.36</div>
+                        </td>
+                        <td class="text-right" data-fieldname="items" data-fieldtype="Table">                            
+                            <div class="value">$ 1.36</div>
+                        </td>
+                        <td class="text-right" data-fieldname="items" data-fieldtype="Table">                            
+                            <div class="value">$ 1.36</div>
+                        </td>
+                        <td class="text-center" data-fieldname="items" data-fieldtype="Table">                            
+                            <div class="value">
+                                <svg viewBox="0 0 16 16" fill="transparent" stroke="#1F272E" stroke-width="2" xmlns="http://www.w3.org/2000/svg" id="icon-tick" style="width: 12px; height: 12px; margin-top: 5px;">
+                                    <path d="M2 9.66667L5.33333 13L14 3" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </div>
+                        </td>                        
+                    </tr>                    
+                </tbody>
+            </table>
         </div>
-        
 
         <div data-fieldname="items" data-fieldtype="Table">
             <table class="table table-bordered table-condensed">
@@ -445,6 +509,27 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+        
+
+        <div class="row section-break" data-label="">
+			<div class="col-xs-4 column-break">
+			    <div class="row  data-field" data-fieldname="total_qty" data-fieldtype="Float">
+				    <div class="col-xs-12">					
+					    <label>Cantidad total: </label>					
+				    </div>
+                    <div class="col-xs-12 value">1</div>
+                </div>
+            </div>		
+            <div class="col-xs-4 column-break"></div>		
+			<div class="col-xs-4 column-break">			
+                <div class="row">	
+                    <div class="col-xs-5">
+                        <label>Total</label>
+                    </div>
+                    <div class="col-xs-7 text-right">$ 1.36</div>
+                </div>			
+            </div>		
         </div>
 
         <table border="0" cellpadding="0" cellspacing="0" style="width: 100%">

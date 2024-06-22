@@ -37,6 +37,18 @@ def execute():
 				  "disabled": 0,
 				  "raw_printing": 0,
 			},
+			{
+                  "doc_type" : "Delivery Note",
+                  "name" : "Guía de Remisión SRI",
+                  "module" : "Accounts",
+				  "standard": "No",
+				  "custom_format": True,
+				  "print_format_type": "Jinja",
+				  "default_print_language":"es-EC",
+                  "source_path" : "delivery_note_sri_ride.html",
+				  "disabled": 0,
+				  "raw_printing": 0,
+			},
 	]
     
 	print ("client_script")

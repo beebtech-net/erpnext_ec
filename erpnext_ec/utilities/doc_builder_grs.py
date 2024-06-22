@@ -4,8 +4,20 @@ import erpnext
 import json
 from types import SimpleNamespace
 from erpnext_ec.utilities.doc_builder_tools import *
+from erpnext_ec.utilities.doc_render_tools import *
+
+@frappe.whitelist()
+def build_doc_grs_with_images(doc_name):
+	doc_response = build_doc_grs(doc_name)
+	if(not doc_response.numeroAutorizacion):
+		doc_response.numeroAutorizacion = "0"	
+	doc_response.numeroautorizacion_img = get_barcode_base64(doc_response.numeroAutorizacion)
+	doc_response.logo_img = get_barcode_base64(doc_response.numeroAutorizacion)
+	#print(doc_response.numeroautorizacion_img)
+	return doc_response
 
 #Guía de remisión
+@frappe.whitelist()
 def build_doc_grs(doc_name):
 	# DireccionMatriz = ''
 	# dirEstablecimiento = ''
@@ -153,7 +165,8 @@ def build_doc_grs(doc_name):
 		print(f'Clave de acceso creada: {claveAcceso}')
 
 		doc.claveAcceso = claveAcceso
-
+		doc.numeroautorizacion = claveAcceso
+		
 		return doc
 
 
@@ -179,6 +192,7 @@ def build_doc_grs_sri(data_object):
 
 	contribuyenteRimpe = "CONTRIBUYENTE RÉGIMEN RIMPE"
 
+	#Se asigna vacios para que no cree campos en caso de que no haya transportista asignado
 	if(not data_object.razonSocialTransportista):
 		data_object.razonSocialTransportista = '' #data_object.razonSocial
 		data_object.tipoIdentificacionTransportista = '' #'04'

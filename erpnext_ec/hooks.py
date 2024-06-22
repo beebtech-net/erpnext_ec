@@ -129,6 +129,8 @@ jenv = {
          "build_doc_fac_with_images:erpnext_ec.utilities.doc_builder_fac.build_doc_fac_with_images",
          "build_doc_cre:erpnext_ec.utilities.doc_builder_cre.build_doc_cre",
          "build_doc_cre_with_images:erpnext_ec.utilities.doc_builder_cre.build_doc_cre_with_images",
+         "build_doc_grs:erpnext_ec.utilities.doc_builder_grs.build_doc_grs",
+         "build_doc_grs_with_images:erpnext_ec.utilities.doc_builder_grs.build_doc_grs_with_images",
          "get_full_url:erpnext_ec.utilities.tools.get_full_url",
      ],
      "filters": [
