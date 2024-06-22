@@ -712,24 +712,20 @@ def ObtenerModulo11(cadenaNumeros):
     base_max = 7
     multiplicador = 2
     total = 0
-    substrings = list(map(int, list(cadenaNumeros)))  # Convierte la cadena de números en una lista de enteros
+    substrings = list(cadenaNumeros) #substrings = re.split("", cadenaNumeros)
 
-    # Recorre la lista de números desde el final hacia el principio
-    for i in range(len(substrings) - 1, -1, -1):  # Recorre desde el último índice hasta el primero
-        num_aux = substrings[i]
-        total += (num_aux * multiplicador)
-        multiplicador += 1
-        if multiplicador > base_max:
-            multiplicador = 2
+    for i in range(len(substrings) - 1, -1, -1): #for i in range(len(substrings) - 1, 0, -1):
+        if substrings[i] != "":
+            if multiplicador > base_max:
+                multiplicador = 2
+                num_aux = int(substrings[i])
+                total += (num_aux * multiplicador)
+                multiplicador += 1
 
-    # Calcula el dígito verificador
     verificador = 11 - total % 11
-    if verificador >= 10:
-        verificador = 0
 
-    return str(verificador) 
+    return CheckDigitBring(verificador)
 
-#Deprecated
 def CheckDigitBring(digit):
     if digit == 10:
         digit = 1
@@ -747,6 +743,7 @@ def ObtenerModulo10(cadenaNumeros):
         index += 1
     residuo = suma % 10
     return 10 - residuo if residuo != 0 else 0
+
 
 def setSecuencial(doc, typeDocSri):
 	
