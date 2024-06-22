@@ -179,6 +179,11 @@ def build_doc_grs_sri(data_object):
 
 	contribuyenteRimpe = "CONTRIBUYENTE RÉGIMEN RIMPE"
 
+	if(not data_object.razonSocialTransportista):
+		data_object.razonSocialTransportista = '' #data_object.razonSocial
+		data_object.tipoIdentificacionTransportista = '' #'04'
+		data_object.rucTransportista = '' #data_object.tax_id
+
 	data = {
         "infoTributaria": {
             "ambiente": data_object.ambiente,
