@@ -14,7 +14,7 @@
             height: 100%;
         }
     }
-    
+
     .gray-box {
         font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
         /*height: 1in;*/
@@ -503,7 +503,7 @@
                                 {% for tax_item in doc_build.taxes %}
                                 <tr>
                                     <td class="summary-title-top">SUBTOTAL {{tax_item.compute_label_sri}}</td>
-                                    <td class="summary-data-top">{{frappe.format(tax_item.tax_amount,'Currency')}}</td>
+                                    <td class="summary-data-top">{{frappe.format(tax_item.baseImponible,'Currency')}}</td>
                                 </tr>
                                 {%- endfor %}
                                     
