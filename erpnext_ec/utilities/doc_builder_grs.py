@@ -9,10 +9,10 @@ from erpnext_ec.utilities.doc_render_tools import *
 @frappe.whitelist()
 def build_doc_grs_with_images(doc_name):
 	doc_response = build_doc_grs(doc_name)
-	if(not doc_response.numeroAutorizacion):
-		doc_response.numeroAutorizacion = "0"	
-	doc_response.numeroautorizacion_img = get_barcode_base64(doc_response.numeroAutorizacion)
-	doc_response.logo_img = get_barcode_base64(doc_response.numeroAutorizacion)
+	if(not doc_response.numeroautorizacion):
+		doc_response.numeroautorizacion = "0"	
+	doc_response.numeroautorizacion_img = get_barcode_base64(doc_response.numeroautorizacion)
+	doc_response.logo_img = get_barcode_base64(doc_response.numeroautorizacion)
 	#print(doc_response.numeroautorizacion_img)
 	return doc_response
 
@@ -166,7 +166,7 @@ def build_doc_grs(doc_name):
 
 		doc.claveAcceso = claveAcceso
 		doc.numeroautorizacion = claveAcceso
-		
+
 		return doc
 
 

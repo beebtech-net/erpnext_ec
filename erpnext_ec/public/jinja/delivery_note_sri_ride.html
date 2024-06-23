@@ -4,6 +4,7 @@
         font-size: 10pt;
         background-repeat: no-repeat;
         background-position: center;
+        line-height: 0.8em;
     }
 
     .gray-box {
@@ -350,7 +351,7 @@
                         </tr>
                         <tr>
                             <td align="center" style="font-size: .7em;font-weight: bold;font-family:helvetica;padding: 0px !important;">
-                                {{doc_build.numeroautorizacion}}
+                                {{doc_build.claveAcceso}}
                             </td>
                         </tr>
                     </table>
@@ -412,8 +413,89 @@
                 </div>
             </div>
         </div>
-    
         
+        {% for destinatario in doc_build.destinatarios %}
+        <div class="">
+            <div class="">        
+                <small class="">Destinatario</small>
+            </div>
+        </div>
+        <div class="row section-break gray-box p-2 m-1">
+            <div class="col-xs-6 column-break">
+                <div class="row data-field">
+                    <div class="col-xs-12">
+                        <label>Comprobante de venta:</label>
+                    </div>
+                    <div class="col-xs-12 value">
+                        {{ destinatario.numDocSustento }}
+                    </div>
+                </div>
+                <div class="row data-field hidden">
+                    <div class="col-xs-12">
+                        <label>N&uacute;mero de Autorización:</label>
+                    </div>
+                    <div class="col-xs-12 value">
+                        {{ destinatario.numDocSustento }}
+                    </div>
+                </div>
+                <div class="row data-field">
+                    <div class="col-xs-12">
+                        <label>Motivo traslado:</label>
+                    </div>
+                    <div class="col-xs-12 value">
+                        {{ destinatario.motivoTraslado }}
+                    </div>
+                </div>
+                <div class="row data-field">
+                    <div class="col-xs-12">
+                        <label>Destino (Punto de llegada):</label>
+                    </div>
+                    <div class="col-xs-12 value">
+                        {{ destinatario.dirDestinatario }}
+                    </div>
+                </div>
+                <div class="row data-field">
+                    <div class="col-xs-12">
+                        <label>Identificación Destinatario:</label>
+                    </div>
+                    <div class="col-xs-12 value">
+                        {{ destinatario.identificacionDestinatario }}
+                    </div>
+                </div>
+                <div class="row data-field">
+                    <div class="col-xs-12">
+                        <label>Razón Social/Nombres Apellidos:</label>
+                    </div>
+                    <div class="col-xs-12 value">
+                        {{ destinatario.razonSocialDestinatario }}
+                    </div>
+                </div>
+                <div class="row data-field hidden">
+                    <div class="col-xs-12">
+                        <label>Documento aduanero:</label>
+                    </div>
+                    <div class="col-xs-12 value">
+                        
+                    </div>
+                </div>
+                <div class="row data-field hidden">
+                    <div class="col-xs-12">
+                        <label>Código Establecimiento Destino:</label>
+                    </div>
+                    <div class="col-xs-12 value">
+                        
+                    </div>
+                </div>
+                <div class="row data-field hidden">
+                    <div class="col-xs-12">
+                        <label>Ruta:</label>
+                    </div>
+                    <div class="col-xs-12 value">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
         <div data-fieldname="items" data-fieldtype="Table">
             <table class="table table-bordered table-condensed">
                 <thead>
@@ -425,17 +507,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in doc.items %}
+                    {% for item in destinatario.detalles.detalle %}
                         <tr>                            
-                            <td class="text-right">{{ item.qty }}</td>
-                            <td>{{ item.item_name }}</td>
-                            <td>{{ item.item_code }}</td>
-                            <td>{{ item.item_code }}</td>
+                            <td class="text-right">{{ item.cantidad }}</td>
+                            <td>{{ item.descripcion }}</td>
+                            <td>{{ item.codigoInterno }}</td>
+                            <td>{{ item.codigoInterno }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+
+        {% endfor %}
 
         <table border="0" cellpadding="0" cellspacing="0" style="width: 100%">
             <tbody>
