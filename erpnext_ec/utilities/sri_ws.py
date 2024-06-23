@@ -66,7 +66,7 @@ def test_signature(signature_doc):
 def verify_signature(signature_doc):	
 	
 	#doc_text = get_doc('ACC-SINV-2024-00001', 'FAC', 'xml', 'principal')
-	private_key, p12 = SriXmlData.get_sri_signature(SriXmlData, signature_doc)
+	private_key, p12 = SriXmlData.get_sri_signature_from_json(SriXmlData, signature_doc)
 	print(private_key)
 	print(p12)
 
@@ -150,9 +150,12 @@ def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnex
 	elif typeDocSri == "GRS":
 			doc_data = build_doc_grs(doc_name)
 			template_name = 'Guia Remision Sri Body'
+			print_format_name = 'Guía de Remisión SRI'
 			email_subject = f'Guía de Remisión {doc_data.estab }-{doc_data.ptoemi}-{doc_data.secuencial:09d}'
 	elif typeDocSri == "CRE":
 			doc_data = build_doc_cre(doc_name)
+			template_name = 'Comprobante Retencion Sri Body'
+			print_format_name = 'Retención SRI'
 			email_subject = f'Comprobante de Retención {doc_data.estab }-{doc_data.ptoemi}-{doc_data.secuencial:09d}'
 	
 	print("---------ENVIANDO")

@@ -25,7 +25,7 @@ def load_print_format_sri():
 	print_formats.execute()
 	print('Terminada la importación de formatos de impresión para el SRI')
 	email_template.execute()
-	print('Terminada la importación de formatos de impresión para el SRI')
+	print('Terminada la importación de plantillas de email para el SRI')
 	pass
 
 @frappe.whitelist()
@@ -214,13 +214,22 @@ def get_last_sequencial_found(company_id, sri_type_doc_lnk, sri_environment_lnk)
 			docs_found = frappe.get_list("Sales Invoice",  fields=[f"MAX(secuencial) as max_secuencial"], filters={        	
 				'company': company_id,
     		})
-
 			#print(docs_found)
 			#print(docs_found[0].max_secuencial)
 			return docs_found[0].max_secuencial			
 		#elif sri_type_doc_lnk ==  "GRS":
 		#elif sri_type_doc_lnk ==  "CRE":
-			
+	if sri_type_doc_lnk == "GRS":
+		docs_found = frappe.get_list("Delivery Note",  fields=[f"MAX(secuencial) as max_secuencial"], filters={        	
+				'company': company_id,
+    		})
+		return docs_found[0].max_secuencial
+	
+	if sri_type_doc_lnk == "CRE":
+		docs_found = frappe.get_list("Purchase Withholding Sri Ec",  fields=[f"MAX(secuencial) as max_secuencial"], filters={        	
+				'company': company_id,
+    		})
+		return docs_found[0].max_secuencial
 			 
 	
 

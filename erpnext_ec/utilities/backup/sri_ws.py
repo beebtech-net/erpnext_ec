@@ -65,7 +65,7 @@ def test_signature(signature_doc):
 def verify_signature(signature_doc):	
 	
 	#doc_text = get_doc('ACC-SINV-2024-00001', 'FAC', 'xml', 'principal')
-	private_key, p12 = SriXmlData.get_sri_signature(SriXmlData, signature_doc)
+	private_key, p12 = SriXmlData.get_sri_signature_from_json(SriXmlData, signature_doc)
 	print(private_key)
 	print(p12)
 

@@ -19,6 +19,26 @@ def execute():
                   "source_path" : "sales_invoice_sri_email.html",
 				  "disabled": 0,
 				  "subject": "Factura Electrónica -",
+			},
+			{
+                  "doc_type" : "Delivery Note",
+                  "name" : "Guia Remision Sri Body",
+                  "module" : "Accounts",
+				  "standard": "No",
+				  "custom_format": True,
+                  "source_path" : "delivery_note_sri_email.html",
+				  "disabled": 0,
+				  "subject": "Guía de Remisión -",
+			},
+			{
+                  "doc_type" : "Purchase Withholding Sri Ec",
+                  "name" : "Comprobante Retencion Sri Body",
+                  "module" : "Accounts",
+				  "standard": "No",
+				  "custom_format": True,
+                  "source_path" : "withdraw_purchase_sri_email.html",
+				  "disabled": 0,
+				  "subject": "Retención -",
 			},					
 	]
     

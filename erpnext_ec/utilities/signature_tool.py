@@ -92,7 +92,7 @@ class SriXmlData():
             sri_signature_validated, p12 = self.validate_password(self, sri_signature_object)            
             return sri_signature_validated, p12
         
-    def get_sri_signature__(self, doc):
+    def get_sri_signature_from_json(self, doc):
         #print(doc)
 
         doc_object_build = json.loads(doc, object_hook=lambda d: SimpleNamespace(**d))
