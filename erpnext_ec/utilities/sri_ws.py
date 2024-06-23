@@ -1126,28 +1126,21 @@ def updateStatusDocument_native(doc, typeDocSri, response_json):
 				#	ignore_version=True # do not create a version record
 				#)
 	
-	elif typeDocSri ==  "GRS":
-			
-			print(response_json)
-
+	elif typeDocSri ==  "GRS":			
+			#print(response_json)
 			document_object = frappe.get_last_doc('Delivery Note', filters = { 'name': doc.name })
 			if(document_object):				
-				document_object.db_set('numeroautorizacion', response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
+				document_object.db_set('numeroautorizacion', response_json['autorizaciones']['autorizacion']['numeroAutorizacion'])
 				document_object.db_set('sri_estado', 200)
-				document_object.db_set('sri_response', response_json.data.autorizaciones.autorizacion[0].estado)
-				#document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
+				document_object.db_set('sri_response', response_json['autorizaciones']['autorizacion']['estado'])
+				document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
 
-				fechaAutorizacion = parser.parse(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
-				#fecha_con_zona = datetime.fromisoformat(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
-				# Eliminar la zona horaria
-				#fechaAutorizacion = fecha_con_zona.replace(tzinfo=None)
+				fecha_string = response_json['autorizaciones']['autorizacion']['fechaAutorizacion']
+				fecha_con_zona = parser.parse(fecha_string)
 
-				#print(fechaAutorizacion)
-				#print(type(fechaAutorizacion))
-				#print(datetime.now())
-				#print(type(datetime.now()))
-
+				fechaAutorizacion = fecha_con_zona.replace(tzinfo=None)
 				document_object.db_set('fechaautorizacion', fechaAutorizacion)
+
 
 	elif typeDocSri ==  "CRE":
 			print(response_json)
