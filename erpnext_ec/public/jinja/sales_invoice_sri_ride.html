@@ -415,37 +415,39 @@
         </div>
         
 
-        <div data-fieldname="items" data-fieldtype="Table">
-            <table class="table table-bordered table-condensed">
-                <thead>
-                    <tr>
-                        <th style="min-width:10%;">Cod.</th>
-                        <th style="min-width:10%;">Cant.</th>
-                        <th style="min-width:40%;">Descripci&oacute;n</th>
-                        <th style="min-width:10%;">P. Un.</th>
-                        <th style="min-width:10%;">Desc.</th>
-                        <th style="min-width:10%;">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in doc.items %}
+        <div class="col-xs-12 column-break">			
+            <div data-fieldname="items" data-fieldtype="Table">
+                <table class="table table-bordered table-condensed">
+                    <thead>
                         <tr>
-                            <td>{{ item.item_code }}</td>
-                            <td class="text-right">{{ item.qty }}</td>
-                            <td>{{ item.item_name }}</td>
-                            
-                            {% if item.price_list_rate > 0 %}
-                                <td class="text-right">{{ item.get_formatted('price_list_rate') }}</td>
-                            {% else %}
-                                <td class="text-right">{{ item.get_formatted('net_rate') }}</td>
-                            {% endif %}
-                            
-                            <td class="text-right">{{ item.get_formatted('discount_amount') }}</td>
-                            <td class="text-right">{{ item.get_formatted('amount') }}</td>
+                            <th style="min-width:10%;">Cod.</th>
+                            <th style="min-width:10%;">Cant.</th>
+                            <th style="min-width:40%;">Descripci&oacute;n</th>
+                            <th style="min-width:10%;">P. Un.</th>
+                            <th style="min-width:10%;">Desc.</th>
+                            <th style="min-width:10%;">Total</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for item in doc.items %}
+                            <tr>
+                                <td>{{ item.item_code }}</td>
+                                <td class="text-right">{{ item.qty }}</td>
+                                <td>{{ item.item_name }}</td>
+                                
+                                {% if item.price_list_rate > 0 %}
+                                    <td class="text-right">{{ item.get_formatted('price_list_rate') }}</td>
+                                {% else %}
+                                    <td class="text-right">{{ item.get_formatted('net_rate') }}</td>
+                                {% endif %}
+                                
+                                <td class="text-right">{{ item.get_formatted('discount_amount') }}</td>
+                                <td class="text-right">{{ item.get_formatted('amount') }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <table border="0" cellpadding="0" cellspacing="0" style="width: 100%">
