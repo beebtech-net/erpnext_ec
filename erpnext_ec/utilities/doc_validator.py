@@ -121,7 +121,7 @@ def validate_delivery_note(doc_name):
         alerts.append({"index": 0, "description": "No se han definido datos de dirección del cliente", "type":"error"})
         documentIsReady = False    			
 
-    if (doc.direccionComprador != None and (doc.customer_email_id == "" or doc.customer_email_id == None )):        
+    if (doc.direccionComprador != None and (doc.contact_email == "" or doc.contact_email == None )):        
         alerts.append({"index": 0, "description": "No se ha definido Email del cliente", "type":"error"})
         documentIsReady = False    
 
@@ -145,7 +145,7 @@ def validate_delivery_note(doc_name):
     header.append({"index": 0, "description": "Nombre cliente", "value":doc.customer_name})
     header.append({"index": 1, "description": "Tip.Doc. cliente", "value":doc.tipoIdentificacionComprador})
     header.append({"index": 2, "description": "Cédula/RUC cliente", "value":doc.customer_tax_id})
-    header.append({"index": 3, "description": "Email cliente", "value":doc.customer_email_id})
+    header.append({"index": 3, "description": "Email cliente", "value":doc.contact_email})
 
     result = {
         "header": header,
