@@ -1133,7 +1133,7 @@ def updateStatusDocument_native(doc, typeDocSri, response_json):
 				document_object.db_set('numeroautorizacion', response_json['autorizaciones']['autorizacion']['numeroAutorizacion'])
 				document_object.db_set('sri_estado', 200)
 				document_object.db_set('sri_response', response_json['autorizaciones']['autorizacion']['estado'])
-				document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
+				#document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
 
 				fecha_string = response_json['autorizaciones']['autorizacion']['fechaAutorizacion']
 				fecha_con_zona = parser.parse(fecha_string)
