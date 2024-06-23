@@ -286,7 +286,7 @@ def build_xml_data(data_object, doc_name, typeDocSri, siteName):
         element_name = "factura"
     elif typeDocSri == "GRS":
         data = build_doc_grs_sri(data_object)
-        xsd_file = dir_path + "/xsd/guiaRemision_V1/1/0.xsd"
+        xsd_file = dir_path + "/xsd/guiaRemision_V1/0/0.xsd"
         element_name = "guiaRemision"
     elif typeDocSri == "CRE":
         data = build_doc_cre_sri(data_object)

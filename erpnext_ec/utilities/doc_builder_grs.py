@@ -2,6 +2,7 @@ import frappe
 from frappe import _
 import erpnext
 import json
+from datetime import timedelta
 from types import SimpleNamespace
 from erpnext_ec.utilities.doc_builder_tools import *
 from erpnext_ec.utilities.doc_render_tools import *
@@ -74,6 +75,7 @@ def build_doc_grs(doc_name):
 		for deliveryTripItem in doc.deliveryTrips:
 			placa_vehiculo = deliveryTripItem.vehicle
 			conductor_nombre = deliveryTripItem.driver_name
+			fechaInicioTransporte = deliveryTripItem.departure_time
 
 			for driverItem in deliveryTripItem.trip_driver:
 				print(driverItem.transporter)
@@ -111,6 +113,10 @@ def build_doc_grs(doc_name):
 					"codDocSustento": "01", #deliveryStopItem.numAutDocSustento,
 					"numDocSustento": deliveryStopItem.numDocSustento.strip(),
 					"fechaEmisionDocSustento": doc.posting_date.strftime("%d/%m/%Y"),
+					#"ruta": deliveryStopItem.ruta,
+					#"docAduaneroUnico": deliveryStopItem.docaduanerounico,
+					#"codEstbDestino": deliveryStopItem.customerestablishment,
+					#"numAutDocSustento": "",
 					"detalles" : {"detalle": detalles}
 				}
 			
@@ -119,6 +125,8 @@ def build_doc_grs(doc_name):
 		doc.destinatarios = destinatarios
 		doc.placa_vehiculo = placa_vehiculo
 		doc.conductor_nombre = conductor_nombre
+
+		doc.fechaInicioTransporte = fechaInicioTransporte
 
 		# print(doc.infoAdicional)
 
@@ -211,7 +219,7 @@ def build_doc_grs_sri(data_object):
             "ptoEmi" : data_object.ptoemi,
             "secuencial" : '{:09d}'.format(data_object.secuencial),
             "dirMatriz" : data_object.DireccionMatriz.upper().strip(),
-			"contribuyenteRimpe": contribuyenteRimpe
+			"contribuyenteRimpe": contribuyenteRimpe			
         },
         "infoGuiaRemision": {
             #"fechaEmision": data_object.posting_date.strftime("%d/%m/%Y"), # data_object.posting_date,			
@@ -220,14 +228,14 @@ def build_doc_grs_sri(data_object):
 			"razonSocialTransportista": data_object.razonSocialTransportista.upper().strip(),
 			"tipoIdentificacionTransportista": data_object.tipoIdentificacionTransportista,
 			"rucTransportista": data_object.rucTransportista,
-			"fechaIniTransporte": "01/04/2024",
-        	"fechaFinTransporte":" 01/04/2024",
+			"obligadoContabilidad": obligadoContabilidad,
+			"contribuyenteEspecial": data_object.contribuyenteEspecial,
+			#"fecha": data_object.posting_date.strftime("%d/%m/%Y"),
+			"fechaIniTransporte": data_object.fechaInicioTransporte.strftime("%d/%m/%Y"), #"01/04/2024",
+        	"fechaFinTransporte":(data_object.fechaInicioTransporte + timedelta(days=1)).strftime("%d/%m/%Y"),
         	"placa": data_object.placa_vehiculo,
-			#"rise":"Contribuyente Regimen Simplificado RISE",
-
-            "contribuyenteEspecial": data_object.contribuyenteEspecial,
-            "obligadoContabilidad": obligadoContabilidad,
-            "tipoIdentificacionComprador": data_object.tipoIdentificacionComprador,            
+			#"rise":"Contribuyente Regimen Simplificado RISE",            
+            #"tipoIdentificacionComprador": data_object.tipoIdentificacionComprador			
         },
         "destinatarios": {
             "destinatario": data_object.destinatarios
