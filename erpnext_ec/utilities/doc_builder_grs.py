@@ -200,11 +200,11 @@ def build_doc_grs_sri(data_object):
 
 	contribuyenteRimpe = "CONTRIBUYENTE RÉGIMEN RIMPE"
 
-	#Se asigna vacios para que no cree campos en caso de que no haya transportista asignado
+	#Se asigna datos de emisor en caso de que no haya transportista asignado
 	if(not data_object.razonSocialTransportista):
-		data_object.razonSocialTransportista = '' #data_object.razonSocial
-		data_object.tipoIdentificacionTransportista = '' #'04'
-		data_object.rucTransportista = '' #data_object.tax_id
+		data_object.razonSocialTransportista = data_object.razonSocial.upper().strip() #data_object.razonSocial
+		data_object.tipoIdentificacionTransportista = '04' #'04'
+		data_object.rucTransportista = data_object.tax_id #data_object.tax_id
 
 	data = {
         "infoTributaria": {
