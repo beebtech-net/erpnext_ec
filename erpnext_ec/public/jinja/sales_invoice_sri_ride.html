@@ -7,6 +7,14 @@
         line-height: 0.8em;
     }
 
+    @media print {
+        /* prevent blank page at end */
+        table:last-of-type { page-break-after: auto; }
+        html, body {
+            height: 100%;
+        }
+    }
+    
     .gray-box {
         font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
         /*height: 1in;*/
