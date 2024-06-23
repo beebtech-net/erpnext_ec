@@ -233,10 +233,10 @@
         <div class="row section-break gray-box p-2 m-1">
 			<div class="col-xs-6 column-break">
                 <div class="row data-field" style="background-color: #fff;">
-				    <div class="col-xs-12">					
+				    <div class="col-xs-12">
 					    {% set logo_path = frappe.db.get_value("Company", doc.company, "company_logo") or "" %}
                         {% set logo_url = base_url + logo_path %}
-                        <img src="{{ logo_url }}" width="200px" />
+                        <img src="{{ logo_url }}" height="80"/>
 				    </div>
 				    <div class="col-xs-12 value">					    
 				    </div>
