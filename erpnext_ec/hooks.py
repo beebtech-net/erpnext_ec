@@ -55,7 +55,7 @@ app_include_css = [
 doctype_js = {
     "Sales Invoice" : "public/js/overrides/sales_invoice_form_sri.js",
     "Delivery Note" : "public/js/overrides/delivery_note_form_sri.js",   
-    
+    "Company" : "public/js/overrides/company_form_sri.js",
     }
 doctype_list_js = {
     "Sales Invoice" : "public/js/overrides/sales_invoice_list_sri.js",

@@ -7,6 +7,8 @@ from erpnext_ec.utilities.signature_tool import *
 #from erpnext_ec.utilities.xades_tool_v1 import *
 #from erpnext_ec.utilities.xades_tool_v2 import *
 
+from erpnext_ec.utilities.xades_tool_v4 import *
+
 import re
 
 from datetime import datetime
@@ -196,12 +198,12 @@ def build_xml_signed(doc_name, typeDocSri, typeFile, siteName):
         if(regional_settings_ec.signature_tool == "XadesSignerCmd"):
             signed_xml = SriXmlData.sign_xml_cmd(SriXmlData, xml_beautified, sri_signatures[0])
 
-        #if(regional_settings_ec.signature_tool == "Python Native (With Fails)"):
+        if(regional_settings_ec.signature_tool == "Python Native (With Fails)"):
             #signed_xml = SriXmlData.sign_xml_xades(SriXmlData, xml_beautified, sri_signatures[0])
             #signed_xml = SriXmlData.sign_xml(SriXmlData, xml_beautified, data, sri_signatures[0])
             #signed_xml = XadesToolV1.sign_xml(SriXmlData, xml_beautified, data, sri_signatures[0])
             #signed_xml = XadesToolV2.sign_xml(XadesToolV2, xml_beautified, data, sri_signatures[0])
-            #signed_xml = XadesToolV3.sign_xml(XadesToolV2, xml_beautified, data, sri_signatures[0])
+            signed_xml = XadesToolV4.sign_xml(XadesToolV4, xml_beautified, data, sri_signatures[0])
                     
 		#if(sri_signatures):
 			#signatureP12 = sri_signatures[0]

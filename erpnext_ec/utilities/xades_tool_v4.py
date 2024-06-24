@@ -597,3 +597,43 @@ def sign_xml(
     signed_xml = xml.replace(tail_tag, xades_bes + tail_tag)
     
     return signed_xml
+
+
+import frappe
+from frappe import _
+from cryptography.hazmat.backends import default_backend
+from frappe.utils.password import get_decrypted_password
+
+class XadesToolV4():
+    def sign_xml(self, xml_string_data, doc, signature_doc):
+        
+        password_p12 = get_decrypted_password('Sri Signature', signature_doc.name, "password")
+
+        full_path_p12 = frappe.get_site_path() + signature_doc.p12        
+        
+        with open(full_path_p12, "rb") as f:
+            (
+                private_key , certificate, additional_certificates
+            ) = serialization.pkcs12.load_key_and_certificates(
+                f.read() , password_p12.encode(), default_backend()                    
+            )
+
+        # Convert the private key to PEM format
+        private_key_pem = private_key.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.PKCS8,
+            encryption_algorithm=serialization.NoEncryption()
+        )
+
+        # Convert the certificate to PEM format
+        certificate_pem = certificate.public_bytes(encoding=serialization.Encoding.PEM)
+
+        if(signature_doc):            
+            full_path_p12 = frappe.get_site_path() + signature_doc.p12
+            #print(full_path_p12)
+            
+            with open(full_path_p12, 'rb') as f:
+                p12 = f.read()
+
+        signed_xml = sign_xml(p12, password_p12, xml_string_data)
+        return signed_xml

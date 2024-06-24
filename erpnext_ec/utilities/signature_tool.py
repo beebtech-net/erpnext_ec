@@ -26,7 +26,7 @@ from cryptography import x509 as x509_crypt
 
 #from cryptography import x509
 from cryptography.hazmat.backends import default_backend
-from erpnext_ec.utilities.xadessri import sign_xml as sign_xml_xs
+from erpnext_ec.utilities.xades_tool_v4 import sign_xml as sign_xml_xs
 
 from requests import Session
 import base64

@@ -21,7 +21,7 @@ from cryptography.hazmat.primitives.serialization.pkcs12 import load_key_and_cer
 from cryptography import x509 as x509_crypt
 
 from cryptography.hazmat.backends import default_backend
-from erpnext_ec.utilities.xadessri import sign_xml as sign_xml_xs
+#from erpnext_ec.utilities.xadessri import sign_xml as sign_xml_xs
 
 class XadesToolV1():
     
