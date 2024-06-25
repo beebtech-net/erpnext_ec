@@ -172,7 +172,7 @@ function SendDeliveryNoteToSri(documentIsReady, document_preview, doc)
 	}
 }
 
-function validationSri(doc)
+function validationDeliveryNoteSri(doc)
 {
 	frappe.call({
 		method: "erpnext_ec.utilities.doc_validator.validate_delivery_note",
@@ -237,5 +237,5 @@ function validationSri(doc)
 
 function SendDeliveryNote(doc) 
 {
-	validationSri(doc);
+	validationDeliveryNoteSri(doc);
 }
