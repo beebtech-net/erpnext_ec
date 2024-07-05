@@ -1,3 +1,18 @@
+function getCookie(cname) {
+  let name = cname + "=";
+  let ca = document.cookie.split(';');
+  for(let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
 
 setTimeout(
     async function () {
@@ -34,5 +49,62 @@ setTimeout(
         </li>`;
 
       $('li.nav-item.dropdown.dropdown-notifications').before(buttonGroup);        
+      
+      var login_boot = getCookie('login_boot');
 
+      if(login_boot=='yes')
+      {
+        frappe.call({
+          method: "erpnext_ec.utilities.tools.validate_sri_settings",
+          args: 
+          {
+            success: function(r) {},
+            always: function(r) {},
+          },
+          callback: function(r)
+          {
+            console.log(r);
+            if(r == null || r == undefined)
+              return;
+            
+            if(r.message == null || r.message == undefined)
+              return;
+
+            if(r.message.SettingsAreReady)
+            {
+              console.log('Configuracion Lista!!');
+            }
+            else
+            {
+              console.log('Configuracion No esta Lista!!');
+            }
+            
+            //Se actualiza el cookie en caso de que toque hacerlo
+            frappe.call({
+              method: "erpnext_ec.utilities.tools.set_cookie",
+              args: 
+              {
+                cookie_name:'login_boot',
+                cookie_value:'yes',                
+                success: function(r) {},
+                always: function(r) {},
+              },
+              callback: function(r)
+              {
+                console.log(r);
+              },
+              error: function(r) {
+                console.log(r);
+              },
+            });
+
+          },
+          error: function(r) {
+            console.log(r);
+          },
+        });
+
+        //console.log('Mensaje de configuracion');        
+      }
+      
 }, 2000);

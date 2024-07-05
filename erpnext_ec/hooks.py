@@ -208,6 +208,10 @@ doc_events = {
     }
 }
 
+on_session_creation = [
+	"erpnext_ec.utilities.tools.on_login_auto",
+]
+
 # Scheduled Tasks
 # ---------------
 

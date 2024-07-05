@@ -15,3 +15,39 @@ def get_full_url():
     full_url = f"{host_name}{port}"
 
     return full_url
+
+
+@frappe.whitelist(allow_guest=True)
+def set_cookie(cookie_name, cookie_value):
+    frappe.local.cookie_manager.set_cookie(cookie_name, cookie_value)    
+    return '{status}'
+
+@frappe.whitelist(allow_guest=True)
+def validate_sri_settings():
+
+    company_object = frappe.get_last_doc('Company', filters = { 'name': doc_data.company  })
+
+    sri_environment = frappe.get_last_doc('Sri Environment', filters = { 'id': doc_data.ambiente })
+
+    if (sri_environment):
+
+        print(sri_environment.name)
+        print(sri_environment.id)
+
+    regional_settings_ec = frappe.get_last_doc('Regional Settings Ec', filters = { 'name': company_object.regional_settings_ec })
+    print(regional_settings_ec)
+    print('regional_settings_ec.signature_tool')
+    print(regional_settings_ec.signature_tool)
+    
+    response_value = {
+        "SettingsAreReady": False
+    }
+
+    return response_value
+
+@frappe.whitelist(allow_guest=True)
+def on_login_auto():
+    set_cookie('login_boot', 'yes')
+    set_cookie('sri_settings_alert', '0')
+
+

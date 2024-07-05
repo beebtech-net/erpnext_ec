@@ -33,7 +33,7 @@ def validate_sales_invoice(doc_name):
     if (not doc.paymentsItems):
         alerts.append({"index": 0, "description": "No se han definido datos de pago (solicitud de pago/entrada de pago)", "type":"error"})
         documentIsReady = False
-       
+    
     if (doc.customer_tax_id == "" or doc.customer_tax_id == "9999999999"):
         alerts.append({"index": 0, "description": f"Cédula/Ruc del cliente es {doc.tax_id}", "type":"error"})
 
@@ -53,7 +53,6 @@ def validate_sales_invoice(doc_name):
         documentIsReady = False    
     else:    
         alerts.append({"index": 0, "description": f"Establecimiento correcto ({doc.estab})", "type":"info"}) #green
-    
 
     print(doc.ptoemi);
 

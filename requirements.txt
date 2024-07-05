@@ -1,1 +1,8 @@
-signxml
+suds
+xmlsig
+xades
+web3
+python-barcode
+dicttoxml
+xmltodict
+pycryptodome
