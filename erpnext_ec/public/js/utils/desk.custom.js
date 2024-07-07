@@ -63,7 +63,7 @@ setTimeout(
           },
           callback: function(r)
           {
-            console.log(r);
+            //console.log(r);
             if(r == null || r == undefined)
               return;
             
@@ -72,29 +72,68 @@ setTimeout(
 
             if(r.message.SettingsAreReady)
             {
-              console.log('Configuracion Lista!!');
+              //console.log('Configuracion Lista!!');
+              return;
             }
-            else
-            {
-              console.log('Configuracion No esta Lista!!');
+            //else
+            //{
+              //console.log('Configuracion No esta Lista!!');
+            //}
+
+
+            var data_header = '<table>';
+
+            for(i=0; i < r.message.header.length; i++)
+            {				
+              data_header += `
+              <tr>
+                          <td>${r.message.header[i].description}:</td>
+                          <td>${r.message.header[i].value}</td>
+                      </tr>
+              `;
             }
+      
+            data_header += '</table>'
+      
+            var data_alert = '<table>';
+      
+            for(i=0; i < r.message.alerts.length; i++)
+            {				
+              data_alert += document.Website.CreateAlertItem(r.message.alerts[i].description);
+            }
+      
+            data_alert += '</table>'
+      
+            //console.log(data_alert);
+      
+            var document_preview = `
+                  <p>Se requiere revisión</p>` + 
+            data_header +
+            data_alert +
+                      `<div class="warning-sri">Por favor, corrija su configuración antes de generar documentos electrónicos.</div>`;
             
-            //Se actualiza el cookie en caso de que toque hacerlo
+            frappe.msgprint({
+              title: __('Configuración incompatible con el SRI'),
+              indicator: 'red',
+              message: __(document_preview)
+            });
+            
+            //Se actualiza la cookie a "not"
             frappe.call({
               method: "erpnext_ec.utilities.tools.set_cookie",
               args: 
               {
                 cookie_name:'login_boot',
-                cookie_value:'yes',                
+                cookie_value:'yes',
                 success: function(r) {},
                 always: function(r) {},
               },
               callback: function(r)
               {
-                console.log(r);
+                //console.log(r);
               },
               error: function(r) {
-                console.log(r);
+                //console.log(r);
               },
             });
 
