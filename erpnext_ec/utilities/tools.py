@@ -25,20 +25,38 @@ def set_cookie(cookie_name, cookie_value):
 @frappe.whitelist(allow_guest=True)
 def validate_sri_settings():
 
-    company_object = frappe.get_last_doc('Company', filters = { 'name': doc_data.company  })
+    company_object = frappe.get_all('Company',fields=["*"],)
+    print('-----------------------------------')
+    print(company_object)
 
-    sri_environment = frappe.get_last_doc('Sri Environment', filters = { 'id': doc_data.ambiente })
+    for company_item in company_object:
+        print(company_item.sri_active_environment)
+        sri_environment = frappe.get_last_doc('Sri Environment', filters = { 'name': company_item.sri_active_environment })
+        print(sri_environment)
 
-    if (sri_environment):
+        if (sri_environment):
+            print(sri_environment.name)
+            print(sri_environment.id)
 
-        print(sri_environment.name)
-        print(sri_environment.id)
+        regional_settings_ec = frappe.get_last_doc('Regional Settings Ec', filters = { 'name': company_item.regional_settings_ec })
+        print(regional_settings_ec)
+        print('regional_settings_ec.signature_tool')
+        print(regional_settings_ec.signature_tool)
 
-    regional_settings_ec = frappe.get_last_doc('Regional Settings Ec', filters = { 'name': company_object.regional_settings_ec })
-    print(regional_settings_ec)
-    print('regional_settings_ec.signature_tool')
-    print(regional_settings_ec.signature_tool)
-    
+        sri_sequences = frappe.get_all('Sri Sequence', filters = { 'company_id': company_item.name })
+        print('Secuencias')
+        print(len(sri_sequences))
+        if(len(sri_sequences)==0):
+            print('SE REQUIERE CREAR SECUENCIAS para' + company_item.name)
+
+        print_formats = frappe.get_all('Print Format', filters = { "name": ["in", ['Factura SRI','Retención SRI','Guía de Remisión SRI']] })
+        print('---------PRINTS')
+        print(print_formats)
+        if(len(print_formats)==0):
+            print('SIN FORMATOS')
+        
+        print_formats = frappe.get_all('Account', filters = { "name": ["in", ['Factura SRI','Retención SRI','Guía de Remisión SRI']] })
+
     response_value = {
         "SettingsAreReady": False
     }
