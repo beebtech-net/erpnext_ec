@@ -30,9 +30,13 @@ def validate_sales_invoice(doc_name):
 
     #print(doc.paymentsItems)
 
-    if (not doc.paymentsItems):
-        alerts.append({"index": 0, "description": "No se han definido datos de pago (solicitud de pago/entrada de pago)", "type":"error"})
-        documentIsReady = False
+    if(doc.is_return):
+        typeDocSri='NCR'
+        #Notas de crédito no requieren datos de pago
+    else:
+        if (not doc.paymentsItems):
+            alerts.append({"index": 0, "description": "No se han definido datos de pago (solicitud de pago/entrada de pago)", "type":"error"})
+            documentIsReady = False
     
     if (doc.customer_tax_id == "" or doc.customer_tax_id == "9999999999"):
         alerts.append({"index": 0, "description": f"Cédula/Ruc del cliente es {doc.tax_id}", "type":"error"})

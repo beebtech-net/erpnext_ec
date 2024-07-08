@@ -124,7 +124,7 @@ setTimeout(
               args: 
               {
                 cookie_name:'login_boot',
-                cookie_value:'yes',
+                cookie_value:'not',
                 success: function(r) {},
                 always: function(r) {},
               },

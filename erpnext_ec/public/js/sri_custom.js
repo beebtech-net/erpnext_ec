@@ -803,13 +803,23 @@ const Website = {
         
         var siteName = frappe.boot.sitename;
         var doctype_erpnext = get_current_doc_type()[0];
-        var typeDocSri = get_current_doc_type()[1];      
+        var typeDocSri = get_current_doc_type()[1];
         var btnProcess = $('div.dropdown[data-name="' + doc + '"]');
         
         //var typeFile = 'xml';
 
         //DownloadFileBlob(doc, typeFile, siteName, typeDocSri, btnProcess)
-    
+        if(doctype_erpnext == 'Sales Invoice')
+        {
+            //Evaluar si es nota de crédito
+            var sales_invoice_doc = frappe.get_doc('Sales Invoice', doc);
+            console.log(sales_invoice_doc);
+            if(sales_invoice_doc.is_return)
+            {
+                typeDocSri = 'NCR';
+            }
+        }
+
         //var url = `${btApiServer}/api/Download/${typeFile}/${doc}?tip_doc=FAC&sitename=${sitename}`;
         //var url = `/api/method/erpnext_ec.utilities.sri_ws.get_doc_blob`;
         var url = `/api/method/erpnext_ec.utilities.xml_builder.build_xml`;

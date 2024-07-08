@@ -240,11 +240,22 @@ function SendSalesInvoiceToSri(documentIsReady, document_preview, doc)
 {
 	var doctype_erpnext = 'Sales Invoice';
 	var typeDocSri = 'FAC';
+	var documentName = 'Factura';
     var sitenameVar = frappe.boot.sitename;
 
+	console.log(doc.is_return);
+	console.log(doc.status);
+	//"Return"
+	//evaluar si es nota de crédito
+	if(doc.is_return)
+	{
+		typeDocSri = 'NCR';
+		documentName = 'Nota de Crédito';
+	}
+	
 	if (documentIsReady)
 	{
-		frappe.warn('Enviar al SRI?',
+		frappe.warn('Enviar ' + documentName + ' al SRI?',
 			document_preview,
 			() => {
 
@@ -295,7 +306,7 @@ function SendSalesInvoiceToSri(documentIsReady, document_preview, doc)
 	{
 		//Cuando la factura no esté correcta
 		frappe.msgprint({
-			title: __('Factura incompatible con el SRI'),
+			title: __(documentName + ' incompatible con el SRI'),
 			indicator: 'red',
 			message: __(document_preview)
 		});

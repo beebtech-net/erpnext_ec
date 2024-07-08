@@ -24,7 +24,7 @@ import os
 from erpnext_ec.utilities.doc_builder_fac import *
 from erpnext_ec.utilities.doc_builder_grs import *
 from erpnext_ec.utilities.doc_builder_cre import *
-
+from erpnext_ec.utilities.doc_builder_ncr import *
 
 DOCUMENT_VERSIONS = {
     'out_invoice': '1.1.0',
@@ -85,17 +85,17 @@ class XMLGenerator:
     def generate_xml(self, root_tag, data_dict):
         root = etree.Element(root_tag, nsmap=self.nsmap)
         
-        root.set("id","comprobante")
+        root.set("id", "comprobante")
         
-        #TODO: Hay que obtener la version desde el XSD
-        root.set("version","1.0.0")
+        #TODO: Hay que obtener la versión desde el XSD
+        root.set("version", "1.0.0")
 
         # Crear el árbol XML basado en los datos proporcionados
         self._build_xml(root, data_dict)
 
         # Crear el documento XML
         xml_doc = etree.ElementTree(root)
-        return xml_doc #.getroot()  # Obtener el elemento raíz del árbol XML
+        return xml_doc  # Obtener el elemento raíz del árbol XML
 
     def _build_xml(self, parent, data_dict):
         for key, value in data_dict.items():
@@ -151,14 +151,14 @@ def build_xml_signed__old(doc_name, typeDocSri, typeFile, siteName):
 
     #print(xml_beautified)
     #Inicia la descarga
-    company_object = frappe.get_last_doc('Company', filters = { 'name': data.company  })
-    if(company_object):
+    company_object = frappe.get_last_doc('Company', filters={'name': data.company})
+    if company_object:
         #signed_xml = build_xml_signed_cmd(xml_beautified, data, signature_doc)
-        sri_signatures = frappe.get_all('Sri Signature', filters={"name": company_object.sri_signature}, fields = ['*'])
+        sri_signatures = frappe.get_all('Sri Signature', filters={"name": company_object.sri_signature}, fields=['*'])
 
-		#if(sri_signatures):
-			#signatureP12 = sri_signatures[0]
-		#	signatureP12 = json.dumps(sri_signatures[0], default=str)
+        #if sri_signatures:
+        #    signatureP12 = sri_signatures[0]
+        #    signatureP12 = json.dumps(sri_signatures[0], default=str)
                
     signed_xml = SriXmlData.sign_xml_cmd(SriXmlData, xml_beautified, sri_signatures[0])
     
@@ -186,28 +186,28 @@ def build_xml_signed(doc_name, typeDocSri, typeFile, siteName):
 
     #print(xml_beautified)
     #Inicia la descarga
-    company_object = frappe.get_last_doc('Company', filters = { 'name': data.company  })
-    if(company_object):
+    company_object = frappe.get_last_doc('Company', filters={'name': data.company})
+    if company_object:
         #signed_xml = build_xml_signed_cmd(xml_beautified, data, signature_doc)
-        sri_signatures = frappe.get_all('Sri Signature', filters={"name": company_object.sri_signature}, fields = ['*'])
+        sri_signatures = frappe.get_all('Sri Signature', filters={"name": company_object.sri_signature}, fields=['*'])
 
-        regional_settings_ec = frappe.get_last_doc('Regional Settings Ec', filters = { 'name': company_object.regional_settings_ec })
+        regional_settings_ec = frappe.get_last_doc('Regional Settings Ec', filters={'name': company_object.regional_settings_ec})
 
         print(regional_settings_ec.signature_tool)
         
-        if(regional_settings_ec.signature_tool == "XadesSignerCmd"):
+        if regional_settings_ec.signature_tool == "XadesSignerCmd":
             signed_xml = SriXmlData.sign_xml_cmd(SriXmlData, xml_beautified, sri_signatures[0])
 
-        if(regional_settings_ec.signature_tool == "Python Native (With Fails)"):
-            #signed_xml = SriXmlData.sign_xml_xades(SriXmlData, xml_beautified, sri_signatures[0])
+        if regional_settings_ec.signature_tool == "Python Native (With Fails)":
+            #signed_xml = SriXmlData.sign_xml_xades(SriXmlData, xml_beautified, data, sri_signatures[0])
             #signed_xml = SriXmlData.sign_xml(SriXmlData, xml_beautified, data, sri_signatures[0])
             #signed_xml = XadesToolV1.sign_xml(SriXmlData, xml_beautified, data, sri_signatures[0])
             #signed_xml = XadesToolV2.sign_xml(XadesToolV2, xml_beautified, data, sri_signatures[0])
             signed_xml = XadesToolV4.sign_xml(XadesToolV4, xml_beautified, data, sri_signatures[0])
                     
-		#if(sri_signatures):
-			#signatureP12 = sri_signatures[0]
-		#	signatureP12 = json.dumps(sri_signatures[0], default=str)
+        #if sri_signatures:
+        #    signatureP12 = sri_signatures[0]
+        #    signatureP12 = json.dumps(sri_signatures[0], default=str)
     
     typeFile = 'xml'
     frappe.local.response.filename = doc_name + "_sign." + typeFile
@@ -226,20 +226,21 @@ def build_xml_signed(doc_name, typeDocSri, typeFile, siteName):
 #    return signed_xml
 
 @frappe.whitelist()
-def get_doc_native(doc, doc_name, typeDocSri, doctype_erpnext, siteName):	
-	
-	doc_data = None
-	
-	#doc_object_build = json.loads(doc, object_hook=lambda d: SimpleNamespace(**d))
-	
-	if typeDocSri == "FAC":			
-		doc_data = build_doc_fac(doc_name)
-	elif typeDocSri == "GRS":
-		doc_data = build_doc_grs(doc_name)
-	elif typeDocSri == "CRE":
-		doc_data = build_doc_cre(doc_name)
+def get_doc_native(doc, doc_name, typeDocSri, doctype_erpnext, siteName):    
+    doc_data = None
+    
+    #doc_object_build = json.loads(doc, object_hook=lambda d: SimpleNamespace(**d))
+    
+    if typeDocSri == "FAC":            
+        doc_data = build_doc_fac(doc_name)
+    elif typeDocSri == "GRS":
+        doc_data = build_doc_grs(doc_name)
+    elif typeDocSri == "CRE":
+        doc_data = build_doc_cre(doc_name)
+    elif typeDocSri == "NCR":
+        doc_data = build_doc_ncr(doc_name)
 
-	return doc_data
+    return doc_data
 
 
 #Download XML
@@ -294,6 +295,10 @@ def build_xml_data(data_object, doc_name, typeDocSri, siteName):
         data = build_doc_cre_sri(data_object)
         xsd_file = dir_path + "/xsd/comprobanteRetencion_V1/0/0.xsd"
         element_name = "comprobanteRetencion"
+    elif typeDocSri == "NCR":
+        data = build_doc_ncr_sri(data_object)
+        xsd_file = dir_path + "/xsd/notaCredito_V1/1/0.xsd"
+        element_name = "notaCredito"
 
     typeFile = "xml"    
     xmldsig_xsd_path = dir_path + "/xsd/xmldsig-core-schema.xsd"
@@ -311,7 +316,7 @@ def build_xml_data(data_object, doc_name, typeDocSri, siteName):
     # Validar el XML con respecto al XSD
     validationResult = xml_generator.validate_xml(xml_doc.getroot())
 
-    if(not validationResult):
+    if not validationResult:
         print("No debe retornar nada")
         #return ""
     #frappe.local.response.filename = doc_name + "." + typeFile

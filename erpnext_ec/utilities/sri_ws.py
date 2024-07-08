@@ -374,6 +374,9 @@ def get_doc_blob(doc_name, typeDocSri, typeFile, siteName):
 	elif typeDocSri == "CRE":
 			doc = build_doc_cre(doc_name)
 			print(doc)
+	elif typeDocSri == "NCR":
+			doc = build_doc_ncr(doc_name)
+			print(doc)
 	
 	if doc:		
 		doc_str = json.dumps(doc, default=str) 
