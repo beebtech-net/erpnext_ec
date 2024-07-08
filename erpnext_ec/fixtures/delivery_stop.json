@@ -61,6 +61,7 @@
 		"inser_after": "customer",
 		"is_custom_field": 1,
 		"doctype": "Custom Field",
+		"default": "001",
 		"dt": "Delivery Stop"
 	}
 ]

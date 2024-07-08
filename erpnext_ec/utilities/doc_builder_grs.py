@@ -104,19 +104,29 @@ def build_doc_grs(doc_name):
 								"descripcion": itemDetalle.description,
 								"cantidad": itemDetalle.qty
 							})
+				if(not deliveryStopItem.docaduanerounico):
+					deliveryStopItem.docaduanerounico = '000'
+				
+				if(not deliveryStopItem.customerestablishment):
+					deliveryStopItem.customerestablishment = '001'
+
+				#sales_invoice_docs = frappe.get_all('Sales Invoice', filters={"docidsri": deliveryStopItem.numDocSustento.strip()}, fields = ['*']) 
+				#numAutDocSustento = ''
+				#if(len(sales_invoice_docs) > 0):
+				#	numAutDocSustento = sales_invoice_docs[0].numeroautorizacion
 
 				new_destinatarios = {
 					"identificacionDestinatario": doc.customer_tax_id,
 					"razonSocialDestinatario": doc.customer_name.upper().strip(),
 					"dirDestinatario": deliveryStopItem.dirDestinatario.upper().strip(),
-					"motivoTraslado": deliveryStopItem.motivotraslado.upper().strip(),
-					"codDocSustento": "01", #deliveryStopItem.numAutDocSustento,
+					"motivoTraslado": deliveryStopItem.motivotraslado.upper().strip(),										
+					"docAduaneroUnico": deliveryStopItem.docaduanerounico,
+					"codEstabDestino": deliveryStopItem.customerestablishment,
+					"ruta": deliveryStopItem.ruta,
+					"codDocSustento": "01",
 					"numDocSustento": deliveryStopItem.numDocSustento.strip(),
-					"fechaEmisionDocSustento": doc.posting_date.strftime("%d/%m/%Y"),
-					#"ruta": deliveryStopItem.ruta,
-					#"docAduaneroUnico": deliveryStopItem.docaduanerounico,
-					#"codEstbDestino": deliveryStopItem.customerestablishment,
-					#"numAutDocSustento": "",
+					"numAutDocSustento": deliveryStopItem.numAutDocSustento.strip(),
+					"fechaEmisionDocSustento": doc.posting_date.strftime("%d/%m/%Y"),					
 					"detalles" : {"detalle": detalles}
 				}
 			
