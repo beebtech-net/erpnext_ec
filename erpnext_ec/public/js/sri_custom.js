@@ -118,7 +118,7 @@ const Website = {
             </span></td></tr>`;
     },
     CreateAlertItem(textInner) {
-        return `<tr><td><span class="indicator-pill red ellipsis">
+        return `<tr><td colspan="2"><span class="indicator-pill red ellipsis">
     		        <span class="ellipsis">${textInner}</span>
     			</span></td></tr>`;
     },

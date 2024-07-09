@@ -31,15 +31,18 @@ def set_cookie(cookie_name, cookie_value):
 @frappe.whitelist(allow_guest=True)
 def validate_sri_settings():
     result = {}
-    header = []
-    alerts = []
-    SettingsAreReady = True
-
+    groups=[]
+    
+    
     company_object = frappe.get_all('Company',fields=["*"],)
     print('-----------------------------------')
     print(company_object)
 
     for company_item in company_object:
+        SettingsAreReady = True
+        header = []
+        alerts = []
+        
         header.append({"index": 0, "description": "Empresa", "value": company_item.name})
         
         print(company_item.sri_active_environment)
@@ -145,21 +148,33 @@ def validate_sri_settings():
                             "type":"error"})
             SettingsAreReady = False
         
-    result = {
-        "header": header,
-        "alerts": alerts,
+        if(not SettingsAreReady):
+            #print(result)
+            create_notification_log(
+                user="administrator",
+                subject= f"Configuración incompatible con el SRI - {company_item.name}",
+                body="Revise la configuración del sistema y corrija para poder crear documentos electrónicos compatibles con el SRI."
+            )
+
+        groups.append({
+            "index": 0, 
+            "description": "Grupo", 
+            "value": company_item.name,
+            "header": header,
+            "alerts": alerts,
+            "SettingsAreReady": SettingsAreReady
+            })
+        
+    #result = {
+    #    "header": header,
+    #    "alerts": alerts,
         #"doctype_erpnext": doctype_erpnext,
         #"typeDocSri": "typeDocSri",
-        "SettingsAreReady": SettingsAreReady
-    }
-
-    if(not SettingsAreReady):
-        #print(result)
-        create_notification_log(
-            user="administrator",
-            subject="Configuración incompatible con el SRI",
-            body="Revise la configuración del sistema y corrija para poder crear documentos electrónicos compatibles con el SRI."
-        )
+    #    "SettingsAreReady": SettingsAreReady
+    #}
+    result = {
+        "groups": groups
+    }    
 
     return result
 

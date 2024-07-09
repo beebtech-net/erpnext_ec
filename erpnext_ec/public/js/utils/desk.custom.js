@@ -63,46 +63,53 @@ setTimeout(
           },
           callback: function(r)
           {
-            //console.log(r);
+            console.log(r);
             if(r == null || r == undefined)
               return;
             
             if(r.message == null || r.message == undefined)
               return;
 
-            if(r.message.SettingsAreReady)
-            {
+            //if(r.message.SettingsAreReady)
+            //{
               //console.log('Configuracion Lista!!');
-              return;
-            }
+              //return;
+            //}
             //else
             //{
               //console.log('Configuracion No esta Lista!!');
             //}
 
+            var data_header = '';
+            var data_alert = '';
 
-            var data_header = '<table>';
+            for(ig=0; ig < r.message.groups.length; ig++)
+            {
+              data_header += '<table>';
 
-            for(i=0; i < r.message.header.length; i++)
-            {				
-              data_header += `
-              <tr>
-                          <td>${r.message.header[i].description}:</td>
-                          <td>${r.message.header[i].value}</td>
-                      </tr>
-              `;
+              for(i=0; i < r.message.groups[ig].header.length; i++)
+                {                  
+                  data_header += `<tr>
+                            <td>${r.message.groups[ig].header[i].description}:</td>
+                            <td>${r.message.groups[ig].header[i].value}</td>
+                        </tr>`;
+                }
+                
+                for(i=0; i < r.message.groups[ig].alerts.length; i++)
+                  {				
+                    data_header += document.Website.CreateAlertItem(r.message.groups[ig].alerts[i].description);
+                  }
+
+              data_header += '</table>';
+              data_header += '<div class="dropdown-divider"></div>';
+              //data_alert += '<table>';
+        
+              //for(i=0; i < r.message.groups[ig].alerts.length; i++)
+              //{				
+                //data_alert += document.Website.CreateAlertItem(r.message.groups[ig].alerts[i].description);
+              //}
+              //data_alert += '</table>';              
             }
-      
-            data_header += '</table>'
-      
-            var data_alert = '<table>';
-      
-            for(i=0; i < r.message.alerts.length; i++)
-            {				
-              data_alert += document.Website.CreateAlertItem(r.message.alerts[i].description);
-            }
-      
-            data_alert += '</table>'
       
             //console.log(data_alert);
       
