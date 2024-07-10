@@ -1,0 +1,8 @@
+/*Para versiones 13 o inferiores ya que no existen estos estilos*/
+.p-2 {
+    padding: 7px !important;
+}
+
+.m-1 {
+    margin: 3.5px !important;
+}

@@ -26,6 +26,18 @@ def execute():
 				  "raw_printing": 0,
 			},
 			{
+                  "doc_type" : "Sales Invoice",
+                  "name" : "Nota de Crédito SRI",
+                  "module" : "Accounts",
+				  "standard": "No",
+				  "custom_format": True,
+				  "print_format_type": "Jinja",
+				  "default_print_language":"es-EC",
+                  "source_path" : "credit_note_sri_ride.html",
+				  "disabled": 0,
+				  "raw_printing": 0,
+			},
+			{
                   "doc_type" : "Purchase Withholding Sri Ec",
                   "name" : "Retención SRI",
                   "module" : "Accounts",
@@ -61,7 +73,7 @@ def execute():
 		create_print_format(script_item, data)
 
 def create_print_format(doc_data, template_content):
-		
+	
     #from frappe.core.page.permission_manager.permission_manager import add
 	resultData = frappe.get_all("Print Format", filters={"name": doc_data['name']})
 

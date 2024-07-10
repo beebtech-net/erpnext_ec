@@ -146,7 +146,12 @@ def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnex
 			doc_data = build_doc_fac(doc_name)
 			template_name = 'Factura SRI Body'
 			print_format_name = 'Factura SRI'
-			email_subject = f'Factura Electrónica {doc_data.estab }-{doc_data.ptoemi}-{doc_data.secuencial:09d}'			
+			email_subject = f'Factura Electrónica {doc_data.estab }-{doc_data.ptoemi}-{doc_data.secuencial:09d}'
+	if typeDocSri == "NCR":
+			doc_data = build_doc_ncr(doc_name)
+			template_name = 'Nota de Crédito SRI Body'
+			print_format_name = 'Nota de Crédito SRI'
+			email_subject = f'Nota de Crédito {doc_data.estab }-{doc_data.ptoemi}-{doc_data.secuencial:09d}'
 	elif typeDocSri == "GRS":
 			doc_data = build_doc_grs(doc_name)
 			template_name = 'Guia Remision Sri Body'
