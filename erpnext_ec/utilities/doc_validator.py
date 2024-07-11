@@ -58,7 +58,7 @@ def validate_sales_invoice(doc_name):
     else:    
         alerts.append({"index": 0, "description": f"Establecimiento correcto ({doc.estab})", "type":"info"}) #green
 
-    print(doc.ptoemi);
+    #print(doc.ptoemi)
 
     if (doc.ptoemi == None or doc.ptoemi == ''):
         alerts.append({"index": 0, "description": f"Punto de emisión incorrecto ({doc.ptoemi})", "type":"error"})

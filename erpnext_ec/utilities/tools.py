@@ -14,11 +14,14 @@ def get_full_url():
     if not frappe.local.conf.get('dns_multitenant'):    
         port = ':' + str(frappe.local.conf.nginx_port)
 
+    #full_url = f"{host_name}"
+    
+    #if(not {port} in {host_name}):
+    
     # Construir la URL completa con el protocolo y el puerto
     full_url = f"{host_name}{port}"
 
     return full_url
-
 
 @frappe.whitelist(allow_guest=True)
 def set_cookie(cookie_name, cookie_value):

@@ -664,7 +664,7 @@ def get_full_delivery_trips(doc):
     return delivery_trips
 
 
-def get_full_taxes_withhold(doc_name):    
+def get_full_taxes_withhold(doc_name):
     
     impuestos = frappe.get_all('Purchase Taxes and Charges Ec', filters={'parent': doc_name}, fields=['*'])
     #    fields=['charge_type', 'account_head', 'tax_amount']
