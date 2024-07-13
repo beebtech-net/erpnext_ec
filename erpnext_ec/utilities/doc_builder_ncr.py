@@ -31,10 +31,7 @@ def build_doc_ncr(doc_name):
 		doc = docs[0]
 		
 		doc.taxes = get_full_taxes(doc.name)
-		#print("TAXEEESSS")
-		#print(doc.taxes)
-  
-		#print("ITEEEEMMMMSSSS")
+		
 		doc.items = get_full_items(doc.name, doc)
 		#print(doc.items)
 
@@ -68,24 +65,7 @@ def build_doc_ncr(doc_name):
 		doc.customer_phone = customer_phone
 		doc.customer_email_id = customer_email_id
 
-		# 		if customerAddress:
-		# 			emailComprador = customerAddress[0].email_id
-		# 			doc.customer_email_id = emailComprador
-		# 		else:
-		# 			sri_validated = 'error'
-		# 			sri_validated_message += 'No se ha definido Email del cliente-'
-		# 	else:
-		# 		sri_validated = 'error'
-		# 		sri_validated_message += 'No se han definido datos de dirección del cliente-'
-		# else:
-		# 	sri_validated = 'error'
-		# 	sri_validated_message += 'Cliente requerido'
-		
-
 		doc.infoAdicional = build_infoAdicional_sri(doc_name, customer_email_id, customer_phone)
-
-		# print(doc.infoAdicional)
-		#doc.taxes_full = get_full_taxes(doc.taxes)		
 
 		#Simulando error
 		sri_validated = 'error'
@@ -145,9 +125,9 @@ def build_doc_ncr_sri(data_object):
 			"totalImpuesto": {
 						"codigo": taxItem.sricode,
 						"codigoPorcentaje": taxItem.codigoPorcentaje,
-						"baseImponible": "{:.2f}".format(taxItem.baseImponible),
+						"baseImponible": "{:.2f}".format(abs(taxItem.baseImponible)),
 						"tarifa": "{:.2f}".format(taxItem.rate),
-						"valor": "{:.2f}".format(taxItem.tax_amount)
+						"valor": "{:.2f}".format(abs(taxItem.tax_amount))
 					}
 		})
 
@@ -168,8 +148,8 @@ def build_doc_ncr_sri(data_object):
 						"codigo": impuesto['codigo'],
 						"codigoPorcentaje": impuesto['codigoPorcentaje'],
 						"tarifa": "{:.2f}".format(impuesto['tarifa']),
-						"baseImponible": "{:.2f}".format(impuesto['baseImponible']),
-						"valor": "{:.2f}".format(impuesto['valor']) #impuesto['valor']
+						"baseImponible": "{:.2f}".format(abs(impuesto['baseImponible'])),
+						"valor": "{:.2f}".format(abs(impuesto['valor'])) #impuesto['valor']
 					}})
 
 		#ErpNext coloca descuento negativo cuando el precio es modificado a un precio mas alto
@@ -180,11 +160,11 @@ def build_doc_ncr_sri(data_object):
 		detalles.append({
                 "codigoPrincipal": item.item_code,
                 "descripcion": item.description.upper(),
-                "cantidad": item.qty,
-                "precioUnitario": "{:.2f}".format(item.precioUnitario),
-                "descuento": "{:.2f}".format(item.qty * item.discount_amount),
-                "precioTotalSinImpuesto": "{:.2f}".format(item.precioTotalSinImpuesto),
-                "impuestos": impuestos                
+                "cantidad": abs(item.qty),
+                "precioUnitario": "{:.2f}".format(abs(item.precioUnitario)),
+                "descuento": "{:.2f}".format(abs(item.qty * item.discount_amount)),
+                "precioTotalSinImpuesto": "{:.2f}".format(abs(item.precioTotalSinImpuesto)),
+                "impuestos": impuestos
             })
 
 	infoAdicional = []
@@ -223,11 +203,11 @@ def build_doc_ncr_sri(data_object):
             "tipoIdentificacionComprador": data_object.tipoIdentificacionComprador,
             "razonSocialComprador": data_object.customer_name.upper(),
             "identificacionComprador": data_object.customer_tax_id,
-            "totalSinImpuestos": "{:.2f}".format(data_object.base_total),
-            "totalDescuento": "{:.2f}".format(data_object.discount_amount),
+            "totalSinImpuestos": "{:.2f}".format(abs(data_object.base_total)),
+            "totalDescuento": "{:.2f}".format(abs(data_object.discount_amount)),
             "totalConImpuestos": totalConImpuestos,
             "propina": "0.00",
-            "importeTotal": data_object.grand_total,
+            "importeTotal": "{:.2f}".format(abs(data_object.grand_total)),
             "moneda": "DOLAR",
         },
         "detalles": {
