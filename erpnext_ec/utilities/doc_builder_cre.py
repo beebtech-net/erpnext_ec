@@ -119,10 +119,10 @@ def build_doc_cre(doc_name):
 		establecimiento = doc.estab
 
 		claveAcceso = GenerarClaveAcceso(tipoDocumento, 
-                                     fechaEmision, 
-                                     puntoEmision, 
-                                     secuencial, 
-                                     tipoEmision, 
+									fechaEmision, 
+									puntoEmision, 
+									secuencial, 
+									tipoEmision, 
 									ruc,
 									tipoAmbiente,
 									establecimiento)

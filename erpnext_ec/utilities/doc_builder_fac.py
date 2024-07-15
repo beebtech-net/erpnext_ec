@@ -121,10 +121,16 @@ def build_doc_fac(doc_name):
 		tipoAmbiente = doc.ambiente
 		tipoEmision = 1
 
-		fechaEmision = doc.posting_date
-		puntoEmision = doc.ptoemi
+		fechaEmision = doc.posting_date		
 		secuencial = doc.secuencial
 		ruc = doc.company_tax_id
+		
+		puntoEmision_rec = get_full_ptoemi(doc.ptoemi)
+		doc.ptoemi = puntoEmision_rec.record_name
+		puntoEmision = doc.ptoemi
+		
+		establecimiento_rec = get_full_establishment(doc.estab)
+		doc.estab = establecimiento_rec.record_name
 		establecimiento = doc.estab
 
 		claveAcceso = GenerarClaveAcceso(tipoDocumento, 
@@ -223,6 +229,16 @@ def build_doc_fac_sri(data_object):
 	obligadoContabilidad = 'NO'
 	if(data_object.obligadoContabilidad == 1):
 		obligadoContabilidad = 'SI'
+	
+	agenteRetencion = None
+	if(not data_object.agenteRetencion == None and 
+		not data_object.agenteRetencion == '' and
+		not data_object.agenteRetencion == '0'):
+		agenteRetencion = data_object.agenteRetencion
+
+	contribuyenteRimpe = "CONTRIBUYENTE RÉGIMEN RIMPE"
+	if(data_object.contribuyenteRimpe != 1):
+		contribuyenteRimpe = ""
 
 	data = {
         "infoTributaria": {
@@ -237,7 +253,8 @@ def build_doc_fac_sri(data_object):
             "ptoEmi" : data_object.ptoemi,
             "secuencial" : '{:09d}'.format(data_object.secuencial),
             "dirMatriz" : data_object.DireccionMatriz.upper(),
-			"contribuyenteRimpe": "CONTRIBUYENTE RÉGIMEN RIMPE"
+			"agenteRetencion": agenteRetencion,
+			"contribuyenteRimpe": contribuyenteRimpe
         },
         "infoFactura": {
             "fechaEmision": data_object.posting_date.strftime("%d/%m/%Y"), # data_object.posting_date,

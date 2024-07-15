@@ -1,0 +1,165 @@
+{
+    "actions": [],
+    "allow_events_in_timeline": 1,
+    "allow_import": 1,
+    "allow_rename": 1,
+    "autoname": "naming_series:",
+    "creation": "2013-06-11 14:26:44",
+    "description": "Buyer of Goods and Services.",
+    "doctype": "DocType",
+    "document_type": "Setup",
+    "engine": "InnoDB",
+    "field_order": [
+     "basic_info",
+     "naming_series",
+     "salutation",
+     "record_name"
+    ],
+    "fields": [
+     {
+      "fieldname": "basic_info",
+      "fieldtype": "Section Break",
+      "oldfieldtype": "Section Break",
+      "options": "fa fa-user"
+     },
+     {
+      "fieldname": "naming_series",
+      "fieldtype": "Select",
+      "label": "Series",
+      "no_copy": 1,
+      "default": "STT-.",
+      "options": "STT-.",
+      "set_only_once": 1
+     },
+     {
+      "depends_on": "",
+      "fieldname": "salutation",
+      "fieldtype": "Link",
+      "label": "Salutation",
+      "options": "Salutation"
+     },
+     {
+      "bold": 1,
+      "fieldname": "record_name",
+      "fieldtype": "Data",
+      "in_global_search": 1,
+      "label": "Record Name",
+      "no_copy": 1,
+      "oldfieldname": "record_name",
+      "oldfieldtype": "Data",
+      "reqd": 1,
+      "search_index": 1
+     },
+     {
+        "fieldname": "description",
+        "fieldtype": "Data",
+        "in_list_view": 1,
+        "in_preview": 1,
+        "label": "Description"
+      },
+      {
+        "allow_in_quick_entry": 1,
+        "fieldname": "sri_establishment_lnk",
+        "fieldtype": "Link",
+        "in_list_view": 1,
+        "in_preview": 1,
+        "options": "Sri Establishment",
+        "label": "Establecimiento Sri"
+      }     
+    ],
+    "icon": "fa fa-user",
+    "idx": 363,    
+    "index_web_pages_for_search": 1,
+    "links": [
+     {
+      "group": "Allowed Items",
+      "link_doctype": "Party Specific Item",
+      "link_fieldname": "party"
+     }
+    ],
+    "modified": "2024-03-16 19:41:47.971815",
+    "modified_by": "Administrator",
+    "module": "Erpnext Sri",
+    "name": "Sri Type Test",
+    "naming_rule": "By \"Naming Series\" field",
+    "owner": "Administrator",
+    "permissions": [
+     {
+      "create": 1,
+      "email": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Sales User",
+      "share": 1,
+      "write": 1
+     },
+     {
+      "permlevel": 1,
+      "read": 1,
+      "role": "Sales User"
+     },
+     {
+      "email": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Sales Manager"
+     },
+     {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "import": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Sales Master Manager",
+      "share": 1,
+      "write": 1
+     },
+     {
+      "permlevel": 1,
+      "read": 1,
+      "role": "Sales Master Manager",
+      "write": 1
+     },
+     {
+      "email": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Stock User"
+     },
+     {
+      "email": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Stock Manager"
+     },
+     {
+      "email": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Accounts User"
+     },
+     {
+      "email": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Accounts Manager"
+     }
+    ],
+    "quick_entry": 1,
+    "search_fields": "",
+    "show_name_in_global_search": 1,
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": [],
+    "title_field": "record_name",
+    "track_changes": 1
+   }

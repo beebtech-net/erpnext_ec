@@ -861,3 +861,16 @@ def setSecuencial(doc, typeDocSri):
 	#	return False
 	return nuevo_secuencial
     
+def get_full_establishment(record_name):    
+    docs = frappe.get_all('Sri Establishment', fields='*', filters={'name': record_name})    
+    
+    if docs:
+        doc = docs[0]
+        return doc
+
+def get_full_ptoemi(record_name):    
+    docs = frappe.get_all('Sri Ptoemi', fields='*', filters={'name': record_name})    
+    
+    if docs:
+        doc = docs[0]
+        return doc

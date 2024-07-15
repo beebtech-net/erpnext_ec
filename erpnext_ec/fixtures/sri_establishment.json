@@ -3,18 +3,21 @@
     "doctype": "Sri Establishment",
     "name": "001",
     "id": "001",
+    "record_name": "001",
     "description": "001-Matrix-Estab"
   },
   {
     "doctype": "Sri Establishment",
     "name": "002",
     "id": "002",
+    "record_name": "002",
     "description": "002-Estab"
   },
   {
     "doctype": "Sri Establishment",
     "name": "003",
     "id": "003",
+    "record_name": "003",
     "description": "003-Estab"
   }
 ]

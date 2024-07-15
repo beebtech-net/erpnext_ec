@@ -209,6 +209,8 @@ def build_doc_grs_sri(data_object):
 		obligadoContabilidad = 'SI'
 
 	contribuyenteRimpe = "CONTRIBUYENTE RÉGIMEN RIMPE"
+	if(data_object.contribuyenteRimpe != 1):
+		contribuyenteRimpe = ""
 
 	#Se asigna datos de emisor en caso de que no haya transportista asignado
 	if(not data_object.razonSocialTransportista):
