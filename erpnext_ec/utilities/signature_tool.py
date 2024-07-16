@@ -9,8 +9,6 @@ from pprint import pformat
 from OpenSSL import crypto
 from random import randrange
 
-
-
 import xmlsig
 from xades import template,XAdESContext
 from xades.policy import GenericPolicyId, ImpliedPolicy
@@ -200,8 +198,8 @@ class SriXmlData():
                 #print(pfx_data)
 
         password = password.encode()
-        print(type(xml_string_data))
-        print("---------------------------------------------------")
+        #print(type(xml_string_data))
+        #print("---------------------------------------------------")
         signed = sign_xml_xs(p12, password, xml_string_data)
 
         #print("signed: ", signed)

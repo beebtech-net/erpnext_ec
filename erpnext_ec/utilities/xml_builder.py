@@ -297,7 +297,7 @@ def build_xml_data(data_object, doc_name, typeDocSri, siteName):
         element_name = "comprobanteRetencion"
     elif typeDocSri == "NCR":
         data = build_doc_ncr_sri(data_object)
-        xsd_file = dir_path + "/xsd/notaCredito_V1/1/0.xsd"
+        xsd_file = dir_path + "/xsd/notaCredito_V1/0/0.xsd"
         element_name = "notaCredito"
 
     typeFile = "xml"    

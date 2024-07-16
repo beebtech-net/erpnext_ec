@@ -900,7 +900,7 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName, regional_setti
 		#signed_xml = build_xml_signed(xml_string, doc_data, signatureP12)
 		#signed_xml = SriXmlData.sign_xml_old(SriXmlData, xml_string, signatureP12)  		
 
-		print(signed_xml)
+		#print(signed_xml)
 		#print(type(str(signed_xml)))
 		xml_bytes = signed_xml.encode()
 
