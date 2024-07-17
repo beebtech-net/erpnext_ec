@@ -123,7 +123,7 @@ def build_doc_fac(doc_name):
 
 		fechaEmision = doc.posting_date		
 		secuencial = doc.secuencial
-		ruc = doc.company_tax_id
+		ruc = doc.tax_id #doc.company_tax_id
 		
 		puntoEmision_rec = get_full_ptoemi(doc.ptoemi)
 		doc.ptoemi = puntoEmision_rec.record_name
@@ -132,6 +132,9 @@ def build_doc_fac(doc_name):
 		establecimiento_rec = get_full_establishment(doc.estab)
 		doc.estab = establecimiento_rec.record_name
 		establecimiento = doc.estab
+
+		if(ruc == None):
+			ruc = '0000000000000'
 
 		claveAcceso = GenerarClaveAcceso(tipoDocumento, 
                                      fechaEmision, 

@@ -38,6 +38,10 @@ def validate_sales_invoice(doc_name):
             alerts.append({"index": 0, "description": "No se han definido datos de pago (solicitud de pago/entrada de pago)", "type":"error"})
             documentIsReady = False
     
+    if (doc.tax_id == None):
+        alerts.append({"index": 0, "description": "No se han definido ruc de compañia", "type":"error"})
+        documentIsReady = False
+
     if (doc.customer_tax_id == "" or doc.customer_tax_id == "9999999999"):
         alerts.append({"index": 0, "description": f"Cédula/Ruc del cliente es {doc.tax_id}", "type":"error"})
 

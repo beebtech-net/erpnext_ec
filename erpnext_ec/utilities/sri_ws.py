@@ -1077,6 +1077,23 @@ def updateStatusDocument(doc, typeDocSri, response_json):
 				fechaAutorizacion = parser.parse(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)				
 				document_object.db_set('fechaAutorizacion', fechaAutorizacion)   
 
+	if typeDocSri ==  "NCR":
+			document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name })
+			if(document_object):
+				document_object.db_set('numeroautorizacion', response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
+				document_object.db_set('sri_estado', 200)
+				document_object.db_set('sri_response', response_json.data.autorizaciones.autorizacion[0].estado)
+				#TODO: Corregir
+				document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
+
+				print(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
+
+				fecha_string = response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion				
+				fecha_con_zona = parser.parse(fecha_string)
+				fechaAutorizacion = fecha_con_zona.replace(tzinfo=None)
+
+				document_object.db_set('fechaautorizacion', fechaAutorizacion)
+
 def registerResponse_native(doc, typeDocSri, doctype_erpnext, response_json, response_json_text):
 	#TODO: El XML se guarda de forma incorrecta, pero al parecer es un comportamiento normal
 	# del frappe, hay que verificar.
@@ -1163,3 +1180,19 @@ def updateStatusDocument_native(doc, typeDocSri, response_json):
 				fechaAutorizacion = fecha_con_zona.replace(tzinfo=None)
 				document_object.db_set('fechaautorizacion', fechaAutorizacion)
 
+	if typeDocSri ==  "NCR":
+			document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name })
+			if(document_object):
+				document_object.db_set('numeroautorizacion', response_json['autorizaciones']['autorizacion']['numeroAutorizacion'])
+				document_object.db_set('sri_estado', 200)
+				document_object.db_set('sri_response', response_json['autorizaciones']['autorizacion']['estado'])
+				#TODO: Corregir
+				document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
+
+				print(response_json['autorizaciones']['autorizacion']['fechaAutorizacion'])
+
+				fecha_string = response_json['autorizaciones']['autorizacion']['fechaAutorizacion']				
+				fecha_con_zona = parser.parse(fecha_string)
+				fechaAutorizacion = fecha_con_zona.replace(tzinfo=None)
+
+				document_object.db_set('fechaautorizacion', fechaAutorizacion)

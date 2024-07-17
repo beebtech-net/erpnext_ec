@@ -65,6 +65,21 @@ def build_doc_ncr(doc_name):
 		doc.customer_phone = customer_phone
 		doc.customer_email_id = customer_email_id
 
+		if(doc.return_against):
+			docs_ret_ag = frappe.get_all('Sales Invoice', filters={"name": doc.return_against}, fields = ['*'])
+			
+			if(docs_ret_ag):
+				docs_ret_ag = docs_ret_ag[0]
+				print(docs_ret_ag)
+				doc.codDocModificado = '01'
+				#valorModificacion
+				#motivo
+				#docs_ret_ag.numeroautorizacion
+				doc.numDocModificado = docs_ret_ag.docidsri 
+				doc.fechaEmisionDocSustento = docs_ret_ag.fechaautorizacion
+				doc.valorModificacion = docs_ret_ag.grand_total
+				doc.motivo = 'DEVOLUCION'
+
 		doc.infoAdicional = build_infoAdicional_sri(doc_name, customer_email_id, customer_phone)
 
 		#Simulando error
@@ -125,8 +140,7 @@ def build_doc_ncr_sri(data_object):
 			"totalImpuesto": {
 						"codigo": taxItem.sricode,
 						"codigoPorcentaje": taxItem.codigoPorcentaje,
-						"baseImponible": "{:.2f}".format(abs(taxItem.baseImponible)),
-						"tarifa": "{:.2f}".format(taxItem.rate),
+						"baseImponible": "{:.2f}".format(abs(taxItem.baseImponible)),						
 						"valor": "{:.2f}".format(abs(taxItem.tax_amount))
 					}
 		})
@@ -158,7 +172,7 @@ def build_doc_ncr_sri(data_object):
 		#	item.discount_amount = 0
 
 		detalles.append({
-                "codigoPrincipal": item.item_code,
+                "codigoInterno": item.item_code,
                 "descripcion": item.description.upper(),
                 "cantidad": abs(item.qty),
                 "precioUnitario": "{:.2f}".format(abs(item.precioUnitario)),
@@ -186,29 +200,35 @@ def build_doc_ncr_sri(data_object):
             "tipoEmision": "1",
             "razonSocial": data_object.razonSocial.upper(),
             "nombreComercial": data_object.nombreComercial.upper(),
+			
             "ruc": data_object.tax_id,
             "claveAcceso": data_object.claveAcceso,
-            "codDoc": "01",
+            "codDoc": "04",
             "estab" : data_object.estab,
             "ptoEmi" : data_object.ptoemi,
             "secuencial" : '{:09d}'.format(data_object.secuencial),
             "dirMatriz" : data_object.DireccionMatriz.upper(),
-			"contribuyenteRimpe": "CONTRIBUYENTE RÉGIMEN RIMPE"
+			"contribuyenteRimpe": "CONTRIBUYENTE RÉGIMEN RIMPE"			
         },
         "infoNotaCredito": {
             "fechaEmision": data_object.posting_date.strftime("%d/%m/%Y"), # data_object.posting_date,
             "dirEstablecimiento": data_object.dirEstablecimiento.upper(),
-            "contribuyenteEspecial": data_object.contribuyenteEspecial,
-            "obligadoContabilidad": obligadoContabilidad,
-            "tipoIdentificacionComprador": data_object.tipoIdentificacionComprador,
+			"tipoIdentificacionComprador": data_object.tipoIdentificacionComprador,
             "razonSocialComprador": data_object.customer_name.upper(),
             "identificacionComprador": data_object.customer_tax_id,
+            "contribuyenteEspecial": data_object.contribuyenteEspecial,
+            "obligadoContabilidad": obligadoContabilidad,
+			
+			"codDocModificado": data_object.codDocModificado,
+			"numDocModificado": data_object.numDocModificado,
+			"fechaEmisionDocSustento": data_object.fechaEmisionDocSustento.strftime("%d/%m/%Y"),
+            
             "totalSinImpuestos": "{:.2f}".format(abs(data_object.base_total)),
-            "totalDescuento": "{:.2f}".format(abs(data_object.discount_amount)),
-            "totalConImpuestos": totalConImpuestos,
-            "propina": "0.00",
-            "importeTotal": "{:.2f}".format(abs(data_object.grand_total)),
-            "moneda": "DOLAR",
+            "valorModificacion": data_object.valorModificacion,
+			"moneda": "DOLAR",
+            "totalConImpuestos": totalConImpuestos,            
+            
+			"motivo": data_object.motivo,
         },
         "detalles": {
             "detalle": detalles
