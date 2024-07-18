@@ -209,20 +209,28 @@ const Website = {
         // var properties_view = Object.getOwnPropertyNames(frappe.views.list_view);
         // var doctype_erpnext = properties_view[0];
 
-
         var sitenameVar = frappe.boot.sitename;
 
-        // typeDocSri = '-';
-
-        // if(doctype_erpnext == 'Sales Invoice')
-        //     typeDocSri = 'FAC';
+        // typeDocSri = '-';        
 
         // if(doctype_erpnext == 'Delivery Note')
         //     typeDocSri = 'GRS';
 
         doctype_erpnext = get_current_doc_type()[0];
         typeDocSri = get_current_doc_type()[1];
-        
+
+        if(doctype_erpnext == 'Sales Invoice')
+        {
+            //Evaluar si es nota de crédito
+            var sales_invoice_doc = frappe.get_doc('Sales Invoice', doc_name);
+            //console.log('sales_invoice_doc');
+            //console.log(sales_invoice_doc);
+            if(sales_invoice_doc.is_return)
+            {
+                typeDocSri = 'NCR';
+            }
+        }
+
         return frappe.call({
                 method: "erpnext_ec.utilities.sri_ws.get_info_doc",
                 args: 
@@ -813,7 +821,7 @@ const Website = {
         {
             //Evaluar si es nota de crédito
             var sales_invoice_doc = frappe.get_doc('Sales Invoice', doc);
-            console.log(sales_invoice_doc);
+            //console.log(sales_invoice_doc);
             if(sales_invoice_doc.is_return)
             {
                 typeDocSri = 'NCR';

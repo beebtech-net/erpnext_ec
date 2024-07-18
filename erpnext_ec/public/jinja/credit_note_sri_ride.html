@@ -113,6 +113,11 @@
         font-weight: bold;
     }
 
+    .group-title {
+        background-color: #b3acac;
+        font-weight: bold;
+    }
+
     .summary-title-top {
         background-color: #f2f2f2;
         text-align: left;
@@ -229,10 +234,10 @@
 
 </style>
 
-{% set doc_build = build_doc_fac_with_images(doc.name) %}
+{% set doc_build = build_doc_ncr_with_images(doc.name) %}
 {% set base_url = get_full_url() %}
 
-<div class="page">    
+<div class="page">
     <div class="page-header">
         <p>Documento electrónico <strong>No.{{doc.estab}}-{{doc.ptoemi}}-{{'%09d' % doc.secuencial}}</strong></p>
     </div>
@@ -420,8 +425,37 @@
                     </div>
                 </div>
             </div>
-        </div>       
+        </div>
         
+        <div class="row section-break gray-box p-2 m-1">
+            <div class="h5 col-xs-12 group-title">Comprobante modificado</div>
+            <div class="col-xs-12 column-break">
+                <div class="row data-field" data-fieldname="customer_name" data-fieldtype="Data">
+                    <div class="col-xs-12">
+                        <label>No. Doc.:</label>
+                    </div>
+                    <div class="col-xs-12 value">
+                        {{ doc_build.numDocModificado }}
+                    </div>
+                </div>
+                <div class="row data-field" data-fieldname="direccionComprador" data-fieldtype="Data">
+                    <div class="col-xs-12">
+                        <label>Fecha de Emisi&oacute;n:</label>
+                    </div>
+                    <div class="col-xs-12 value">
+                        {{ doc_build.fechaEmisionDocSustento }}
+                    </div>
+                </div>
+                <div class="row data-field" data-fieldname="posting_date" data-fieldtype="Datetime">
+                    <div class="col-xs-12">
+                        <label>Raz&oacute;n/Motivo:</label>
+                    </div>
+                    <div class="col-xs-12 value">
+                        {{ doc_build.motivo }}
+                    </div>
+                </div>
+            </div>            
+        </div>
 
         <div class="col-xs-12 column-break">
             <div data-fieldname="items" data-fieldtype="Table">
@@ -462,25 +496,7 @@
             <tbody>
                 <tr>
                     <td style="width:50%">
-                        <table class="infoAdicional">
-                            <tbody>
-                                <tr>
-                                    <td class="subsection-title">Forma Pagos</td>
-                                    <td class="subsection-title" style="text-align: center;">Total</td>
-                                    <td class="subsection-title" style="text-align: center;">Plazo</td>
-                                    <td class="subsection-title" style="text-align: center;">Tiempo</td>
-                                </tr>                                
-                                {% for payment in doc_build.pagos %}
-                                    <tr>                                        
-                                        <td style="text-align: left;">{{payment.formaPagoDescripcion}}</td>                                    
-                                        <td style="text-align: center;">{{frappe.format(payment.total,'Currency')}}</td>                                    
-                                        <td style="text-align: center;">{{payment.plazo}}</td>                                    
-                                        <td style="text-align: center;">{{payment.unidadTiempo}}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                        
+                                                
                         <table class="infoAdicional" style="width:90%">
                             <tbody>
                                 <tr>

@@ -282,7 +282,7 @@ def download_pdf(doc_name, typeDocSri, typeFile, siteName):
 
 @frappe.whitelist()
 def get_info_doc(doc_name, typeDocSri, doctype_erpnext, siteName):
-	#print(doc)
+	#print(doc_name, typeDocSri, doctype_erpnext, siteName)
 	#var url = `${btApiServer}/api/SriProcess/getresponses/${doc}?tip_doc=${tip_doc}&sitename=${sitenamePar}`;
 	#xml_responses = frappe.get_list(doctype='Xml Responses', fields='*')
 	info_doc = {}
@@ -290,6 +290,8 @@ def get_info_doc(doc_name, typeDocSri, doctype_erpnext, siteName):
 	
 	#for xml_response_item in xml_responses:
 	#	print(xml_response_item.xmldata)
+	
+	#print(doc_name, typeDocSri, doctype_erpnext, siteName)
 
 	doc_json = get_doc_json(doc_name, typeDocSri, doctype_erpnext, siteName)
 	info_doc['responses'] = xml_responses
@@ -353,13 +355,13 @@ def get_doc_json(doc_name, typeDocSri, typeFile, siteName):
 	
 	#Python 3.6 compatible	
 	if typeDocSri == "FAC":
-			doc = build_doc_fac(doc_name)
-			#print ("")
+		doc = build_doc_fac(doc_name)
 	elif typeDocSri == "GRS":
-			doc = build_doc_grs(doc_name)
+		doc = build_doc_grs(doc_name)
 	elif typeDocSri == "CRE":
-			doc = build_doc_cre(doc_name)
-			#print(doc)	
+		doc = build_doc_cre(doc_name)
+	elif typeDocSri == "NCR":
+		doc = build_doc_ncr(doc_name)
 
 	return doc
 
@@ -367,8 +369,7 @@ def get_doc_json(doc_name, typeDocSri, typeFile, siteName):
 @frappe.whitelist()
 def get_doc_blob(doc_name, typeDocSri, typeFile, siteName):
 
-	print(doc_name, typeDocSri, typeFile, siteName)
-
+	#print(doc_name, typeDocSri, typeFile, siteName)
 	#El parametro doc aquí es el nombre del documento
       
 	if typeDocSri == "FAC":
@@ -390,15 +391,15 @@ def get_doc_blob(doc_name, typeDocSri, typeFile, siteName):
 		
 		url_server_beebtech, server_timeout = get_api_url()
 		
-		print(url_server_beebtech)
-		print(server_timeout)
+		#print(url_server_beebtech)
+		#print(server_timeout)
 
 		api_url = f"{url_server_beebtech}/Download/{typeFile}?documentName={doc_name}&tip_doc={typeDocSri}&sitename={siteName}"	
 		
 		response = requests.post(api_url, data=doc_str, verify=False, stream=True, headers= headers, timeout=server_timeout)
 		response.raise_for_status()
 
-		print(response.status_code)
+		#print(response.status_code)
 
 		if (response.status_code == 200):
 			#test signature
@@ -408,7 +409,7 @@ def get_doc_blob(doc_name, typeDocSri, typeFile, siteName):
 			frappe.local.response.filecontent = response.content
 			frappe.local.response.type = "download"
 		else:
-			print("Error pos!")
+			#print("Error pos!")
 			raise SystemError("No se pudo descargar archivo." + doc_name)
 
 	#return ""
