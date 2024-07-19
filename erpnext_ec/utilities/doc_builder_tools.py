@@ -785,81 +785,94 @@ def ObtenerModulo10(cadenaNumeros):
 
 
 def setSecuencial(doc, typeDocSri):
-	
-	company_object = frappe.get_last_doc('Company', filters = { 'name': doc.company  })
-	#company_object.name
-	#company_object.sri_active_environment
-	
-	if typeDocSri ==  "FAC":
-			
-			#print(doc)
-			document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name})
-			if(document_object):
-				if(document_object.secuencial > 0):
-					print("Secuencial ya asignado!")
-					print(document_object.secuencial)
-					return True
+    company_object = frappe.get_last_doc('Company', filters = { 'name': doc.company  })
+    
+    if typeDocSri ==  "FAC":
+        document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name})
+        if(document_object):
+            if(document_object.secuencial > 0):
+                print("Secuencial ya asignado!")
+                print(document_object.secuencial)
+                return True
 
-	elif typeDocSri ==  "GRS":
+    elif typeDocSri ==  "NCR":			
+        #print(doc)
+        document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name})
+        if(document_object):
+            if(document_object.secuencial > 0):
+                print("Secuencial ya asignado!")
+                print(document_object.secuencial)
+                return True
+    elif typeDocSri ==  "GRS":
 			
-			#print(doc)
-			document_object = frappe.get_last_doc('Delivery Note', filters = { 'name': doc.name})
-			if(document_object):
-				if(document_object.secuencial > 0):
-					print("Secuencial ya asignado!")
-					print(document_object.secuencial)
-					return True
-
-	elif typeDocSri ==  "CRE":
+        #print(doc)
+        document_object = frappe.get_last_doc('Delivery Note', filters = { 'name': doc.name})
+        if(document_object):
+            if(document_object.secuencial > 0):
+                print("Secuencial ya asignado!")
+                print(document_object.secuencial)
+                return True
+    
+    elif typeDocSri ==  "CRE":
 			
-			#print(doc)
-			document_object = frappe.get_last_doc('Purchase Withholding Sri Ec', filters = { 'name': doc.name})
-			if(document_object):
-				if(document_object.secuencial > 0):
-					print("Secuencial ya asignado!")
-					print(document_object.secuencial)
-					return True
+        #print(doc)
+        document_object = frappe.get_last_doc('Purchase Withholding Sri Ec', filters = { 'name': doc.name})
+        if(document_object):
+            if(document_object.secuencial > 0):
+                print("Secuencial ya asignado!")
+                print(document_object.secuencial)
+                return True
+    
+    elif typeDocSri ==  "LIQ":
+			
+        #print(doc)
+        document_object = frappe.get_last_doc('Purchase Receipt', filters = { 'name': doc.name})
+        if(document_object):
+            if(document_object.secuencial > 0):
+                print("Secuencial ya asignado!")
+                print(document_object.secuencial)
+                return True
 
 	#PROCESO GENERAL -----
 	#doc.ambiente ---- aun no asignado   --- probablemente desde company
 	#environment_object = frappe.get_last_doc('Sri Environment', filters = { 'id': 1  })
 	#print(environment_object.name)
 	#print(environment_object.id)
-
-	print("--------------------------")
-	nuevo_secuencial = 0
+    print("--------------------------")
+    nuevo_secuencial = 0
 
 	#TODO: Agregar filtro por empresa, no fue considerado al inicio, se requerirá cambios en el modelo
 	#TODO: Falta automatizar el filtro, por ahora se puso id = 1
 	#sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'id': 1, 'sri_environment_lnk': environment_object.name, 'sri_type_doc_lnk': typeDocSri })
 	
 	#sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'company_id': company_object.name, 'sri_environment_lnk': company_object.sri_active_environment, 'sri_type_doc_lnk': typeDocSri })
-	sequence_object = frappe.get_list('Sri Sequence', fields = ['*'], filters = { 'company_id': company_object.name, 'sri_environment_lnk': company_object.sri_active_environment, 'sri_type_doc_lnk': typeDocSri })
+    sequence_object = frappe.get_list('Sri Sequence', fields = ['*'], filters = { 'company_id': company_object.name, 'sri_environment_lnk': company_object.sri_active_environment, 'sri_type_doc_lnk': typeDocSri })
 	#sequence_object = frappe.get_list('Sri Sequence', filters = { 'reference_name': doc_name })
 
 	#print(sequence_object[0])
-	
-	if (sequence_object):
-		print(sequence_object[0].value)
-		nuevo_secuencial = sequence_object[0].value
-		nuevo_secuencial += 1
-		print(nuevo_secuencial)
+    if (sequence_object):
+        print(sequence_object[0].value)
+        nuevo_secuencial = sequence_object[0].value
+        nuevo_secuencial += 1
+        print(nuevo_secuencial)
 		#Se asigna al documento
-		document_object.db_set('secuencial', nuevo_secuencial)
+        document_object.db_set('secuencial', nuevo_secuencial)
 		#Se asigna a la tabla de secuenciales
 
 		#Actualizar dato de secuencia
 		#doc_sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'id': sequence_object[0].id })
-		doc_sequence_object = frappe.get_last_doc('Sri Sequence', 
+        doc_sequence_object = frappe.get_last_doc('Sri Sequence', 
 				filters = { 'company_id': company_object.name, 
 					  'sri_environment_lnk': company_object.sri_active_environment, 
 					  'sri_type_doc_lnk': typeDocSri })
-		doc_sequence_object.db_set('value', nuevo_secuencial)
-		frappe.db.commit()
+		
+        doc_sequence_object.db_set('value', nuevo_secuencial)
+		
+        frappe.db.commit()
 	#	return True
 	#else:
-	#	return False
-	return nuevo_secuencial
+	#	return False	
+    return nuevo_secuencial
     
 def get_full_establishment(record_name):    
     docs = frappe.get_all('Sri Establishment', fields='*', filters={'name': record_name})    

@@ -21,6 +21,16 @@ def execute():
 				  "subject": "Factura Electrónica -",
 			},
 			{
+                  "doc_type" : "Sales Invoice",
+                  "name" : "Nota de Crédito SRI Body",
+                  "module" : "Accounts",
+				  "standard": "No",
+				  "custom_format": True,
+                  "source_path" : "credit_note_sri_email.html",
+				  "disabled": 0,
+				  "subject": "Nota de Crédito -",
+			},
+			{
                   "doc_type" : "Delivery Note",
                   "name" : "Guia Remision Sri Body",
                   "module" : "Accounts",

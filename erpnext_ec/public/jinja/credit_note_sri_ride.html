@@ -317,7 +317,7 @@
                             <td>
                                 <table style="font-size: 8pt;width:100%" padding="0" cellspacing="0">
                                     <tr>
-                                        <td><strong>FACTURA:</strong></td>
+                                        <td><strong>NOTA DE CR&Eacute;DITO:</strong></td>
                                         <td valign="top" align="right"><strong>No.</strong>{{doc.estab}}-{{doc.ptoemi}}-{{'%09d' % doc.secuencial}}</td>
                                     </tr>                                    
                                 </table>
@@ -474,7 +474,7 @@
                         {% for item in doc.items %}
                             <tr>
                                 <td>{{ item.item_code }}</td>
-                                <td class="text-right">{{ item.qty }}</td>
+                                <td class="text-right">{{ item.qty | abs }}</td>
                                 <td>{{ item.item_name }}</td>
                                 
                                 {% if item.price_list_rate > 0 %}
@@ -484,7 +484,7 @@
                                 {% endif %}
                                 
                                 <td class="text-right">{{ item.get_formatted('discount_amount') }}</td>
-                                <td class="text-right">{{ item.get_formatted('amount') }}</td>
+                                <td class="text-right">{{ item.get_formatted('amount', absolute_value=True) }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -519,7 +519,7 @@
                                 {% for tax_item in doc_build.taxes %}
                                 <tr>
                                     <td class="summary-title-top">SUBTOTAL {{tax_item.compute_label_sri}}</td>
-                                    <td class="summary-data-top">{{frappe.format(tax_item.baseImponible,'Currency')}}</td>
+                                    <td class="summary-data-top">{{frappe.format(abs(tax_item.baseImponible),'Currency')}}</td>
                                 </tr>
                                 {%- endfor %}
                                     
@@ -533,23 +533,23 @@
                                 </tr>
                                 <tr>
                                     <td class="summary-title">SUBTOTAL SIN IMPUESTOS</td>
-                                    <td class="summary-data">{{doc.get_formatted('total')}}</td>
+                                    <td class="summary-data">{{doc.get_formatted('total', absolute_value=True)}}</td>
                                 </tr>
                                 <tr>
                                     <td class="summary-title">TOTAL DESCUENTO</td>
-                                <td class="summary-data">{{doc.get_formatted('TotalDescuento')}}</td>
+                                <td class="summary-data">{{doc.get_formatted('TotalDescuento', absolute_value=True)}}</td>
                                 </tr>
                             
                                 {% for tax_item in doc_build.taxes %}
                                     <tr>
                                         <td class="summary-title">{{tax_item.compute_label_sri}}</td>
-                                        <td class="summary-data-top">{{frappe.format(tax_item.tax_amount,'Currency')}}</td>
+                                        <td class="summary-data-top">{{frappe.format(abs(tax_item.tax_amount),'Currency')}}</td>
                                     </tr>
                                 {% endfor %}
                                 
                                 <tr>
                                     <td class="summary-title-bottom"><strong>VALOR A PAGAR</strong></td>
-                                    <td class="summary-data-bottom"><strong>{{doc.get_formatted('grand_total')}}</strong></td>
+                                    <td class="summary-data-bottom"><strong>{{doc.get_formatted('grand_total', absolute_value=True)}}</strong></td>
                                 </tr>
                             </tbody>
                         </table>

@@ -641,13 +641,26 @@ const Website = {
                 //    message: __(`Documento ${doc} se agregará la cola de envío`),
                 //    indicator: 'green'
                 //}, 2);
+                
+                doctype_erpnext = get_current_doc_type()[0];
+                typeDocSri = get_current_doc_type()[1];
 
+                if(doctype_erpnext == 'Sales Invoice')
+                {                    
+                    var sales_invoice_doc = frappe.get_doc('Sales Invoice', doc_name);
+                 
+                    if(sales_invoice_doc.is_return)
+                    {
+                        typeDocSri = 'NCR';
+                    }
+                }
+                
                 var datos = "doc_name=" + encodeURIComponent(doc_name) +
                 "&recipients=" + encodeURIComponent([values.email_to]) +
                 "&msg=" + encodeURIComponent('---') +
                 "&title=" + encodeURIComponent('---') +
-                "&typeDocSri=" + get_current_doc_type()[1] +
-                "&doctype_erpnext=" + get_current_doc_type()[0] + 
+                "&typeDocSri=" + typeDocSri +
+                "&doctype_erpnext=" + doctype_erpnext + 
                 "&use_doc_email=1";
 
                 req.send(datos);
