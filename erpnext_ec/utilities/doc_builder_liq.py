@@ -57,44 +57,27 @@ def build_doc_liq(doc_name):
 		doc.contribuyenteEspecial = company_full['contribuyenteEspecial']
 		doc.ambiente = company_full['ambiente']
 
-		#Datos completos del cliente
-		customer_full = get_full_customer_sri(doc.customer)
-		doc.customer_tax_id = customer_full['customer_tax_id']		
-		doc.tipoIdentificacionComprador = customer_full['tipoIdentificacionComprador']
-		doc.direccionComprador = customer_full['direccionComprador']
-		customer_phone = customer_full['customer_phone']
-		customer_email_id = customer_full['customer_email_id']
+		#Datos completos del proveedor
+		supplier_full = get_full_supplier_sri(doc.purchase_withholding_supplier)
+		print(supplier_full)
 
-		doc.customer_phone = customer_phone
-		doc.customer_email_id = customer_email_id
+		supplier_phone = ''
+		supplier_email_id = ''
+		
+		if(supplier_full):
+			doc.supplier_tax_id = supplier_full['supplier_tax_id']
+			doc.tipoIdentificacionSujetoRetenido = supplier_full['tipoIdentificacionProveedor']
+			doc.direccionProveedor = supplier_full['direccionSujetoRetenido']
+			supplier_phone = supplier_full['supplier_phone']
+			supplier_email_id = supplier_full['supplier_email_id']
 
-		# 		if customerAddress:
-		# 			emailComprador = customerAddress[0].email_id
-		# 			doc.customer_email_id = emailComprador
-		# 		else:
-		# 			sri_validated = 'error'
-		# 			sri_validated_message += 'No se ha definido Email del cliente-'
-		# 	else:
-		# 		sri_validated = 'error'
-		# 		sri_validated_message += 'No se han definido datos de dirección del cliente-'
-		# else:
-		# 	sri_validated = 'error'
-		# 	sri_validated_message += 'Cliente requerido'
-
-		# 	if not paymentsApi and  not paymentsEntryApi:
-		# 		sri_validated = 'error'
-		# 		sri_validated_message += 'No se ha definido ni solicitud de pago ni entrada de pago-'
+		doc.supplier_phone = supplier_phone
+		doc.supplier_email_id = supplier_email_id
 
 		doc.paymentsItems = get_payments_sri(doc.name)
 		doc.pagos = build_pagos(doc.paymentsItems)
 
-		#for paym in  doc.paymentsItems:
-		#	print(paym)
-
-		doc.infoAdicional = build_infoAdicional_sri(doc_name, customer_email_id, customer_phone)
-
-		# print(doc.infoAdicional)
-		#doc.taxes_full = get_full_taxes(doc.taxes)		
+		doc.infoAdicional = build_infoAdicional_sri(doc_name, supplier_email_id, supplier_phone)
 
 		#Simulando error
 		sri_validated = 'error'

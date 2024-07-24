@@ -7,6 +7,7 @@ from erpnext_ec.utilities.doc_builder_tools import *
 from erpnext_ec.utilities.doc_builder_fac import build_doc_fac 
 from erpnext_ec.utilities.doc_builder_grs import build_doc_grs
 from erpnext_ec.utilities.doc_builder_cre import build_doc_cre
+from erpnext_ec.utilities.doc_builder_liq import build_doc_liq
 
 @frappe.whitelist()
 def validate_sales_invoice(doc_name):
@@ -225,6 +226,73 @@ def validate_purchase_whithold_sri_ec(doc_name):
     header.append({"index": 3, "description": "Cédula/RUC proveedor", "value":doc.identificacionSujetoRetenido})
     header.append({"index": 3, "description": "Periodo Fiscal", "value":doc.identificacionSujetoRetenido})
     #header.append({"index": 4, "description": "Email cliente", "value":doc.customer_email_id})
+
+    result = {
+        "header": header,
+        "alerts": alerts,
+        "doctype_erpnext": doctype_erpnext,
+        "typeDocSri": "typeDocSri",
+        "documentIsReady": documentIsReady
+    }
+
+    return result
+
+@frappe.whitelist()
+def validate_purchase_receipt(doc_name):
+    #Esta validacion servira para saber si el documento contiene toda la informacion necesaria para el SRI
+    result = {}
+    header = []
+    alerts = []
+    documentIsReady = True
+
+    doc = build_doc_liq(doc_name)
+
+    doctype_erpnext = 'Purchase Receipt'
+    typeDocSri = 'LIQ'
+
+    customer_email_id = ''
+    
+    if (doc.tax_id == None):
+        alerts.append({"index": 0, "description": "No se han definido ruc de compañia", "type":"error"})
+        documentIsReady = False
+
+    if (doc.supplier_tax_id == "" or doc.supplier_tax_id == "9999999999"):
+        alerts.append({"index": 0, "description": f"Cédula/Ruc del cliente es {doc.supplier_tax_id}", "type":"error"})
+
+    #print(doc.direccionComprador)
+    if (doc.direccionProveedor == None):
+        alerts.append({"index": 0, "description": "No se han definido datos de dirección del proveedor", "type":"error"})
+        documentIsReady = False
+
+    if (doc.direccionProveedor != None and (doc.supplier_email_id == "" or doc.supplier_email_id == None )):        
+        alerts.append({"index": 0, "description": "No se ha definido Email del proveedor", "type":"error"})
+        documentIsReady = False
+
+    print(doc.estab)
+
+    if (doc.estab == None or doc.estab == ''):
+        alerts.append({"index": 0, "description": f"Establecimiento incorrecto ({doc.estab})", "type":"error"})
+        documentIsReady = False    
+    else:    
+        alerts.append({"index": 0, "description": f"Establecimiento correcto ({doc.estab})", "type":"info"}) #green
+
+    #print(doc.ptoemi)
+
+    if (doc.ptoemi == None or doc.ptoemi == ''):
+        alerts.append({"index": 0, "description": f"Punto de emisión incorrecto ({doc.ptoemi})", "type":"error"})
+        documentIsReady = False
+    else:    
+        alerts.append({"index": 0, "description": f"Punto de emisión correcto ({doc.ptoemi})", "type":"info"}) #green
+
+    sri_environment = frappe.get_last_doc('Sri Environment', filters = { 'id': doc.ambiente })
+    #print(sri_environment.name)
+    #print(sri_environment.id)
+
+    header.append({"index": 0, "description": "Ambiente", "value": sri_environment.description})
+    header.append({"index": 1, "description": "Nombre cliente", "value":doc.customer_name})
+    header.append({"index": 2, "description": "Tip.Doc. cliente", "value":doc.tipoIdentificacionComprador})
+    header.append({"index": 3, "description": "Cédula/RUC cliente", "value":doc.customer_tax_id})
+    header.append({"index": 4, "description": "Email cliente", "value":doc.customer_email_id})
 
     result = {
         "header": header,

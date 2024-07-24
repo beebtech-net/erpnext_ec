@@ -23,6 +23,7 @@ app_include_js = [
     "/assets/erpnext_ec/js/delivery_note_tools.js",
     "/assets/erpnext_ec/js/withholding_tools.js",
     "/assets/erpnext_ec/js/frappe_sri_ui_tools.js",
+    "/assets/erpnext_ec/js/purchase_receipt_tools.js",
     #"/assets/erpnext_ec/js/erpnext_ec.bundle.js",
 
     "/assets/erpnext_ec/js/libs/jsonTree/jsonTree.js",
@@ -54,13 +55,15 @@ app_include_css = [
 # include js in doctype views
 doctype_js = {
     "Sales Invoice" : "public/js/overrides/sales_invoice_form_sri.js",
-    "Delivery Note" : "public/js/overrides/delivery_note_form_sri.js",   
+    "Delivery Note" : "public/js/overrides/delivery_note_form_sri.js",
+    "Purchase Receipt" : "public/js/overrides/purchase_receipt_form_sri.js",
     "Company" : "public/js/overrides/company_form_sri.js",
     }
 doctype_list_js = {
     "Sales Invoice" : "public/js/overrides/sales_invoice_list_sri.js",
     "Purchase Invoice" : "public/js/overrides/purchase_invoice_list_sri.js",
     "Delivery Note" : "public/js/overrides/delivery_note_list_sri.js",
+    "Purchase Receipt" : "public/js/overrides/purchase_receipt_list_sri.js",
 
     "Print Format" : "public/js/overrides/print_format_list_sri.js",
     "Account" : "public/js/overrides/account_list_sri.js",

@@ -64,7 +64,7 @@ def build_doc_cre(doc_name):
 		doc.contribuyenteEspecial = company_full['contribuyenteEspecial']
 		doc.ambiente = company_full['ambiente']
 
-		#Datos completos del cliente
+		#Datos completos del proveedor
 		supplier_full = get_full_supplier_sri(doc.purchase_withholding_supplier)
 		print(supplier_full)
 

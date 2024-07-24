@@ -4,7 +4,7 @@ function PrepareDocumentForSendV2(doc, DocTypeErpNext)
 	{
 		case 'Sales Invoice':
 			{
-				console.log('Método Facturas de venta');
+				console.log('Facturas de venta/Nota de Crédito');
 				SendSalesInvoice(doc);
 			}
 			break;
@@ -20,6 +20,12 @@ function PrepareDocumentForSendV2(doc, DocTypeErpNext)
 				SendWithholding(doc);
 			}
 			break;
+		case 'Purchase Receipt':
+				{
+					console.log('Método Liquidación de Compra');
+					SendPurchaseReceipt(doc);
+				}
+				break;
 	}
 
 	console.log(DocTypeErpNext);

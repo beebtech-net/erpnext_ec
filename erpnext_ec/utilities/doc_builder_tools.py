@@ -399,7 +399,7 @@ def get_full_items(doc_name, doc_parent):
             item.impuestos = []
             total_items_discount += item.discount_amount
 
-            item.precioUnitario = item.rate #precio del item
+            item.precioUnitario = item.base_price_list_rate #rate #precio del item
             item.precioTotalSinImpuesto = item.base_net_amount #subtotal del item
 
             #if(item.item_tax_template is None):
