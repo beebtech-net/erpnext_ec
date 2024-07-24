@@ -454,7 +454,7 @@ def get_full_items(doc_name, doc_parent):
             #</impuestos>
         
         #Coloca el total de descuentos de los items en el documento padre
-        doc_parent.TotalDescuento = total_items_discount
+        doc_parent.totalDescuento = total_items_discount
     return items
 
 def get_full_items_delivery_note(doc_name):    
