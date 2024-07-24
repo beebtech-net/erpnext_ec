@@ -268,7 +268,7 @@ def build_doc_fac_sri(data_object):
             "razonSocialComprador": data_object.customer_name.upper(),
             "identificacionComprador": data_object.customer_tax_id,
             "totalSinImpuestos": "{:.2f}".format(data_object.base_total),
-            "totalDescuento": "{:.2f}".format(data_object.discount_amount),
+            "totalDescuento": "{:.2f}".format(data_object.totalDescuento),
             "totalConImpuestos": totalConImpuestos,
             "propina": "0.00",
             "importeTotal": data_object.grand_total,
