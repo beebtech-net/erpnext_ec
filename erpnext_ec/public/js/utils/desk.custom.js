@@ -70,22 +70,28 @@ setTimeout(
             if(r.message == null || r.message == undefined)
               return;
 
-            if(r.message.SettingsAreReady)
-            {
-              console.log('Configuracion Lista!!');
-              return;
-            }
-            else
-            {
-              console.log('Configuracion No esta Lista!!');
-            }
+            //if(r.message.SettingsAreReady)
+            //{
+              //console.log('Configuracion Lista!!');
+              //return;
+            //}
+            //else
+            //{
+              //console.log('Configuracion No esta Lista!!');
+            //}
 
             var data_header = '';
             var data_alert = '';
+            var SettingsAreReady = true;
 
             for(ig=0; ig < r.message.groups.length; ig++)
             {
               data_header += '<table>';
+
+              if(r.message.groups[ig].SettingsAreReady == false && SettingsAreReady)
+              {
+                SettingsAreReady = false;
+              }
 
               for(i=0; i < r.message.groups[ig].header.length; i++)
                 {                  
@@ -119,11 +125,14 @@ setTimeout(
             data_alert +
                       `<div class="warning-sri">Por favor, corrija su configuración antes de generar documentos electrónicos.</div>`;
             
+          if(!SettingsAreReady)
+          {
             frappe.msgprint({
               title: __('Configuración incompatible con el SRI'),
               indicator: 'red',
               message: __(document_preview)
             });
+          }
             
             //Se actualiza la cookie a "not"
             frappe.call({
