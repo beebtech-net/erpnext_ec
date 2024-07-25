@@ -357,7 +357,7 @@ function validationPurchaseReceiptSri(doc)
 			data_alert +
                 `<div class="warning-sri">Por favor, verifique que toda la información esté correctamente ingresada antes de enviarla al SRI y generar el documento electrónico.</div>`;
 
-			SendSalesInvoiceToSri(r.message.documentIsReady, document_preview, doc);
+				SendPurchaseReceiptToSri(r.message.documentIsReady, document_preview, doc);
 
 			//if(r.message.documentIsReady)
 			//{				

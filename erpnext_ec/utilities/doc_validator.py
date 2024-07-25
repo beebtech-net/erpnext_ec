@@ -289,10 +289,10 @@ def validate_purchase_receipt(doc_name):
     #print(sri_environment.id)
 
     header.append({"index": 0, "description": "Ambiente", "value": sri_environment.description})
-    header.append({"index": 1, "description": "Nombre cliente", "value":doc.customer_name})
-    header.append({"index": 2, "description": "Tip.Doc. cliente", "value":doc.tipoIdentificacionComprador})
-    header.append({"index": 3, "description": "Cédula/RUC cliente", "value":doc.customer_tax_id})
-    header.append({"index": 4, "description": "Email cliente", "value":doc.customer_email_id})
+    header.append({"index": 1, "description": "Nombre proveedor", "value":doc.supplier_name})
+    header.append({"index": 2, "description": "Tip.Doc. proveedor", "value":doc.tipoIdentificacionProveedor})
+    header.append({"index": 3, "description": "Cédula/RUC proveedor", "value":doc.supplier_tax_id})
+    header.append({"index": 4, "description": "Email proveedor", "value":doc.supplier_email_id})
 
     result = {
         "header": header,

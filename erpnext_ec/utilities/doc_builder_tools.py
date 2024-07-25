@@ -324,6 +324,8 @@ def get_full_supplier_sri(def_customer):
     if docs:
         doc = docs[0]
         #print(doc)
+        print('doc.typeidtax')
+        print(doc.typeidtax)
         supplier_sri['supplier_tax_id'] = doc.tax_id
         supplier_sri['supplier_name'] = doc.nombrecomercial
         supplier_sri['tipoIdentificacionProveedor'] = doc.typeidtax

@@ -57,8 +57,10 @@ def build_doc_liq(doc_name):
 		doc.contribuyenteEspecial = company_full['contribuyenteEspecial']
 		doc.ambiente = company_full['ambiente']
 
+		print('doc.purchase_withholding_supplier')
+		print(doc.supplier)
 		#Datos completos del proveedor
-		supplier_full = get_full_supplier_sri(doc.purchase_withholding_supplier)
+		supplier_full = get_full_supplier_sri(doc.supplier)
 		print(supplier_full)
 
 		supplier_phone = ''
@@ -66,7 +68,7 @@ def build_doc_liq(doc_name):
 		
 		if(supplier_full):
 			doc.supplier_tax_id = supplier_full['supplier_tax_id']
-			doc.tipoIdentificacionSujetoRetenido = supplier_full['tipoIdentificacionProveedor']
+			doc.tipoIdentificacionProveedor = supplier_full['tipoIdentificacionProveedor']
 			doc.direccionProveedor = supplier_full['direccionSujetoRetenido']
 			supplier_phone = supplier_full['supplier_phone']
 			supplier_email_id = supplier_full['supplier_email_id']

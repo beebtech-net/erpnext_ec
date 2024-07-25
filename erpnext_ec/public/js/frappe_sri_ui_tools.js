@@ -21,11 +21,11 @@ function PrepareDocumentForSendV2(doc, DocTypeErpNext)
 			}
 			break;
 		case 'Purchase Receipt':
-				{
-					console.log('Método Liquidación de Compra');
-					SendPurchaseReceipt(doc);
-				}
-				break;
+			{
+				console.log('Método Liquidación de Compra');
+				SendPurchaseReceipt(doc);
+			}
+			break;
 	}
 
 	console.log(DocTypeErpNext);
