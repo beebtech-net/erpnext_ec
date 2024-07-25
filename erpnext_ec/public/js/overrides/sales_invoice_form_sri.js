@@ -6,13 +6,13 @@ frappe.ui.form.on(doctype_customized, {
         if (frm.doc.status == 'Draft')
         {
             //Fields for custom settings
-            //frm.set_query('ptoemi', function() {
-            //    return {
-            //        filters: {
-            //            'sri_establishment_lnk': frm.doc.estab
-            //        }
-            //    };
-            //});
+            frm.set_query('ptoemi', function() {
+                return {
+                    filters: {
+                        'sri_establishment_lnk': frm.doc.estab
+                    }
+                };
+            });
         }
 
         if (frm.doc.status == 'Cancelled' || frm.doc.status == 'Draft')
