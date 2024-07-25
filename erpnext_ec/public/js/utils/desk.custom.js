@@ -70,15 +70,15 @@ setTimeout(
             if(r.message == null || r.message == undefined)
               return;
 
-            //if(r.message.SettingsAreReady)
-            //{
-              //console.log('Configuracion Lista!!');
-              //return;
-            //}
-            //else
-            //{
-              //console.log('Configuracion No esta Lista!!');
-            //}
+            if(r.message.SettingsAreReady)
+            {
+              console.log('Configuracion Lista!!');
+              return;
+            }
+            else
+            {
+              console.log('Configuracion No esta Lista!!');
+            }
 
             var data_header = '';
             var data_alert = '';
