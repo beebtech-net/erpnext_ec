@@ -238,7 +238,7 @@ def validate_purchase_whithold_sri_ec(doc_name):
     return result
 
 @frappe.whitelist()
-def validate_purchase_receipt(doc_name):
+def validate_purchase_settlement(doc_name):
     #Esta validacion servira para saber si el documento contiene toda la informacion necesaria para el SRI
     result = {}
     header = []
@@ -247,7 +247,7 @@ def validate_purchase_receipt(doc_name):
 
     doc = build_doc_liq(doc_name)
 
-    doctype_erpnext = 'Purchase Receipt'
+    doctype_erpnext = 'Purchase Invoice'
     typeDocSri = 'LIQ'
 
     customer_email_id = ''
@@ -256,8 +256,8 @@ def validate_purchase_receipt(doc_name):
         alerts.append({"index": 0, "description": "No se han definido ruc de compañia", "type":"error"})
         documentIsReady = False
 
-    if (doc.supplier_tax_id == "" or doc.supplier_tax_id == "9999999999"):
-        alerts.append({"index": 0, "description": f"Cédula/Ruc del cliente es {doc.supplier_tax_id}", "type":"error"})
+    if (doc.identificacionProveedor == "" or doc.identificacionProveedor == "9999999999"):
+        alerts.append({"index": 0, "description": f"Cédula/Ruc del cliente es {doc.identificacionProveedor}", "type":"error"})
 
     #print(doc.direccionComprador)
     if (doc.direccionProveedor == None):
@@ -288,10 +288,11 @@ def validate_purchase_receipt(doc_name):
     #print(sri_environment.name)
     #print(sri_environment.id)
 
+    header.append({"index": 0, "description": "Compañia", "value": doc.company})
     header.append({"index": 0, "description": "Ambiente", "value": sri_environment.description})
     header.append({"index": 1, "description": "Nombre proveedor", "value":doc.supplier_name})
     header.append({"index": 2, "description": "Tip.Doc. proveedor", "value":doc.tipoIdentificacionProveedor})
-    header.append({"index": 3, "description": "Cédula/RUC proveedor", "value":doc.supplier_tax_id})
+    header.append({"index": 3, "description": "Cédula/RUC proveedor", "value":doc.identificacionProveedor})
     header.append({"index": 4, "description": "Email proveedor", "value":doc.supplier_email_id})
 
     result = {

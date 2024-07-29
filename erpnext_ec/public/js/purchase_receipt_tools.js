@@ -3,7 +3,6 @@ function resolveFromExternal(r, doc, btnProcess)
 {
 	console.log(r);
 
-
 	jsonResponse = JSON.parse(r.message);
 	console.log(jsonResponse);
 
@@ -236,9 +235,9 @@ function resolveFromInternal(r, doc, btnProcess)
 	$(btnProcess).parent().find('.custom-animation').remove();  
 }
 
-function SendPurchaseReceiptToSri(documentIsReady, document_preview, doc)
+function SendPurchaseSettlementToSri(documentIsReady, document_preview, doc)
 {
-	var doctype_erpnext = 'Purchase Receipt';
+	var doctype_erpnext = 'Purchase Invoice';
 	var typeDocSri = 'LIQ';
 	var documentName = 'Liquidación de Compra';
     var sitenameVar = frappe.boot.sitename;
@@ -307,10 +306,10 @@ function SendPurchaseReceiptToSri(documentIsReady, document_preview, doc)
 	}
 }
 
-function validationPurchaseReceiptSri(doc)
+function validationPurchaseSettlementSri(doc)
 {
 	frappe.call({
-		method: "erpnext_ec.utilities.doc_validator.validate_purchase_receipt",
+		method: "erpnext_ec.utilities.doc_validator.validate_purchase_settlement",
 		args: 
 		{
 			doc_name: doc.name,
@@ -321,8 +320,8 @@ function validationPurchaseReceiptSri(doc)
 		},
 		callback: function(r) 
 		{
-			console.log(r);			
-			console.log(r.message.doctype_erpnext);
+			//console.log(r);			
+			//console.log(r.message.doctype_erpnext);
 			//jsonResponse = JSON.parse(r.message);
 			//console.log(jsonResponse);
 			
@@ -357,7 +356,7 @@ function validationPurchaseReceiptSri(doc)
 			data_alert +
                 `<div class="warning-sri">Por favor, verifique que toda la información esté correctamente ingresada antes de enviarla al SRI y generar el documento electrónico.</div>`;
 
-				SendPurchaseReceiptToSri(r.message.documentIsReady, document_preview, doc);
+				SendPurchaseSettlementToSri(r.message.documentIsReady, document_preview, doc);
 
 			//if(r.message.documentIsReady)
 			//{				
@@ -370,8 +369,8 @@ function validationPurchaseReceiptSri(doc)
 	});
 }
 
-function SendPurchaseReceipt(doc)
+function SendPurchaseSettlement(doc)
 {
-	validationPurchaseReceiptSri(doc);
+	validationPurchaseSettlementSri(doc);
 }
 

@@ -56,6 +56,9 @@ function get_current_doc_type()
     if(doctype_erpnext == 'Purchase Withholding Sri Ec')
         typeDocSri = 'CRE';
 
+    if(doctype_erpnext == 'Purchase Receipt')
+        typeDocSri = 'LIQ';
+
     //console.log([doctype_erpnext, typeDocSri]);
     
     return [doctype_erpnext, typeDocSri];
@@ -230,6 +233,17 @@ const Website = {
                 typeDocSri = 'NCR';
             }
         }
+
+        if(doctype_erpnext == 'Purchase Invoice')
+            {
+                //Evaluar si es nota de crédito
+                var purchase_invoice_doc = frappe.get_doc('Purchase Invoice', doc_name);
+                
+                if(purchase_invoice_doc.is_purchase_settlement)
+                {
+                    typeDocSri = 'LIQ';
+                }
+            }
 
         return frappe.call({
                 method: "erpnext_ec.utilities.sri_ws.get_info_doc",
@@ -654,6 +668,16 @@ const Website = {
                         typeDocSri = 'NCR';
                     }
                 }
+
+                if(doctype_erpnext == 'Purchase Invoice')
+                    {                    
+                        var purchase_invoice_doc = frappe.get_doc('Purchase Invoice', doc_name);
+                     
+                        if(purchase_invoice_doc.is_purchase_settlement)
+                        {
+                            typeDocSri = 'LIQ';
+                        }
+                    }
                 
                 var datos = "doc_name=" + encodeURIComponent(doc_name) +
                 "&recipients=" + encodeURIComponent([values.email_to]) +
@@ -840,6 +864,17 @@ const Website = {
                 typeDocSri = 'NCR';
             }
         }
+
+        if(doctype_erpnext == 'Purchase Invoice')
+            {
+                //Evaluar si es liquidacion de compra
+                var sales_invoice_doc = frappe.get_doc('Purchase Invoice', doc);
+                
+                if(sales_invoice_doc.is_purchase_settlement)
+                {
+                    typeDocSri = 'LIQ';
+                }
+            }
 
         //var url = `${btApiServer}/api/Download/${typeFile}/${doc}?tip_doc=FAC&sitename=${sitename}`;
         //var url = `/api/method/erpnext_ec.utilities.sri_ws.get_doc_blob`;

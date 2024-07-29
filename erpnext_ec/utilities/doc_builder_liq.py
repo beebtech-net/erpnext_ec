@@ -16,12 +16,13 @@ def build_doc_liq_with_images(doc_name):
 #Factura de Venta
 @frappe.whitelist()
 def build_doc_liq(doc_name):
+	
 	# DireccionMatriz = ''
 	# dirEstablecimiento = ''
 	# direccionComprador = ''
 	# emailComprador = ''	
     
-	docs = frappe.get_all('Purchase Receipt', filters={"name": doc_name}, fields = ['*'])
+	docs = frappe.get_all('Purchase Invoice', filters={"name": doc_name}, fields = ['*'])
 	customer_email_id =  ''
 
 	sri_validated = 'ok';
@@ -30,12 +31,12 @@ def build_doc_liq(doc_name):
 	if docs:
 		doc = docs[0]
 		
-		doc.taxes = get_full_taxes(doc.name)
+		doc.taxes = get_full_taxes_purchases(doc.name)
 		#print("TAXEEESSS")
 		#print(doc.taxes)
   
 		#print("ITEEEEMMMMSSSS")
-		doc.items = get_full_items(doc.name, doc)
+		doc.items = get_full_items_purchase_invoice(doc.name, doc)
 		#print(doc.items)
 
 		#Datos completos de la compañia emisora
@@ -57,19 +58,20 @@ def build_doc_liq(doc_name):
 		doc.contribuyenteEspecial = company_full['contribuyenteEspecial']
 		doc.ambiente = company_full['ambiente']
 
-		print('doc.purchase_withholding_supplier')
-		print(doc.supplier)
+		#print('doc.purchase_withholding_supplier')
+		#print(doc.supplier)
 		#Datos completos del proveedor
 		supplier_full = get_full_supplier_sri(doc.supplier)
-		print(supplier_full)
+		#print(supplier_full)
 
 		supplier_phone = ''
 		supplier_email_id = ''
 		
 		if(supplier_full):
-			doc.supplier_tax_id = supplier_full['supplier_tax_id']
+			doc.razonSocialProveedor = supplier_full['supplier_name']
+			doc.identificacionProveedor = supplier_full['supplier_tax_id']
 			doc.tipoIdentificacionProveedor = supplier_full['tipoIdentificacionProveedor']
-			doc.direccionProveedor = supplier_full['direccionSujetoRetenido']
+			doc.direccionProveedor = supplier_full['direccionProveedor']
 			supplier_phone = supplier_full['supplier_phone']
 			supplier_email_id = supplier_full['supplier_email_id']
 
@@ -102,7 +104,7 @@ def build_doc_liq(doc_name):
 			if new_secuencial > 0:
 				doc.secuencial = new_secuencial			
 
-		tipoDocumento = '01'
+		tipoDocumento = '03'
 		tipoAmbiente = doc.ambiente
 		tipoEmision = 1
 
@@ -137,9 +139,6 @@ def build_doc_liq(doc_name):
 		return doc
 
 def build_doc_liq_sri(data_object):
-	
-	#print(data_object)
-	#return ""
 
 	totalConImpuestos = []
 
@@ -236,7 +235,7 @@ def build_doc_liq_sri(data_object):
             "nombreComercial": data_object.nombreComercial.upper(),
             "ruc": data_object.tax_id,
             "claveAcceso": data_object.claveAcceso,
-            "codDoc": "01",
+            "codDoc": "03",
             "estab" : data_object.estab,
             "ptoEmi" : data_object.ptoemi,
             "secuencial" : '{:09d}'.format(data_object.secuencial),
@@ -244,18 +243,22 @@ def build_doc_liq_sri(data_object):
 			"agenteRetencion": agenteRetencion,
 			"contribuyenteRimpe": contribuyenteRimpe
         },
-        "infoFactura": {
+        "infoLiquidacionCompra": {
             "fechaEmision": data_object.posting_date.strftime("%d/%m/%Y"), # data_object.posting_date,
             "dirEstablecimiento": data_object.dirEstablecimiento.upper(),
             "contribuyenteEspecial": data_object.contribuyenteEspecial,
             "obligadoContabilidad": obligadoContabilidad,
-            "tipoIdentificacionComprador": data_object.tipoIdentificacionComprador,
-            "razonSocialComprador": data_object.customer_name.upper(),
-            "identificacionComprador": data_object.customer_tax_id,
+            "tipoIdentificacionProveedor": data_object.tipoIdentificacionProveedor,
+            "razonSocialProveedor": data_object.razonSocialProveedor.upper(),
+            "identificacionProveedor": data_object.identificacionProveedor,
+			"direccionProveedor": data_object.direccionProveedor,
             "totalSinImpuestos": "{:.2f}".format(data_object.base_total),
             "totalDescuento": "{:.2f}".format(data_object.discount_amount),
+			"codDocReembolso": "00",
+			"totalComprobantesReembolso": data_object.grand_total,
+			"totalBaseImponibleReembolso": data_object.grand_total,
+			"totalImpuestoReembolso": data_object.grand_total,
             "totalConImpuestos": totalConImpuestos,
-            "propina": "0.00",
             "importeTotal": data_object.grand_total,
             "moneda": "DOLAR",
             "pagos": pagos

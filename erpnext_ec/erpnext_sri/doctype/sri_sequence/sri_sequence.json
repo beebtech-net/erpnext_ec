@@ -60,7 +60,7 @@
     "fieldtype": "Link",
     "in_list_view": 1,
     "in_preview": 1,
-    "label": "compañia",
+    "label": "Compañia",
     "options":"Company"
   }
  ],

@@ -206,8 +206,70 @@ function UploadFromSriBuild(listview)
 
 frappe.listview_settings['Purchase Invoice'] = {
    refresh: function(listview) {
-       listview.page.add_inner_button('<i class="fa fa-upload"></i> Importar del SRI', function() {
-        UploadFromSriBuild(listview);
-       });;
+       
    },
+   onload: function(listview) {
+        //listview.page.add_action_item(__("Actions 222"));
+
+        listview.page.add_inner_button('<i class="fa fa-upload"></i> Importar del SRI', function() {
+        UploadFromSriBuild(listview);
+       });
+
+        listview.page.set_secondary_action('<i class="fa fa-plus"></i> Liq. de Compra', function() {            
+            frappe.session.default_is_purchase_settlement = 1;
+            frappe.new_doc('Purchase Invoice', {
+                'is_purchase_settlement': 1
+            });
+        });//.addClass("btn-primary").css({'color':'#efeccc','font-weight': 'bold'});
+
+        listview.page.add_menu_item(__('Comprobantes de Retención'), function() {
+            // Redirige a la creación de un nuevo Purchase Invoice con el campo check marcado
+            frappe.new_doc('Purchase Invoice', {
+                'is_paid': 1 // Reemplaza con el nombre del campo check que quieres marcar
+            });
+
+            //frappe.new_doc('Journal Entry', {company: get_company()});
+        });
+    }
 };
+
+var doctype_customized = "Purchase Invoice";
+
+frappe.listview_settings[doctype_customized] = frappe.listview_settings[doctype_customized] || {};
+
+frappe.listview_settings[doctype_customized].button = {
+    show(doc) {
+
+        //console.log(doc);
+        //if (doc.status == 'Cancelled' || doc.status == 'Draft' || !doc.is_purchase_settlement) {
+        //    return false;
+        //}
+        //console.log(doc.is_purchase_settlement);
+
+        if (doc.status == 'Cancelled' || !doc.is_purchase_settlement) {
+            return false;
+        }
+
+        SetupCustomButtons(doc, doctype_customized);
+        return true;
+    },
+    get_label() 
+    {
+        return __('<i class="fa fa-play"></i>');
+    },
+    get_description(doc) 
+    {
+        return __('Enviar al SRI')
+    },
+    action(doc) 
+    {
+        var actionButton = $('.list-actions > .btn-action[data-name="' + doc.name + '"]');
+
+        if ($(actionButton).attr('endRender') != 'true') {
+            frappe.show_alert({
+                message: __(`${doc.name} aún se está configurando, espere un momento por favor.`),
+                indicator: 'red'
+            }, 3);
+        }        
+    }
+}

@@ -146,22 +146,27 @@ def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnex
 			doc_data = build_doc_fac(doc_name)
 			template_name = 'Factura SRI Body'
 			print_format_name = 'Factura SRI'
-			email_subject = f'Factura Electrónica {doc_data.estab }-{doc_data.ptoemi}-{doc_data.secuencial:09d}'
+			email_subject = f'Factura Electrónica {doc_data.estab}-{doc_data.ptoemi}-{doc_data.secuencial:09d}'
+	elif typeDocSri == "LIQ":
+			doc_data = build_doc_liq(doc_name)
+			template_name = 'Liquiración Compra Sri Body'
+			print_format_name = 'Liquidación de Compra SRI'
+			email_subject = f'Liquidación de Compra {doc_data.estab}-{doc_data.ptoemi}-{doc_data.secuencial:09d}'
 	if typeDocSri == "NCR":
 			doc_data = build_doc_ncr(doc_name)
 			template_name = 'Nota de Crédito SRI Body'
 			print_format_name = 'Nota de Crédito SRI'
-			email_subject = f'Nota de Crédito {doc_data.estab }-{doc_data.ptoemi}-{doc_data.secuencial:09d}'
+			email_subject = f'Nota de Crédito {doc_data.estab}-{doc_data.ptoemi}-{doc_data.secuencial:09d}'
 	elif typeDocSri == "GRS":
 			doc_data = build_doc_grs(doc_name)
 			template_name = 'Guia Remision Sri Body'
 			print_format_name = 'Guía de Remisión SRI'
-			email_subject = f'Guía de Remisión {doc_data.estab }-{doc_data.ptoemi}-{doc_data.secuencial:09d}'
+			email_subject = f'Guía de Remisión {doc_data.estab}-{doc_data.ptoemi}-{doc_data.secuencial:09d}'
 	elif typeDocSri == "CRE":
 			doc_data = build_doc_cre(doc_name)
 			template_name = 'Comprobante Retencion Sri Body'
 			print_format_name = 'Retención SRI'
-			email_subject = f'Comprobante de Retención {doc_data.estab }-{doc_data.ptoemi}-{doc_data.secuencial:09d}'
+			email_subject = f'Comprobante de Retención {doc_data.estab}-{doc_data.ptoemi}-{doc_data.secuencial:09d}'
 	
 	print("---------ENVIANDO")
 	#print(doc_data)
@@ -362,6 +367,8 @@ def get_doc_json(doc_name, typeDocSri, typeFile, siteName):
 		doc = build_doc_cre(doc_name)
 	elif typeDocSri == "NCR":
 		doc = build_doc_ncr(doc_name)
+	elif typeDocSri == "LIQ":
+		doc = build_doc_liq(doc_name)
 
 	return doc
 
@@ -884,8 +891,8 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName, regional_setti
 
 		xml_string = build_xml_data(doc_data, doc_data.name, typeDocSri, siteName)
 
-		print('regional_settings_ec.signature_tool')
-		print(regional_settings_ec.signature_tool)
+		#print('regional_settings_ec.signature_tool')
+		#print(regional_settings_ec.signature_tool)
 
 		#Se firma el documento con la aplicacion externa XadesSignerCmd
 		if(regional_settings_ec.signature_tool == "XadesSignerCmd"):
@@ -896,8 +903,8 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName, regional_setti
 			#signed_xml = SriXmlData.sign_xml_xades(SriXmlData, xml_string, sri_signatures[0])			
 		#	signed_xml =XadesToolV2.sign_xml(SriXmlData, xml_string, doc_data, sri_signatures[0])
 	
-		#print(xml_string)
-
+		print(xml_string)
+		
 		#signed_xml = build_xml_signed(xml_string, doc_data, signatureP12)
 		#signed_xml = SriXmlData.sign_xml_old(SriXmlData, xml_string, signatureP12)  		
 
@@ -1100,8 +1107,9 @@ def registerResponse_native(doc, typeDocSri, doctype_erpnext, response_json, res
 	# del frappe, hay que verificar.
 	sri_status = ''
 
-	#Si es que tiene itemes de autorizaciones
+	#Si es que tiene items de autorizaciones
 	if('autorizaciones' in response_json):
+		print(response_json['autorizaciones'])
 		sri_status = response_json['autorizaciones']['autorizacion']['estado']
 
 	if('estado' in response_json):

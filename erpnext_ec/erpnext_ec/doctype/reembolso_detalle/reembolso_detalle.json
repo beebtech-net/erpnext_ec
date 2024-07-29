@@ -1,0 +1,86 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2023-12-21 01:27:30.810619",
+ "doctype": "DocType",
+ "document_type": "Setup",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "nombre",
+  "valor"
+ ],
+ "fields": 
+ [
+    {
+        "fieldname": "tipoIdentificacionProveedorReembolso", 
+        "fieldtype": "Data", 
+        "label": "Tipo Identificación Proveedor Reembolso"
+    },
+    {
+        "fieldname": "identificacionProveedorReembolso", 
+        "fieldtype": "Data", 
+        "label": "Identificación Proveedor Reembolso"
+    },
+    {
+        "fieldname": "codPaisPagoProveedorReembolso", 
+        "fieldtype": "Data", 
+        "label": "Código País Pago Proveedor Reembolso"
+    },
+    {
+        "fieldname": "tipoProveedorReembolso", 
+        "fieldtype": "Data", 
+        "label": "Tipo Proveedor Reembolso"
+    },
+    {
+        "fieldname": "codDocReembolso", 
+        "fieldtype": "Data", 
+        "label": "Código Doc Reembolso"
+    },
+    {
+        "fieldname": "estabDocReembolso", 
+        "fieldtype": "Data", 
+        "label": "Establecimiento Doc Reembolso"
+    },
+    {
+        "fieldname": "ptoEmiDocReembolso", 
+        "fieldtype": "Data", 
+        "label": "Punto Emisión Doc Reembolso"
+    },
+    {
+        "fieldname": "secuencialDocReembolso", 
+        "fieldtype": "Data", 
+        "label": "Secuencial Doc Reembolso"
+    },
+    {
+        "fieldname": "fechaEmisionDocReembolso", 
+        "fieldtype": "Date", 
+        "label": "Fecha Emisión Doc Reembolso"
+    },
+    {
+        "fieldname": "numeroautorizacionDocReemb", 
+        "fieldtype": "Data", 
+        "label": "Número Autorización Doc Reemb"
+    },
+    {
+        "fieldname": "detalleImpuestos", 
+        "fieldtype": "Table", 
+        "options": "Detalle Impuestos", 
+        "label": "Detalle Impuestos"
+    }
+],
+ "idx": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-04-23 15:33:14.429601",
+ "modified_by": "Administrator",
+ "module": "Erpnext Ec",
+ "name": "Reembolso Detalle",
+ "owner": "Administrator",
+ "permissions": [],
+ "show_name_in_global_search": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

@@ -20,10 +20,10 @@ function PrepareDocumentForSendV2(doc, DocTypeErpNext)
 				SendWithholding(doc);
 			}
 			break;
-		case 'Purchase Receipt':
+		case 'Purchase Invoice':
 			{
 				console.log('Método Liquidación de Compra');
-				SendPurchaseReceipt(doc);
+				SendPurchaseSettlement(doc);
 			}
 			break;
 	}

@@ -56,15 +56,15 @@ app_include_css = [
 doctype_js = {
     "Sales Invoice" : "public/js/overrides/sales_invoice_form_sri.js",
     "Delivery Note" : "public/js/overrides/delivery_note_form_sri.js",
-    "Purchase Receipt" : "public/js/overrides/purchase_receipt_form_sri.js",
+    "Purchase Invoice" : "public/js/overrides/purchase_invoice_form_sri.js",
+    #"Purchase Receipt" : "public/js/overrides/purchase_receipt_form_sri.js",
     "Company" : "public/js/overrides/company_form_sri.js",
     }
 doctype_list_js = {
     "Sales Invoice" : "public/js/overrides/sales_invoice_list_sri.js",
     "Purchase Invoice" : "public/js/overrides/purchase_invoice_list_sri.js",
     "Delivery Note" : "public/js/overrides/delivery_note_list_sri.js",
-    "Purchase Receipt" : "public/js/overrides/purchase_receipt_list_sri.js",
-
+    #"Purchase Receipt" : "public/js/overrides/purchase_receipt_list_sri.js",
     "Print Format" : "public/js/overrides/print_format_list_sri.js",
     "Account" : "public/js/overrides/account_list_sri.js",
     }
@@ -224,6 +224,11 @@ on_session_creation = [
 # ---------------
 
 # scheduler_events = {
+#   "cron": {
+#        "0 0 * * *": [
+#               "frappe.file_name.function_name",
+#           ]
+#        },
 # 	"all": [
 # 		"erpnext_ec.tasks.all"
 # 	],

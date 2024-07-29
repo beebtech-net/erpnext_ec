@@ -323,14 +323,20 @@ def get_full_supplier_sri(def_customer):
 
     if docs:
         doc = docs[0]
+        print(doc)
         #print(doc)
-        print('doc.typeidtax')
-        print(doc.typeidtax)
+        #print('doc.typeidtax')
+        #print(doc.typeidtax)
         supplier_sri['supplier_tax_id'] = doc.tax_id
-        supplier_sri['supplier_name'] = doc.nombrecomercial
+        if(doc.nombrecomercial):
+            supplier_sri['supplier_name'] = doc.nombrecomercial
+        else:
+            supplier_sri['supplier_name'] = doc.supplier_name
         supplier_sri['tipoIdentificacionProveedor'] = doc.typeidtax
         supplier_sri['supplier_email_id']  = ''
         supplier_sri['supplier_phone']  = ''
+        
+        #supplier_sri["razonSocialProveedor"] = doc.nombrecomercial.upper(),
 
         supplier_address_primary = None
         supplier_address_first = None
@@ -374,13 +380,16 @@ def get_full_supplier_sri(def_customer):
             supplier_sri['supplier_phone']  = supplier_address_primary.phone
             supplier_sri['address_line1']  = supplier_address_primary.address_line1 if supplier_address_primary.address_line1 is not None else ''
             supplier_sri['address_line2']  = supplier_address_primary.address_line2 if supplier_address_primary.address_line2 is not None else ''
-            supplier_sri['direccionSujetoRetenido']  = supplier_sri['address_line1'] + ' ' + supplier_sri['address_line2']
+            supplier_sri['direccionSujetoRetenido'] = supplier_sri['address_line1'] + ' ' + supplier_sri['address_line2']
+            supplier_sri['direccionProveedor'] = supplier_sri['address_line1'] + ' ' + supplier_sri['address_line2']
         else:
             supplier_sri['supplier_email_id']  = ''
             supplier_sri['supplier_phone']  = ''
             supplier_sri['address_line1']  = ''
             supplier_sri['address_line2']  = ''
             supplier_sri['direccionSujetoRetenido']  = ''
+            supplier_sri['direccionProveedor'] = None
+            
 
         #print(compania_sri)
         return supplier_sri
@@ -459,6 +468,113 @@ def get_full_items(doc_name, doc_parent):
         doc_parent.totalDescuento = total_items_discount
     return items
 
+def get_full_items_purchase_receipt(doc_name, doc_parent):
+
+    items = frappe.get_all('Purchase Receipt Item',
+                           filters={'parent': doc_name},
+                           fields=['*']
+                            )
+    
+    total_items_discount = 0
+
+    if (items):
+        for item in items:
+            item.impuestos = []
+            total_items_discount += item.discount_amount
+
+            item.precioUnitario = item.base_price_list_rate #rate #precio del item
+            item.precioTotalSinImpuesto = item.base_net_amount #subtotal del item
+
+            #if(item.item_tax_template is None):
+            for itemOfTax in doc_parent.taxes:
+                if(not itemOfTax.item_wise_tax_detail is None):
+                    
+                    #print(itemOfTax.item_wise_tax_detail)
+
+                    json_item_wise_tax_detail = json.loads(itemOfTax.item_wise_tax_detail)
+                    
+                    for key_item in list(json_item_wise_tax_detail.keys()):
+                        print("key_item")
+                        print (key_item)
+                    
+                        #print(json_item_wise_tax_detail)
+                        #key_item = list(json_item_wise_tax_detail.keys())[0]
+
+                        if(item.item_code == key_item):                            
+                            #print(key_item)
+                            #print(json_item_wise_tax_detail[key_item][0])
+                            item_impuesto_valor = json_item_wise_tax_detail[key_item][1]
+
+                            print(f'Encontrado {item.item_code} {item_impuesto_valor}')
+                            
+                            #TODO: Chequear la base imponible, posibles casos especiales
+                            new_tax_item = {
+                                    "codigo": itemOfTax.sricode,
+                                    "codigoPorcentaje": itemOfTax.codigoPorcentaje,
+                                    "tarifa": itemOfTax.rate,
+                                    "baseImponible": item.net_amount,  #base_amount, base_net_amount, qty * rate
+                                    "valor": item_impuesto_valor                            
+                            }
+
+                            item.impuestos.append(new_tax_item)
+        
+        doc_parent.totalDescuento = total_items_discount
+    return items
+
+def get_full_items_purchase_invoice(doc_name, doc_parent):
+
+    items = frappe.get_all('Purchase Invoice Item',
+                           filters={'parent': doc_name},
+                           fields=['*']
+                            )
+    
+    total_items_discount = 0
+
+    if (items):
+        for item in items:
+            item.impuestos = []
+            total_items_discount += item.discount_amount
+
+            item.precioUnitario = item.base_price_list_rate #rate #precio del item
+            item.precioTotalSinImpuesto = item.base_net_amount #subtotal del item
+
+            #if(item.item_tax_template is None):
+            for itemOfTax in doc_parent.taxes:
+                if(not itemOfTax.item_wise_tax_detail is None):
+                    
+                    #print(itemOfTax.item_wise_tax_detail)
+
+                    json_item_wise_tax_detail = json.loads(itemOfTax.item_wise_tax_detail)
+                    
+                    for key_item in list(json_item_wise_tax_detail.keys()):
+                        print("key_item")
+                        print (key_item)
+                    
+                        #print(json_item_wise_tax_detail)
+                        #key_item = list(json_item_wise_tax_detail.keys())[0]
+
+                        if(item.item_code == key_item):                            
+                            #print(key_item)
+                            #print(json_item_wise_tax_detail[key_item][0])
+                            item_impuesto_valor = json_item_wise_tax_detail[key_item][1]
+
+                            print(f'Encontrado {item.item_code} {item_impuesto_valor}')
+                            
+                            #TODO: Chequear la base imponible, posibles casos especiales
+                            new_tax_item = {
+                                    "codigo": itemOfTax.sricode,
+                                    "codigoPorcentaje": itemOfTax.codigoPorcentaje,
+                                    "tarifa": itemOfTax.rate,
+                                    "baseImponible": item.net_amount,  #base_amount, base_net_amount, qty * rate
+                                    "valor": item_impuesto_valor                            
+                            }
+
+                            item.impuestos.append(new_tax_item)
+        
+        doc_parent.totalDescuento = total_items_discount
+    return items
+
+
 def get_full_items_delivery_note(doc_name):    
     items = frappe.get_all('Delivery Note Item',
                            filters={'parent': doc_name},
@@ -491,7 +607,7 @@ def get_full_taxes(doc_name):
         if accountApi.compute_label_sri:
             taxItem.compute_label_sri = accountApi.compute_label_sri
         else:
-            if taxItem.sricode == 2:
+            if taxItem.sricode == 2 or taxItem.sricode == 4:
                 taxItem.compute_label_sri = "IVA " + str(int(accountApi.tax_rate)) + "%"
             #se deberian agregar manualmente los otros tipos de impuestos
 
@@ -502,6 +618,51 @@ def get_full_taxes(doc_name):
         #print(taxItem.compute_label_sri)
 
         #print(accountApi.tax_rate)
+        
+        #TODO: Probablemente un bug en la version 13, no se ha replicado en la version 15
+        if (taxItem.rate == 0 and  taxItem.rate != accountApi.tax_rate):
+            taxItem.rate = accountApi.tax_rate
+
+    return impuestos
+
+def get_full_taxes_purchases(doc_name):
+    
+    impuestos = frappe.get_all('Purchase Taxes and Charges', 
+                               filters={'parent': doc_name}, 
+                               fields=['*'])
+    #    fields=['charge_type', 'account_head', 'tax_amount']
+    
+    for taxItem in impuestos:
+        accountApi = frappe.get_doc('Account', taxItem.account_head)
+
+        #accountApi = frappe.get_doc(
+        #{
+        #    "doctype": "Account", 
+        #    "name": taxItem.account_head, 
+        #    "company": taxItem.company
+        #})
+
+
+        print("accountApi")
+        print(accountApi)
+
+        if accountApi.sricode:
+            taxItem.sricode =  int(accountApi.sricode)
+              
+        if accountApi.codigoporcentaje:
+            taxItem.codigoPorcentaje = int(accountApi.codigoporcentaje)
+                
+        if accountApi.compute_label_sri:
+            taxItem.compute_label_sri = accountApi.compute_label_sri
+        else:
+            if taxItem.sricode == 2 or taxItem.sricode == 4:
+                taxItem.compute_label_sri = "IVA " + str(int(accountApi.tax_rate)) + "%"
+            #se deberian agregar manualmente los otros tipos de impuestos
+
+        if (taxItem.total == taxItem.base_total):
+            taxItem.baseImponible = taxItem.base_total - taxItem.tax_amount
+        else:            
+            taxItem.baseImponible = taxItem.base_total
         
         #TODO: Probablemente un bug en la version 13, no se ha replicado en la version 15
         if (taxItem.rate == 0 and  taxItem.rate != accountApi.tax_rate):
@@ -828,7 +989,7 @@ def setSecuencial(doc, typeDocSri):
     elif typeDocSri ==  "LIQ":
 			
         #print(doc)
-        document_object = frappe.get_last_doc('Purchase Receipt', filters = { 'name': doc.name})
+        document_object = frappe.get_last_doc('Purchase Invoice', filters = { 'name': doc.name})
         if(document_object):
             if(document_object.secuencial > 0):
                 print("Secuencial ya asignado!")

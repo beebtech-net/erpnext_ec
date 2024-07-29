@@ -26,7 +26,7 @@ frappe.ui.form.on(doctype_customized, {
     },
     estab: function(frm)
 	{
-        frm.set_value('ptoemi',  '');
-        frm.refresh_field('ptoemi');
+        //frm.set_value('ptoemi',  '');
+        //frm.refresh_field('ptoemi');
 	},
 })
