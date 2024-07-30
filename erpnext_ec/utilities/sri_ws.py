@@ -260,7 +260,15 @@ def download_pdf(doc_name, typeDocSri, typeFile, siteName):
 			doc_data = build_doc_cre(doc_name)			
 			doctype_erpnext = 'Purchase Withholding Sri Ec'
 			print_format_name = 'Retencion SRI'
-			
+	elif typeDocSri == "NCR":
+			doc_data = build_doc_ncr(doc_name)			
+			doctype_erpnext = 'Sales Invoice'
+			print_format_name = 'Nota de Crédito SRI'
+	elif typeDocSri == "LIQ":
+			doc_data = build_doc_liq(doc_name)			
+			doctype_erpnext = 'Purchase Invoice'
+			print_format_name = 'Liquidación de Compra SRI'
+
 	templates = frappe.get_list('Email Template', fields = ['*'], filters = { 'name': template_name })
 
 	if(templates):
@@ -1101,6 +1109,22 @@ def updateStatusDocument(doc, typeDocSri, response_json):
 				fechaAutorizacion = fecha_con_zona.replace(tzinfo=None)
 
 				document_object.db_set('fechaautorizacion', fechaAutorizacion)
+	
+	if typeDocSri == "LIQ":
+			document_object = frappe.get_last_doc('Purchase Invoice', filters = { 'name': doc.name })
+			if(document_object):
+				document_object.db_set('numeroautorizacion', response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
+				document_object.db_set('sri_estado', 200)
+				document_object.db_set('sri_response', response_json.data.autorizaciones.autorizacion[0].estado)
+				
+				document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
+				print(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
+
+				fecha_string = response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion				
+				fecha_con_zona = parser.parse(fecha_string)
+				fechaAutorizacion = fecha_con_zona.replace(tzinfo=None)
+
+				document_object.db_set('fechaautorizacion', fechaAutorizacion)
 
 def registerResponse_native(doc, typeDocSri, doctype_erpnext, response_json, response_json_text):
 	#TODO: El XML se guarda de forma incorrecta, pero al parecer es un comportamiento normal
@@ -1191,6 +1215,23 @@ def updateStatusDocument_native(doc, typeDocSri, response_json):
 
 	if typeDocSri ==  "NCR":
 			document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name })
+			if(document_object):
+				document_object.db_set('numeroautorizacion', response_json['autorizaciones']['autorizacion']['numeroAutorizacion'])
+				document_object.db_set('sri_estado', 200)
+				document_object.db_set('sri_response', response_json['autorizaciones']['autorizacion']['estado'])
+				#TODO: Corregir
+				document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
+
+				print(response_json['autorizaciones']['autorizacion']['fechaAutorizacion'])
+
+				fecha_string = response_json['autorizaciones']['autorizacion']['fechaAutorizacion']				
+				fecha_con_zona = parser.parse(fecha_string)
+				fechaAutorizacion = fecha_con_zona.replace(tzinfo=None)
+
+				document_object.db_set('fechaautorizacion', fechaAutorizacion)
+
+	if typeDocSri == "LIQ":
+			document_object = frappe.get_last_doc('Purchase Invoice', filters = { 'name': doc.name })
 			if(document_object):
 				document_object.db_set('numeroautorizacion', response_json['autorizaciones']['autorizacion']['numeroAutorizacion'])
 				document_object.db_set('sri_estado', 200)

@@ -989,7 +989,7 @@ def setSecuencial(doc, typeDocSri):
     elif typeDocSri ==  "LIQ":
 			
         #print(doc)
-        document_object = frappe.get_last_doc('Purchase Invoice', filters = { 'name': doc.name})
+        document_object = frappe.get_last_doc('Purchase Invoice', filters = {'name': doc.name})
         if(document_object):
             if(document_object.secuencial > 0):
                 print("Secuencial ya asignado!")

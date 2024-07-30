@@ -61,6 +61,18 @@ def execute():
 				  "disabled": 0,
 				  "raw_printing": 0,
 			},
+			{
+                  "doc_type" : "Purchase Invoice",
+                  "name" : "Liquidación de Compra SRI",
+                  "module" : "Accounts",
+				  "standard": "No",
+				  "custom_format": True,
+				  "print_format_type": "Jinja",
+				  "default_print_language":"es-EC",
+                  "source_path" : "purchase_settlement_sri_ride.html",
+				  "disabled": 0,
+				  "raw_printing": 0,
+			},
 	]
     
 	print ("client_script")

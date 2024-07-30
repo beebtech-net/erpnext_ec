@@ -49,6 +49,16 @@ def execute():
                   "source_path" : "withdraw_purchase_sri_email.html",
 				  "disabled": 0,
 				  "subject": "Retención -",
+			},		
+			{
+                  "doc_type" : "Purchase Invoice",
+                  "name" : "Liquidación de Compra Sri Body",
+                  "module" : "Accounts",
+				  "standard": "No",
+				  "custom_format": True,
+                  "source_path" : "purchase_settlement_sri_email.html",
+				  "disabled": 0,
+				  "subject": "Liquidación de compra -",
 			},					
 	]
     
