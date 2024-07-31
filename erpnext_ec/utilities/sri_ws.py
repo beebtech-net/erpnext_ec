@@ -669,7 +669,7 @@ def validaComprobante(sri_environment, base64_string, server_timeout):
 	if (sri_environment.service_url_recept != api_url):
 		api_url = sri_environment.service_url_recept
 
-	print(api_url)
+	#print(api_url)
 
 	body = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ec="http://ec.gob.sri.ws.recepcion">
 	<soapenv:Header/>
@@ -680,7 +680,7 @@ def validaComprobante(sri_environment, base64_string, server_timeout):
 </soapenv:Body>
 </soapenv:Envelope>""".format(base64_string)
 
-	print(body)
+	#print(body)
 
 	headers = {
 		"Content-Type": "text/xml"
@@ -926,7 +926,7 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName, regional_setti
 
 		print('Numero de respuesta')
 		
-		print(response)
+		#print(response.text)
 		
 		response_valida_json_auto = xmltodict.parse(response.text)
 		

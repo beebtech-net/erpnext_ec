@@ -107,7 +107,26 @@
     "in_list_view": 0,
     "in_preview": 0,
     "label": "Envío manual al sri"
-	}
+	},
+  {
+    "default": false,
+    "description":"Dummy Email Send (No envía correo al cliente, sino al email configurado)",
+		"fieldtype": "Check",
+		"fieldname": "dummy_email_send",
+    "in_list_view": 0,
+    "in_preview": 0,
+    "label": "Dummy Email Send"
+	},
+  {
+    "default": "@gmail.com",
+    "fieldname": "dummy_email_target",
+    "fieldtype": "Data",
+    "in_list_view": 1,
+    "in_preview": 1,
+    "label": "Dummy Email Target",    
+    "docstatus": 0,
+    "is_custom_field": 0
+  }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
