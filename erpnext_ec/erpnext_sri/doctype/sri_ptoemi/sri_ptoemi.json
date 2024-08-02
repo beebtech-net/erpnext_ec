@@ -53,6 +53,60 @@
     "options": "Sri Establishment",
     "label": "Establecimiento Sri",
     "reqd": 1
+  },
+  {				
+		"label": "",
+		"fieldtype": "Column Break",
+		"fieldname": "column_break_10001",
+		"description": "Secuencial inicial por tipo de comprobante"		
+	},
+  {
+    "default": 0,
+    "fieldname": "sec_factura",
+    "fieldtype": "Int",
+    "in_list_view": 1,
+    "in_preview": 1,
+    "label": "Factura"
+  },
+  {
+    "default": 0,
+    "fieldname": "sec_notacredito",
+    "fieldtype": "Int",
+    "in_list_view": 1,
+    "in_preview": 1,
+    "label": "Nota Crédito"
+  },
+  {
+    "default": 0,
+    "fieldname": "sec_notadebito",
+    "fieldtype": "Int",
+    "in_list_view": 1,
+    "in_preview": 1,
+    "label": "Nota Débito"
+  },
+  {
+    "default": 0,
+    "fieldname": "sec_comprobanteretencion",
+    "fieldtype": "Int",
+    "in_list_view": 1,
+    "in_preview": 1,
+    "label": "Comprobante Retención"
+  },
+  {
+    "default": 0,
+    "fieldname": "sec_liquidacioncompra",
+    "fieldtype": "Int",
+    "in_list_view": 1,
+    "in_preview": 1,
+    "label": "Liquidación Compra"
+  },
+  {
+    "default": 0,
+    "fieldname": "sec_guiaremision",
+    "fieldtype": "Int",
+    "in_list_view": 1,
+    "in_preview": 1,
+    "label": "Guía Remisión"
   }
  ],
  "index_web_pages_for_search": 1,
