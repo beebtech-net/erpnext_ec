@@ -158,7 +158,10 @@ def validate_sri_settings():
                 subject= f"Configuración incompatible con el SRI - {company_item.name}",
                 body="Revise la configuración del sistema y corrija para poder crear documentos electrónicos compatibles con el SRI."
             )
-
+            header.append({"index": 0, "description": "Estado", "value": '<span class="indicator-pill red filterable no-indicator-dot ellipsis"><span class="ellipsis"> Fail</span></span>'})
+        else:
+            header.append({"index": 0, "description": "Estado", "value": '<span class="indicator-pill blue filterable no-indicator-dot ellipsis"><span class="ellipsis"> Ready</span></span>'})
+        
         groups.append({
             "index": 0, 
             "description": "Grupo", 

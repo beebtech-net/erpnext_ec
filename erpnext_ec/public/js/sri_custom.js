@@ -232,6 +232,13 @@ const Website = {
             {
                 typeDocSri = 'NCR';
             }
+            else
+            {
+                if(sales_invoice_doc.is_debit_note)
+                {
+                    typeDocSri = 'NDE';
+                }
+            }
         }
 
         if(doctype_erpnext == 'Purchase Invoice')

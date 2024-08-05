@@ -25,6 +25,7 @@ from erpnext_ec.utilities.doc_builder_fac import *
 from erpnext_ec.utilities.doc_builder_grs import *
 from erpnext_ec.utilities.doc_builder_cre import *
 from erpnext_ec.utilities.doc_builder_ncr import *
+from erpnext_ec.utilities.doc_builder_nde import *
 from erpnext_ec.utilities.doc_builder_liq import *
 
 DOCUMENT_VERSIONS = {
@@ -240,6 +241,8 @@ def get_doc_native(doc, doc_name, typeDocSri, doctype_erpnext, siteName):
         doc_data = build_doc_cre(doc_name)
     elif typeDocSri == "NCR":
         doc_data = build_doc_ncr(doc_name)
+    elif typeDocSri == "NDE":
+        doc_data = build_doc_nde(doc_name)
     elif typeDocSri == "LIQ":
         doc_data = build_doc_liq(doc_name)
 
@@ -302,6 +305,10 @@ def build_xml_data(data_object, doc_name, typeDocSri, siteName):
         data = build_doc_ncr_sri(data_object)
         xsd_file = dir_path + "/xsd/notaCredito_V1/0/0.xsd"
         element_name = "notaCredito"
+    elif typeDocSri == "NDE":
+        data = build_doc_nde_sri(data_object)
+        xsd_file = dir_path + "/xsd/notaDebito_V1/0/0.xsd"
+        element_name = "notaDebito"
     elif typeDocSri == "LIQ":
         data = build_doc_liq_sri(data_object)
         xsd_file = dir_path + "/xsd/liquidacionCompra_V1/0/0.xsd"

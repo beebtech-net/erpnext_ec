@@ -1,5 +1,5 @@
 from frappe.model.document import Document
-class SriEstablishment(Document):
+class SriEstablishmentLink(Document):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:

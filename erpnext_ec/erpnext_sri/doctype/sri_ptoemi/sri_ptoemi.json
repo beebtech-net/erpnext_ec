@@ -1,141 +1,135 @@
 {
  "actions": [],
  "allow_events_in_timeline": 1,
- "allow_import": 1,
  "allow_rename": 1,
- "autoname": "naming_series:",
+ "autoname": "hash",
  "creation": "2023-12-21 01:27:30.810619",
  "doctype": "DocType",
- "document_type": "Document", 
- "show_name_in_global_search": 1,
+ "document_type": "Setup",
+ "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "record_name",
-  "id",
-  "description"
+  "description",
+  "naming_series",
+  "column_break_10001",
+  "sec_factura",
+  "sec_notacredito",
+  "sec_notadebito",
+  "sec_comprobanteretencion",
+  "sec_liquidacioncompra",
+  "sec_guiaremision"
  ],
  "fields": [
   {
-    "fieldname": "naming_series",
-    "fieldtype": "Select",
-    "label": "Series",
-    "no_copy": 1,
-    "default": "PTO-.",
-    "options": "PTO-.",
-    "set_only_once": 1
-   },
-   {
-    "bold": 1,
-    "fieldname": "record_name",
-    "fieldtype": "Data",
-    "in_global_search": 1,
-    "label": "Record Name",
-    "no_copy": 1,
-    "oldfieldname": "record_name",
-    "oldfieldtype": "Data",
-    "reqd": 1,
-    "search_index": 1
-   },
-  {
-    "fieldname": "description",
-    "fieldtype": "Data",
-    "in_list_view": 1,
-    "in_preview": 1,
-    "label": "Description",
-    "reqd": 1
+   "default": "PTO-.",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "PTO-.",
+   "set_only_once": 1
   },
   {
-    "allow_in_quick_entry": 1,
-    "fieldname": "sri_establishment_lnk",
+   "bold": 1,
+   "fieldname": "record_name",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "label": "Record Name",
+   "no_copy": 1,
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "Description",
+   "reqd": 1
+  },
+  {
+    "fieldname": "sri_establishment",
     "fieldtype": "Link",
-    "in_list_view": 1,
-    "in_preview": 1,
-    "options": "Sri Establishment",
     "label": "Establecimiento Sri",
+    "options": "Sri Establishment",
     "reqd": 1
-  },
-  {				
-		"label": "",
-		"fieldtype": "Column Break",
-		"fieldname": "column_break_10001",
-		"description": "Secuencial inicial por tipo de comprobante"		
-	},
+   },
   {
-    "default": 0,
-    "fieldname": "sec_factura",
-    "fieldtype": "Int",
-    "in_list_view": 1,
-    "in_preview": 1,
-    "label": "Factura"
+   "description": "Secuencial inicial por tipo de comprobante",
+   "fieldname": "column_break_10001",
+   "fieldtype": "Column Break"
   },
   {
-    "default": 0,
-    "fieldname": "sec_notacredito",
-    "fieldtype": "Int",
-    "in_list_view": 1,
-    "in_preview": 1,
-    "label": "Nota Crédito"
+   "default": "0",
+   "fieldname": "sec_factura",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "Factura",
+   "non_negative": 1
   },
   {
-    "default": 0,
-    "fieldname": "sec_notadebito",
-    "fieldtype": "Int",
-    "in_list_view": 1,
-    "in_preview": 1,
-    "label": "Nota Débito"
+   "default": "0",
+   "fieldname": "sec_notacredito",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "Nota Cr\u00e9dito",
+   "non_negative": 1
   },
   {
-    "default": 0,
-    "fieldname": "sec_comprobanteretencion",
-    "fieldtype": "Int",
-    "in_list_view": 1,
-    "in_preview": 1,
-    "label": "Comprobante Retención"
+   "default": "0",
+   "fieldname": "sec_notadebito",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "Nota D\u00e9bito",
+   "non_negative": 1
   },
   {
-    "default": 0,
-    "fieldname": "sec_liquidacioncompra",
-    "fieldtype": "Int",
-    "in_list_view": 1,
-    "in_preview": 1,
-    "label": "Liquidación Compra"
+   "default": "0",
+   "fieldname": "sec_comprobanteretencion",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "Comprobante Retenci\u00f3n",
+   "non_negative": 1
   },
   {
-    "default": 0,
-    "fieldname": "sec_guiaremision",
-    "fieldtype": "Int",
-    "in_list_view": 1,
-    "in_preview": 1,
-    "label": "Guía Remisión"
+   "default": "0",
+   "fieldname": "sec_liquidacioncompra",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "Liquidaci\u00f3n Compra",
+   "non_negative": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "sec_guiaremision",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "Gu\u00eda Remisi\u00f3n",
+   "non_negative": 1
   }
  ],
  "index_web_pages_for_search": 1,
+ "istable": 1,
  "links": [],
- "modified": "2023-12-21 03:17:38.359596",
+ "modified": "2024-08-04 10:53:42.674488",
  "modified_by": "Administrator",
  "module": "Erpnext Sri",
  "name": "Sri Ptoemi",
- "naming_rule": "Expression (old style)",
+ "naming_rule": "Random",
  "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  }
- ],
- "search_fields": "id, description, sri_establishment_lnk",
- "sort_field": "id",
+ "permissions": [],
+ "search_fields": "record_name, description",
+ "show_name_in_global_search": 1,
+ "sort_field": "record_name",
  "sort_order": "ASC",
- "states": [], 
- "editable_title": 1,
+ "states": [],
  "title_field": "record_name",
  "track_changes": 1
 }

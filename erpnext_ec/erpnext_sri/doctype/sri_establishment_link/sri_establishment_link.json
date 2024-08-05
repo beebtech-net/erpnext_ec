@@ -1,0 +1,37 @@
+{
+  "actions": [],
+  "allow_events_in_timeline": 1,
+  "allow_import": 1,
+  "allow_rename": 1,
+  "autoname": "hash",
+  "creation": "2023-12-21 01:27:30.810619",
+  "doctype": "DocType",
+  "document_type": "Setup",
+  "show_name_in_global_search": 1,
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [],
+  "fields": [
+    {
+      "fieldname": "sri_establishment",
+      "fieldtype": "Link",
+      "options": "Sri Establishment",
+      "label": "Establecimiento",
+      "reqd": 1
+  }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2023-12-21 03:17:38.359596",
+  "modified_by": "Administrator",
+  "module": "Erpnext Sri",
+  "name": "Sri Establishment Link",
+  "naming_rule": "Random",
+  "owner": "Administrator",
+  "permissions": [],
+  "istable": 1,  
+  "sort_order": "ASC",
+  "states": [],  
+  "track_changes": 1
+ }
+ 

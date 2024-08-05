@@ -382,5 +382,39 @@
 		"doctype": "Custom Field",
 		"options": "Email Template",
 		"dt": "Company"
-	}
+	},
+	{
+		"name": "Company-sri-section-estab",
+		"label": "Establecimientos Asignados",
+		"fieldtype": "Section Break",
+		"fieldname": "estab_detail_section",
+		"parent": "Customize Form",
+		"parentfield": "fields",
+		"parenttype": "Customize Form",
+		"idx": 45,		
+		"in_preview": 0,
+		"bold": 1,
+		"collapsible": 0,		
+		"inser_after": "sri_ride_gr_template_email",
+		"doctype": "Custom Field",
+		"dt": "Company"
+	  },
+	  {
+		"allow_bulk_edit": true,
+		"name": "Company-sri-estab-detail",
+		"label": "Establecimientos",
+		"fieldtype": "Table",
+		"fieldname": "sri_estab_detail",
+		"options": "Sri Establishment Link",		
+		"idx": 46,
+		"in_list_view": 0,
+		"in_standard_filter": 0,
+		"in_global_search": 0,
+		"in_preview": 0,
+		"inser_after": "estab_detail_section",
+		"allow_in_quick_entry": 0,
+		"translatable": 1,
+		"doctype": "Custom Field",		
+		"dt": "Company"
+	  }
 ]

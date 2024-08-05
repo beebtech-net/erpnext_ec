@@ -5,7 +5,7 @@
     "record_name": "001",
     "id": "001",
     "description": "Matrix-001-Estab-001-Ptoemi-001",
-    "sri_establishment_lnk": "001"
+    "parent": "001"
   },
   {
     "doctype": "Sri Ptoemi",
@@ -13,6 +13,6 @@
     "record_name": "002",
     "id": "002",
     "description": "Matrix-001-Estab-001-Ptoemi-002",
-    "sri_establishment_lnk": "001"
+    "parent": "001"
   }
 ]

@@ -252,6 +252,13 @@ function SendSalesInvoiceToSri(documentIsReady, document_preview, doc)
 		typeDocSri = 'NCR';
 		documentName = 'Nota de Crédito';
 	}
+	{
+		if(doc.is_debit_note)
+		{
+			typeDocSri = 'NDE';
+			documentName = 'Nota de Débito';
+		}
+	}
 	
 	if (documentIsReady)
 	{
