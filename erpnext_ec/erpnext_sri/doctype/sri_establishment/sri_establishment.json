@@ -3,7 +3,7 @@
   "allow_events_in_timeline": 1,
   "allow_import": 1,
   "allow_rename": 1,
-  "autoname": "hash",
+  "autoname": "naming_series:",
   "creation": "2023-12-21 01:27:30.810619",
   "doctype": "DocType",
   "document_type": "Document",
@@ -11,8 +11,7 @@
   "engine": "InnoDB",
   "field_order": [
    "record_name",
-   "description",
-   "sri_ptoemi_detail"
+   "description"
   ],
   "fields": [
    {
@@ -25,17 +24,30 @@
      "set_only_once": 1
     },
     {
-     "bold": 1,
-     "fieldname": "record_name",
-     "fieldtype": "Data",
-     "in_global_search": 1,
-     "in_list_view": 1,
-     "in_preview": 1,
-     "label": "Record Name",
-     "no_copy": 1,
-     "reqd": 1,
-     "search_index": 1
-    },  
+      "bold": 1,
+      "fieldname": "company_link",
+      "fieldtype": "Link",
+      "in_global_search": 1,
+      "label": "Compañia",
+      "no_copy": 1,
+      "options":"Company",
+      "reqd": 1,
+      "search_index": 1,
+      "read_only": 0,
+      "remember_last_selected_value": 1
+    },
+    {
+      "bold": 1,
+      "fieldname": "record_name",
+      "fieldtype": "Data",
+      "in_global_search": 1,
+      "label": "Record Name",
+      "no_copy": 1,
+      "oldfieldname": "record_name",
+      "oldfieldtype": "Data",
+      "reqd": 1,
+      "search_index": 1
+    },
    {
      "fieldname": "description",
      "fieldtype": "Data",
@@ -49,9 +61,16 @@
      "fieldtype": "Section Break",
      "fieldname": "estab_detail_section",		
      "in_preview": 0,
-     "bold": 1,		
+     "bold": 1,
      "collapsible": 0
-   }
+   },
+   {
+    "label": "Puntos de Emisión",
+    "fieldtype": "Table",
+    "fieldname": "sri_ptoemi_detail",		
+    "in_preview": 0,
+    "options": "Sri Ptoemi"
+  }
   ],
   "index_web_pages_for_search": 1,
   "links": [],

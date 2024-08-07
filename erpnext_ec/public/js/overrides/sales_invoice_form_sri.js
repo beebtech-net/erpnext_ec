@@ -9,7 +9,7 @@ frappe.ui.form.on(doctype_customized, {
             frm.set_query('ptoemi', function() {
                 return {
                     filters: {
-                        'sri_establishment_lnk': frm.doc.estab
+                        //'sri_establishment_lnk': frm.doc.estab
                     }
                 };
             });
