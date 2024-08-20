@@ -9,6 +9,7 @@
  "document_type": "Setup",
  "editable_grid": 1,
  "engine": "InnoDB",
+ "istable": 1,
  "field_order": [
   "record_name",
   "description",
@@ -51,6 +52,16 @@
    "label": "Description",
    "reqd": 1
   },
+  {
+    "fieldname": "sri_environment_lnk",
+    "fieldtype": "Link",
+    "default":"DES",
+    "in_list_view": 1,
+    "in_preview": 1,
+    "label": "Ambiente",
+    "options":"Sri Environment",
+    "reqd": 1
+   },
   {
    "description": "Secuencial inicial por tipo de comprobante",
    "fieldname": "column_break_10001",

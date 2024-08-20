@@ -304,7 +304,7 @@ def get_info_doc(doc_name, typeDocSri, doctype_erpnext, siteName):
 	#for xml_response_item in xml_responses:
 	#	print(xml_response_item.xmldata)
 	
-	#print(doc_name, typeDocSri, doctype_erpnext, siteName)
+	print(doc_name, typeDocSri, doctype_erpnext, siteName)
 
 	doc_json = get_doc_json(doc_name, typeDocSri, doctype_erpnext, siteName)
 	info_doc['responses'] = xml_responses
