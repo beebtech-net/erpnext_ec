@@ -1,6 +1,6 @@
-## Erpnext Ec
+## ERPNext Ec
 
-Erpnext Ecuador
+ERPNext Ecuador
 
 <div align="center">
     <a href="https://erpnext.com">
