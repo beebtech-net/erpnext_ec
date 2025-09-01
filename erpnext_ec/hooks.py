@@ -112,12 +112,12 @@ frappe_version_int = int(frappe_version.split('.')[0])
 jinja = {
     #"methods": "erpnext_ec.utils.jinja_methods",
     "methods": [
-                "erpnext_ec.utilities.doc_builder_fac",
-                "erpnext_ec.utilities.doc_builder_cre",
-                "erpnext_ec.utilities.doc_builder_grs",
-                "erpnext_ec.utilities.doc_builder_ncr",
-                "erpnext_ec.utilities.doc_builder_liq",
-                "erpnext_ec.utilities.tools",
+                #"erpnext_ec.utilities.doc_builder_fac",
+                #"erpnext_ec.utilities.doc_builder_cre",
+                #"erpnext_ec.utilities.doc_builder_grs",
+                #"erpnext_ec.utilities.doc_builder_ncr",
+                #"erpnext_ec.utilities.doc_builder_liq",
+                #"erpnext_ec.utilities.tools",
                 ]
     #"filters": "erpnext_ec.utils.jinja_filters"
 }
