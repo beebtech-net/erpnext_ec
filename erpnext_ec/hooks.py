@@ -118,6 +118,7 @@ jinja = {
                 #"erpnext_ec.utilities.doc_builder_ncr",
                 #"erpnext_ec.utilities.doc_builder_liq",
                 #"erpnext_ec.utilities.tools",
+                "erpnext_ec.utilities.tools.get_full_url"
                 ]
     #"filters": "erpnext_ec.utils.jinja_filters"
 }
