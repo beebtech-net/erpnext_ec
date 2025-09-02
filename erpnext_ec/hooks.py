@@ -127,6 +127,8 @@ jinja = {
 #from erpnext_ec.utilities.doc_builder_fac import build_doc_fac 
 #from erpnext_ec.utilities.doc_builder_cre import build_doc_cre
 
+from erpnext_ec.utilities.doc_builder_fac import build_doc_fac_with_images
+
 #Frappe <=13
 jenv = {
      "methods": [
@@ -150,6 +152,7 @@ jenv = {
 
 def jenv_customizations(jenv):
     #    jenv.globals['build_doc_fac'] = build_doc_fac
+    jenv.globals['build_doc_fac_with_images'] = build_doc_fac_with_images
     print ("no usado")
 
 # Installation
