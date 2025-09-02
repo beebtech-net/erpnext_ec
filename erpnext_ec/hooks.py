@@ -112,7 +112,7 @@ frappe_version_int = int(frappe_version.split('.')[0])
 jinja = {
     #"methods": "erpnext_ec.utils.jinja_methods",
     "methods": [
-                #"erpnext_ec.utilities.doc_builder_fac",
+                "erpnext_ec.utilities.doc_builder_fac.build_doc_fac_with_images",
                 #"erpnext_ec.utilities.doc_builder_cre",
                 #"erpnext_ec.utilities.doc_builder_grs",
                 #"erpnext_ec.utilities.doc_builder_ncr",
@@ -151,8 +151,7 @@ jenv = {
 }
 
 def jenv_customizations(jenv):
-    #    jenv.globals['build_doc_fac'] = build_doc_fac
-    jenv.globals['build_doc_fac_with_images'] = build_doc_fac_with_images
+    #    jenv.globals['build_doc_fac'] = build_doc_fac    
     print ("no usado")
 
 # Installation
