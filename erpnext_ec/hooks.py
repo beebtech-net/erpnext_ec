@@ -113,6 +113,10 @@ jinja = {
     #"methods": "erpnext_ec.utils.jinja_methods",
     "methods": [
                 "erpnext_ec.utilities.doc_builder_fac.build_doc_fac_with_images",
+                "erpnext_ec.utilities.doc_builder_cre.build_doc_cre_with_images",
+                "erpnext_ec.utilities.doc_builder_grs.build_doc_grs_with_images",
+                "erpnext_ec.utilities.doc_builder_ncr.build_doc_ncr_with_images",
+                "erpnext_ec.utilities.doc_builder_liq.build_doc_liq_with_images",
                 #"erpnext_ec.utilities.doc_builder_cre",
                 #"erpnext_ec.utilities.doc_builder_grs",
                 #"erpnext_ec.utilities.doc_builder_ncr",
