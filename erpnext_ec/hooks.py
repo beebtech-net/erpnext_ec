@@ -3,7 +3,7 @@ from frappe import __version__ as frappe_version
 app_name = "erpnext_ec"
 app_title = "ERPNext Ec"
 app_publisher = "BeebTech"
-app_description = "Erpnext Ecuador"
+app_description = "ERPNext Ecuador"
 app_email = "ronald.chonillo@gmail.com"
 app_license = "mit"
 required_apps = [
@@ -36,7 +36,6 @@ app_include_css = [
     "/assets/erpnext_ec/js/libs/monthpicker/qunit.min.css",
     "/assets/erpnext_ec/js/libs/monthpicker/jquery-ui.css",
 ]
-
 
 # include js, css files in header of web template
 # web_include_css = "/assets/erpnext_ec/css/erpnext_ec.css"
