@@ -113,9 +113,9 @@ def build_doc_fac(doc_name):
 		doc.sri_validated_message = sri_validated_message
 
 		if(not doc.secuencial or doc.secuencial == 0):
-			new_secuencial = 149 #setSecuencial(doc, 'FAC')
-			if new_secuencial > 0:
-				doc.secuencial = new_secuencial			
+			#new_secuencial = setSecuencial(doc, 'FAC')
+			#if new_secuencial > 0:
+				doc.secuencial = 149 #new_secuencial			
 
 		tipoDocumento = '01'
 		tipoAmbiente = doc.ambiente
