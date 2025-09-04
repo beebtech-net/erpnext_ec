@@ -1243,19 +1243,8 @@ def setSecuencial_obs(doc, typeDocSri):
 #     return nuevo_secuencial
 
 def setSecuencial(doc, typeDocSri):
-    nuevo_secuencial = 0
-
-    document_object = frappe.get_last_doc('Sales Invoice', filters={'name': doc.name})
-    if document_object and document_object.secuencial and document_object.secuencial > 0:
-        return int(document_object.secuencial or 0)
-
-    sequence_object = frappe.get_all('Sri Ptoemi', fields=['*'], filters={})
-    if sequence_object:
-        base = sequence_object[0].sec_factura or 0
-        nuevo_secuencial = int(base) + 1
-
-    print(">>> Devolviendo", nuevo_secuencial)
-    return int(nuevo_secuencial or 0)
+    
+    return 145
 
 
 def get_full_establishment(record_name):    
