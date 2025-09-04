@@ -1037,130 +1037,212 @@ def setSecuencial_obs(doc, typeDocSri):
 	#	return False	
     return nuevo_secuencial
 
-def setSecuencial(doc, typeDocSri):
-    company_object = frappe.get_last_doc('Company', filters = { 'name': doc.company  })
+# def setSecuencial(doc, typeDocSri):
+#     company_object = frappe.get_last_doc('Company', filters = { 'name': doc.company  })
     
-    if typeDocSri ==  "FAC":
-        document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name})
-        if(document_object):
-            if(document_object.secuencial > 0):
-                print("Secuencial ya asignado!")
-                print(document_object.secuencial)
-                return True
+#     if typeDocSri ==  "FAC":
+#         document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name})
+#         if(document_object):
+#             if(document_object.secuencial > 0):
+#                 print("Secuencial ya asignado!")
+#                 print(document_object.secuencial)
+#                 return True
 
-    elif typeDocSri ==  "NCR":			
-        #print(doc)
-        document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name})
-        if(document_object):
-            if(document_object.secuencial > 0):
-                print("Secuencial ya asignado!")
-                print(document_object.secuencial)
-                return True
-    elif typeDocSri ==  "GRS":
+#     elif typeDocSri ==  "NCR":			
+#         #print(doc)
+#         document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name})
+#         if(document_object):
+#             if(document_object.secuencial > 0):
+#                 print("Secuencial ya asignado!")
+#                 print(document_object.secuencial)
+#                 return True
+#     elif typeDocSri ==  "GRS":
 			
-        #print(doc)
-        document_object = frappe.get_last_doc('Delivery Note', filters = { 'name': doc.name})
-        if(document_object):
-            if(document_object.secuencial > 0):
-                print("Secuencial ya asignado!")
-                print(document_object.secuencial)
-                return True
+#         #print(doc)
+#         document_object = frappe.get_last_doc('Delivery Note', filters = { 'name': doc.name})
+#         if(document_object):
+#             if(document_object.secuencial > 0):
+#                 print("Secuencial ya asignado!")
+#                 print(document_object.secuencial)
+#                 return True
     
-    elif typeDocSri ==  "CRE":
+#     elif typeDocSri ==  "CRE":
 			
-        #print(doc)
-        document_object = frappe.get_last_doc('Purchase Withholding Sri Ec', filters = { 'name': doc.name})
-        if(document_object):
-            if(document_object.secuencial > 0):
-                print("Secuencial ya asignado!")
-                print(document_object.secuencial)
-                return True
+#         #print(doc)
+#         document_object = frappe.get_last_doc('Purchase Withholding Sri Ec', filters = { 'name': doc.name})
+#         if(document_object):
+#             if(document_object.secuencial > 0):
+#                 print("Secuencial ya asignado!")
+#                 print(document_object.secuencial)
+#                 return True
     
-    elif typeDocSri ==  "LIQ":			
-        #print(doc)
-        document_object = frappe.get_last_doc('Purchase Invoice', filters = {'name': doc.name})
-        if(document_object):
-            if(document_object.secuencial > 0):
-                print("Secuencial ya asignado!")
-                print(document_object.secuencial)
-                return True
-    elif typeDocSri ==  "NDE":
-        pass	
+#     elif typeDocSri ==  "LIQ":			
+#         #print(doc)
+#         document_object = frappe.get_last_doc('Purchase Invoice', filters = {'name': doc.name})
+#         if(document_object):
+#             if(document_object.secuencial > 0):
+#                 print("Secuencial ya asignado!")
+#                 print(document_object.secuencial)
+#                 return True
+#     elif typeDocSri ==  "NDE":
+#         pass	
     
-    print("--------------------------")
-    nuevo_secuencial = 0
+#     print("--------------------------")
+#     nuevo_secuencial = 0
 
-    establishment_object = frappe.get_list('Sri Establishment', 
-                                      fields = ['*'], 
-                                      filters = {
-                                          'company_link': company_object.name, 
-                                          'record_name': doc.estab 
-                                          })
+#     establishment_object = frappe.get_list('Sri Establishment', 
+#                                       fields = ['*'], 
+#                                       filters = {
+#                                           'company_link': company_object.name, 
+#                                           'record_name': doc.estab 
+#                                           })
     
-    if(establishment_object):
-        print("establishment_object[0]")
-        print(establishment_object[0])
-        sequence_object = frappe.get_all('Sri Ptoemi', 
-                                        fields = ['*'],
-                                        filters = {
-                                            'parent': establishment_object[0].name,
-                                            'record_name': doc.ptoemi,
-                                            'sri_environment_lnk': company_object.sri_active_environment                                            
-                                            })
-        print("sequence_object")
-        print(sequence_object)
+#     if(establishment_object):
+#         print("establishment_object[0]")
+#         print(establishment_object[0])
+#         sequence_object = frappe.get_all('Sri Ptoemi', 
+#                                         fields = ['*'],
+#                                         filters = {
+#                                             'parent': establishment_object[0].name,
+#                                             'record_name': doc.ptoemi,
+#                                             'sri_environment_lnk': company_object.sri_active_environment                                            
+#                                             })
+#         print("sequence_object")
+#         print(sequence_object)
 
-        if (sequence_object):
+#         if (sequence_object):
 
-            if typeDocSri ==  "FAC":
-                nuevo_secuencial = sequence_object[0].sec_factura
-            elif typeDocSri ==  "NCR":			
-                nuevo_secuencial = sequence_object[0].sec_notacredito
-            elif typeDocSri ==  "GRS":
-                nuevo_secuencial = sequence_object[0].sec_guiaremision
-            elif typeDocSri ==  "CRE":                    
-                nuevo_secuencial = sequence_object[0].sec_comprobanteretencion
-            elif typeDocSri ==  "LIQ":
-                nuevo_secuencial = sequence_object[0].sec_liquidacioncompra
-            elif typeDocSri ==  "NDE":
-                nuevo_secuencial = sequence_object[0].sec_notadebito
+#             if typeDocSri ==  "FAC":
+#                 nuevo_secuencial = sequence_object[0].sec_factura
+#             elif typeDocSri ==  "NCR":			
+#                 nuevo_secuencial = sequence_object[0].sec_notacredito
+#             elif typeDocSri ==  "GRS":
+#                 nuevo_secuencial = sequence_object[0].sec_guiaremision
+#             elif typeDocSri ==  "CRE":                    
+#                 nuevo_secuencial = sequence_object[0].sec_comprobanteretencion
+#             elif typeDocSri ==  "LIQ":
+#                 nuevo_secuencial = sequence_object[0].sec_liquidacioncompra
+#             elif typeDocSri ==  "NDE":
+#                 nuevo_secuencial = sequence_object[0].sec_notadebito
             
-            nuevo_secuencial += 1
-            print(nuevo_secuencial)
-            #Se asigna al documento
-            document_object.db_set('secuencial', nuevo_secuencial)
-            #Se asigna a la tabla de secuenciales
+#             nuevo_secuencial += 1
+#             print(nuevo_secuencial)
+#             #Se asigna al documento
+#             document_object.db_set('secuencial', nuevo_secuencial)
+#             #Se asigna a la tabla de secuenciales
 
-            #Actualizar dato de secuencia
-            #doc_sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'id': sequence_object[0].id })
-            doc_sequence_object = frappe.get_last_doc('Sri Ptoemi', 
-                    filters = { 
-                        'parent': establishment_object[0].name,
-                                            'record_name': doc.ptoemi,
-                                            'sri_environment_lnk': company_object.sri_active_environment
-                                         })
+#             #Actualizar dato de secuencia
+#             #doc_sequence_object = frappe.get_last_doc('Sri Sequence', filters = { 'id': sequence_object[0].id })
+#             doc_sequence_object = frappe.get_last_doc('Sri Ptoemi', 
+#                     filters = { 
+#                         'parent': establishment_object[0].name,
+#                                             'record_name': doc.ptoemi,
+#                                             'sri_environment_lnk': company_object.sri_active_environment
+#                                          })
             
-            if typeDocSri ==  "FAC":
-                doc_sequence_object.db_set('sec_factura', nuevo_secuencial)
-                frappe.db.commit()
-            elif typeDocSri ==  "NCR":			
-                doc_sequence_object.db_set('sec_notacredito', nuevo_secuencial)
-                frappe.db.commit()
-            elif typeDocSri ==  "GRS":
-                doc_sequence_object.db_set('sec_guiaremision', nuevo_secuencial)
-                frappe.db.commit()
-            elif typeDocSri ==  "CRE":                    
-                doc_sequence_object.db_set('sec_comprobanteretencion', nuevo_secuencial)
-                frappe.db.commit()
-            elif typeDocSri ==  "LIQ":
-                doc_sequence_object.db_set('sec_liquidacioncompra', nuevo_secuencial)
-                frappe.db.commit()
-            elif typeDocSri ==  "NDE":
-                doc_sequence_object.db_set('sec_notadebito', nuevo_secuencial)
-                frappe.db.commit()
+#             if typeDocSri ==  "FAC":
+#                 doc_sequence_object.db_set('sec_factura', nuevo_secuencial)
+#                 frappe.db.commit()
+#             elif typeDocSri ==  "NCR":			
+#                 doc_sequence_object.db_set('sec_notacredito', nuevo_secuencial)
+#                 frappe.db.commit()
+#             elif typeDocSri ==  "GRS":
+#                 doc_sequence_object.db_set('sec_guiaremision', nuevo_secuencial)
+#                 frappe.db.commit()
+#             elif typeDocSri ==  "CRE":                    
+#                 doc_sequence_object.db_set('sec_comprobanteretencion', nuevo_secuencial)
+#                 frappe.db.commit()
+#             elif typeDocSri ==  "LIQ":
+#                 doc_sequence_object.db_set('sec_liquidacioncompra', nuevo_secuencial)
+#                 frappe.db.commit()
+#             elif typeDocSri ==  "NDE":
+#                 doc_sequence_object.db_set('sec_notadebito', nuevo_secuencial)
+#                 frappe.db.commit()
                 	
-        return nuevo_secuencial
-    
+#         return nuevo_secuencial
+
+def setSecuencial(doc, typeDocSri):
+    company_object = frappe.get_last_doc('Company', filters={'name': doc.company})
+
+    # Revisar si ya existe secuencial asignado
+    document_object = None
+    if typeDocSri == "FAC":
+        document_object = frappe.get_last_doc('Sales Invoice', filters={'name': doc.name})
+    elif typeDocSri == "NCR":
+        document_object = frappe.get_last_doc('Sales Invoice', filters={'name': doc.name})
+    elif typeDocSri == "GRS":
+        document_object = frappe.get_last_doc('Delivery Note', filters={'name': doc.name})
+    elif typeDocSri == "CRE":
+        document_object = frappe.get_last_doc('Purchase Withholding Sri Ec', filters={'name': doc.name})
+    elif typeDocSri == "LIQ":
+        document_object = frappe.get_last_doc('Purchase Invoice', filters={'name': doc.name})
+    elif typeDocSri == "NDE":
+        document_object = None
+
+    if document_object and document_object.secuencial and document_object.secuencial > 0:
+        print("Secuencial ya asignado!", document_object.secuencial)
+        return document_object.secuencial   # 🔹 en vez de `True`
+
+    nuevo_secuencial = 0
+    establishment_object = frappe.get_list(
+        'Sri Establishment',
+        fields=['*'],
+        filters={'company_link': company_object.name, 'record_name': doc.estab}
+    )
+
+    if establishment_object:
+        sequence_object = frappe.get_all(
+            'Sri Ptoemi',
+            fields=['*'],
+            filters={
+                'parent': establishment_object[0].name,
+                'record_name': doc.ptoemi,
+                'sri_environment_lnk': company_object.sri_active_environment
+            }
+        )
+
+        if sequence_object:
+            if typeDocSri == "FAC":
+                nuevo_secuencial = sequence_object[0].sec_factura or 0
+            elif typeDocSri == "NCR":
+                nuevo_secuencial = sequence_object[0].sec_notacredito or 0
+            elif typeDocSri == "GRS":
+                nuevo_secuencial = sequence_object[0].sec_guiaremision or 0
+            elif typeDocSri == "CRE":
+                nuevo_secuencial = sequence_object[0].sec_comprobanteretencion or 0
+            elif typeDocSri == "LIQ":
+                nuevo_secuencial = sequence_object[0].sec_liquidacioncompra or 0
+            elif typeDocSri == "NDE":
+                nuevo_secuencial = sequence_object[0].sec_notadebito or 0
+
+            nuevo_secuencial = (nuevo_secuencial or 0) + 1
+            document_object.db_set('secuencial', nuevo_secuencial)
+
+            # actualizar Sri Ptoemi
+            doc_sequence_object = frappe.get_last_doc(
+                'Sri Ptoemi',
+                filters={
+                    'parent': establishment_object[0].name,
+                    'record_name': doc.ptoemi,
+                    'sri_environment_lnk': company_object.sri_active_environment
+                }
+            )
+
+            field_map = {
+                "FAC": "sec_factura",
+                "NCR": "sec_notacredito",
+                "GRS": "sec_guiaremision",
+                "CRE": "sec_comprobanteretencion",
+                "LIQ": "sec_liquidacioncompra",
+                "NDE": "sec_notadebito",
+            }
+            if typeDocSri in field_map:
+                doc_sequence_object.db_set(field_map[typeDocSri], nuevo_secuencial)
+                frappe.db.commit()
+
+    return nuevo_secuencial
+
+
 def get_full_establishment(record_name):    
     docs = frappe.get_all('Sri Establishment', fields='*', filters={'name': record_name})    
     
