@@ -1046,7 +1046,7 @@ def setSecuencial(doc, typeDocSri):
             if(document_object.secuencial > 0):
                 print("Secuencial ya asignado!")
                 print(document_object.secuencial)
-                return True
+                return 0
 
     elif typeDocSri ==  "NCR":			
         #print(doc)
@@ -1055,7 +1055,7 @@ def setSecuencial(doc, typeDocSri):
             if(document_object.secuencial > 0):
                 print("Secuencial ya asignado!")
                 print(document_object.secuencial)
-                return True
+                return 0
     elif typeDocSri ==  "GRS":
 			
         #print(doc)
@@ -1064,7 +1064,7 @@ def setSecuencial(doc, typeDocSri):
             if(document_object.secuencial > 0):
                 print("Secuencial ya asignado!")
                 print(document_object.secuencial)
-                return True
+                return 0
     
     elif typeDocSri ==  "CRE":
 			
@@ -1074,7 +1074,7 @@ def setSecuencial(doc, typeDocSri):
             if(document_object.secuencial > 0):
                 print("Secuencial ya asignado!")
                 print(document_object.secuencial)
-                return True
+                return 0
     
     elif typeDocSri ==  "LIQ":			
         #print(doc)
@@ -1083,7 +1083,7 @@ def setSecuencial(doc, typeDocSri):
             if(document_object.secuencial > 0):
                 print("Secuencial ya asignado!")
                 print(document_object.secuencial)
-                return True
+                return 0
     elif typeDocSri ==  "NDE":
         pass	
     
