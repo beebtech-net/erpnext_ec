@@ -1160,6 +1160,7 @@ def setSecuencial(doc, typeDocSri):
                 frappe.db.commit()
                 	
         return nuevo_secuencial
+    return 0
     
 def get_full_establishment(record_name):    
     docs = frappe.get_all('Sri Establishment', fields='*', filters={'name': record_name})    
