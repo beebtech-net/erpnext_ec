@@ -60,7 +60,7 @@
 		"root_type": "Liability",
 		"report_type": "Balance Sheet",
 		"account_currency": "USD",
-		"parent_account": "2300 - IMPUESTOS Y ARANCELES*",
+		"parent_account": "IMPUESTOS Y ARANCELES*",
 		"account_type": "Tax",
 		"tax_rate": 15,
 		"compute_label_sri": "IVA 15%"

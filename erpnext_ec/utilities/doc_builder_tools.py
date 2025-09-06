@@ -1100,6 +1100,10 @@ def setSecuencial(doc, typeDocSri):
     if(establishment_object):
         print("establishment_object[0]")
         print(establishment_object[0])
+        print('doc.ptoemi')
+        print(doc.ptoemi)
+        print('company_object.sri_active_environment')
+        print(company_object.sri_active_environment)
         sequence_object = frappe.get_all('Sri Ptoemi', 
                                         fields = ['*'],
                                         filters = {
@@ -1157,9 +1161,9 @@ def setSecuencial(doc, typeDocSri):
                 frappe.db.commit()
             elif typeDocSri ==  "NDE":
                 doc_sequence_object.db_set('sec_notadebito', nuevo_secuencial)
-                frappe.db.commit()
-                	
+                frappe.db.commit()                	
         return nuevo_secuencial
+    
     return 0
     
 def get_full_establishment(record_name):    
