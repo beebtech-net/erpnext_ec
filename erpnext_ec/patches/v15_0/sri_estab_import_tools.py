@@ -3,6 +3,32 @@ import os
 import frappe
 import json
 
+def get_last_sequencial_found(company_id, sri_type_doc_lnk, establishment, ptoemi):
+	if sri_type_doc_lnk == "FAC":
+			#'sri_environment_lnk': sri_environment_lnk,
+			# TODO: Agregar "ambiente" en las tablas
+			docs_found = frappe.get_list("Sales Invoice",  fields=[f"MAX(secuencial) as max_secuencial"], filters={        	
+				'company': company_id,
+                'estab': establishment,
+                'ptoemi': ptoemi,
+    		})
+			#print(docs_found)
+			#print(docs_found[0].max_secuencial)
+			return docs_found[0].max_secuencial			
+		#elif sri_type_doc_lnk ==  "GRS":
+		#elif sri_type_doc_lnk ==  "CRE":
+	if sri_type_doc_lnk == "GRS":
+		docs_found = frappe.get_list("Delivery Note",  fields=[f"MAX(secuencial) as max_secuencial"], filters={        	
+				'company': company_id,
+    		})
+		return docs_found[0].max_secuencial
+	
+	if sri_type_doc_lnk == "CRE":
+		docs_found = frappe.get_list("Purchase Withholding Sri Ec",  fields=[f"MAX(secuencial) as max_secuencial"], filters={        	
+				'company': company_id,
+    		})
+		return docs_found[0].max_secuencial
+     
 def insert_update(DocTypeName, JsonPath):
     print("insert_update_data")
     # Lee el archivo JSON
@@ -42,6 +68,22 @@ def insert_update(DocTypeName, JsonPath):
                 if "sri_ptoemi_detail" in record:
                     document_object.sri_ptoemi_detail = []  # limpia antes de recargar
                     for child in record["sri_ptoemi_detail"]:
+                        sales_invoice_max = get_last_sequencial_found(record["company_link"], 'FAC', record["name"], child['record_name'])
+                        if sales_invoice_max is None:
+                            sales_invoice_max = 0
+                        
+                        delivery_note_max = get_last_sequencial_found(record["company_link"], 'GRS', record["name"], child['record_name'])
+                        if delivery_note_max is None:
+                            delivery_note_max = 0
+                        
+                        purchase_withholding_max = get_last_sequencial_found(record["company_link"], 'CRE', record["name"], child['record_name'])                        
+                        if purchase_withholding_max is None:
+                            purchase_withholding_max = 0
+
+                        child['sec_factura'] = sales_invoice_max
+                        child['sec_guiaremision'] = delivery_note_max
+                        child['sec_comprobanteretencion'] = purchase_withholding_max
+
                         document_object.append("sri_ptoemi_detail", child)
 
                 document_object.save()
