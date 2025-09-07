@@ -1,0 +1,15 @@
+[
+  {
+    "doctype": "Sri Ptoemi",
+    "record_name": "001",
+    "description": "001",
+    "sri_environment_lnk": "PRO",
+    "naming_series": "PTO-.",
+    "sec_factura": 0,
+    "sec_notacredito": 0,
+    "sec_notadebito": 0,
+    "sec_comprobanteretencion": 0,
+    "sec_liquidacioncompra": 0,
+    "sec_guiaremision": 0
+  }
+]

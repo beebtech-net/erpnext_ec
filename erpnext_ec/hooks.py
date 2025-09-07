@@ -66,6 +66,7 @@ doctype_list_js = {
     #"Purchase Receipt" : "public/js/overrides/purchase_receipt_list_sri.js",
     "Print Format" : "public/js/overrides/print_format_list_sri.js",
     "Account" : "public/js/overrides/account_list_sri.js",
+    "Sri Establishment" : "public/js/overrides/sri_establishment_list.js",
     }
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}

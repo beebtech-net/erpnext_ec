@@ -1,0 +1,74 @@
+[
+  {
+    "doctype": "Sri Establishment",
+    "name": "001",
+    "id": "001",
+    "record_name": "001",
+    "description": "001-Matrix-Estab",
+    "company": "{{company}}",
+    "sri_ptoemi_detail": [
+        {
+            "record_name": "001",
+            "description": "001",
+            "sri_environment_lnk": "PRO",
+            "naming_series": "PTO-.",
+            "sec_factura": 100,
+            "sec_notacredito": 0,
+            "sec_notadebito": 0,
+            "sec_comprobanteretencion": 0,
+            "sec_liquidacioncompra": 0,
+            "sec_guiaremision": 0
+        },
+        {
+            "record_name": "002",
+            "description": "002",
+            "sri_environment_lnk": "PRO",
+            "naming_series": "PTO-.",
+            "sec_factura": 100,
+            "sec_notacredito": 0,
+            "sec_notadebito": 0,
+            "sec_comprobanteretencion": 0,
+            "sec_liquidacioncompra": 0,
+            "sec_guiaremision": 0
+        }
+    ]
+  },
+  {
+    "doctype": "Sri Establishment",
+    "name": "002",
+    "id": "002",
+    "record_name": "002",
+    "description": "002-Estab",
+    "company": "{{company}}"
+  },
+  {
+    "doctype": "Sri Establishment",
+    "name": "003",
+    "id": "003",
+    "record_name": "003",
+    "description": "003-Estab",
+    "company": "{{company}}"
+  },
+  {
+    "doctype": "Sri Establishment",
+    "name": "004",
+    "id": "004",
+    "record_name": "004",
+    "description": "004-Matrix-Estab",
+    "company": "{{company}}",
+    "sri_ptoemi_detail": [
+        {
+            "record_name": "004",
+            "description": "004",
+            "sri_environment_lnk": "PRO",
+            "naming_series": "PTO-.",
+            "sec_factura": 100,
+            "sec_notacredito": 0,
+            "sec_notadebito": 0,
+            "sec_comprobanteretencion": 0,
+            "sec_liquidacioncompra": 0,
+            "sec_guiaremision": 0
+        }
+    ]
+  }
+]

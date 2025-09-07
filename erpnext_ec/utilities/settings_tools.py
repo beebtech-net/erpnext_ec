@@ -12,8 +12,8 @@ import json
 from types import SimpleNamespace
 
 from erpnext_ec.patches.v15_0 import print_formats, import_tools, email_template
-
 from erpnext_ec.patches.v15_0 import print_formats_online, email_template_online
+from erpnext_ec.patches.v15_0 import sri_estab_import_tools
 
 @frappe.whitelist()
 def load_accounts():
@@ -36,6 +36,12 @@ def load_print_format_sri_online():
 	print('Terminada la importación de formatos de impresión para el SRI')
 	email_template_online.execute()
 	print('Terminada la importación de plantillas de email para el SRI')
+	pass
+
+@frappe.whitelist()
+def load_sri_estab_build():
+	sri_estab_import_tools.execute()
+	print('Terminada la importación de establecimientos para el SRI')	
 	pass
 
 @frappe.whitelist()

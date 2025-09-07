@@ -20,3 +20,12 @@ frappe.ui.form.on('Sri Establishment', {
         }
     }
 });
+
+
+frappe.listview_settings['SriEstablishment'] = {
+    onload: function (listview) {
+		var buttonObj = listview.page.add_inner_button('<i class="fa fa-file"></i> Crear datos SRI', function() {
+            AccountSriBuild(listview);
+           });        
+	},   
+};
