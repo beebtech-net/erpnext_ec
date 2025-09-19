@@ -6,7 +6,7 @@ frappe.ui.form.on(doctype_customized, {
         if (cur_frm.doc.docstatus == 1 && frappe.model.can_create("Delivery Trip")) 
         {
 			frm.add_custom_button(
-				__("Delivery Trip"),
+				'<i class="fa fa-truck"></i> ' +  __('Delivery Trip'),
 				function () {
 					
 					frappe.model.open_mapped_doc({
