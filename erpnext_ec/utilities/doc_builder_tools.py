@@ -173,7 +173,7 @@ def get_full_company_sri(def_company):
         company_address_primary = None
         company_address_first = None
 
-        din_link_api = frappe.get_all('Dynamic Link', fields='["name","parent","link_title"]',
+        din_link_api = frappe.get_all('Dynamic Link', fields=["name","parent","link_title"],
                                                 filters={'link_doctype': 'Company', 'parenttype': 'Address', 'link_name': def_company})
         #print(din_link_api)
 
@@ -264,7 +264,7 @@ def get_full_customer_sri(def_customer):
         customer_address_primary = None
         customer_address_first = None
 
-        din_link_api = frappe.get_all('Dynamic Link', fields='["name","parent","link_title"]',
+        din_link_api = frappe.get_all('Dynamic Link', fields=["name","parent","link_title"],
                                                 filters={'link_doctype': 'Customer', 'parenttype': 'Address', 'link_name': def_customer})
         # print('DIRECCCCCCCCCCIIIIIIIONNNNNNN CUSTOMMMMERRRR')
         # print(din_link_api)
@@ -341,7 +341,7 @@ def get_full_supplier_sri(def_customer):
         supplier_address_primary = None
         supplier_address_first = None
 
-        din_link_api = frappe.get_all('Dynamic Link', fields='["name","parent","link_title"]',
+        din_link_api = frappe.get_all('Dynamic Link', fields=["name","parent","link_title"],
                                                 filters={'link_doctype': 'Supplier', 'parenttype': 'Address', 'link_name': def_customer})
         
         # print(din_link_api)
@@ -675,7 +675,7 @@ def get_address_by_name(link_name, primary_address, link_doctype):
     customer_address_primary = None
     customer_address_first = None
 
-    din_link_api = frappe.get_all('Dynamic Link', fields='["name","parent","link_title"]',
+    din_link_api = frappe.get_all('Dynamic Link', fields=["name","parent","link_title"],
                                                 filters={'link_doctype': link_doctype, 'parenttype': 'Address', 'link_name': link_name})
         
     # print('DIRECCCCCCCCCCIIIIIIIONNNNNNN CUSTOMMMMERRRR')
@@ -730,7 +730,7 @@ def get_address_by_name(link_name, primary_address, link_doctype):
 def get_invoice_by_link(link_name, link_doctype):
     invoice_data = {}   
 
-    din_link_api = frappe.get_all('Dynamic Link', fields='["name","parent","link_title"]',
+    din_link_api = frappe.get_all('Dynamic Link', fields=["name","parent","link_title"],
                                                 filters={'link_doctype': link_doctype, 'parenttype': 'Sales Invoice', 'link_name': link_name})        
     
     print(din_link_api)
