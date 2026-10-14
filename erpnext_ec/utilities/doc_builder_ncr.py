@@ -80,7 +80,7 @@ def build_doc_ncr(doc_name):
 				doc.valorModificacion = docs_ret_ag.grand_total
 				doc.motivo = 'DEVOLUCION'
 
-		doc.infoAdicional = build_infoAdicional_sri(doc_name, customer_email_id, customer_phone)
+		doc.infoAdicional = build_infoAdicional_sri(doc_name, customer_email_id, customer_phone, company_full)
 
 		#Simulando error
 		sri_validated = 'error'

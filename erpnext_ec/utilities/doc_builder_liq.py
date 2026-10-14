@@ -81,7 +81,7 @@ def build_doc_liq(doc_name):
 		doc.paymentsItems = get_payments_sri(doc.name)
 		doc.pagos = build_pagos(doc.paymentsItems)
 
-		doc.infoAdicional = build_infoAdicional_sri(doc_name, supplier_email_id, supplier_phone)
+		doc.infoAdicional = build_infoAdicional_sri(doc_name, supplier_email_id, supplier_phone, company_full)
 
 		#Simulando error
 		sri_validated = 'error'

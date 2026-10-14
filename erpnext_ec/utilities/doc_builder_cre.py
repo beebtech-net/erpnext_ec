@@ -78,7 +78,7 @@ def build_doc_cre(doc_name):
 			supplier_phone = supplier_full['supplier_phone']
 			supplier_email_id = supplier_full['supplier_email_id']
 		
-		doc.infoAdicional = build_infoAdicional_sri(doc_name, supplier_email_id, supplier_phone)
+		doc.infoAdicional = build_infoAdicional_sri(doc_name, supplier_email_id, supplier_phone, company_full)
 
 		doc.supplier_phone = supplier_phone
 		doc.supplier_email_id = supplier_email_id
