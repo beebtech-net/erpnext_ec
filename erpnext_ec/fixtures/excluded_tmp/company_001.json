@@ -10,6 +10,17 @@
     "idx": 100,
     "is_custom_field": 1
   },
+    {
+    "doctype": "Custom Field",
+    "dt": "Company",
+    "name": "Company-section_break_ride_ec",
+    "label": "Configuración ERPNext Ecuador",
+    "fieldname": "section_break_ride_ec",
+    "fieldtype": "Section Break",
+    "insert_after": "tab_break_ec_sri",
+    "idx": 105,
+    "is_custom_field": 1
+  },
   {
     "doctype": "Custom Field",
     "dt": "Company",
@@ -17,7 +28,7 @@
     "label": "Nombre Comercial",
     "fieldname": "nombreComercial",
     "fieldtype": "Data",
-    "insert_after": "tab_break_ec_sri",
+    "insert_after": "section_break_ride_ec",
     "idx": 110,
     "is_custom_field": 1
   },
@@ -25,7 +36,7 @@
     "doctype": "Custom Field",
     "dt": "Company",
     "name": "Company-regional_settings_ec",
-    "label": "Configuración",
+    "label": "Configuración Regional",
     "fieldname": "regional_settings_ec",
     "fieldtype": "Link",
     "options": "Regional Settings Ec",
@@ -138,13 +149,14 @@
     "idx": 210,
     "is_custom_field": 1
   },
+
   {
     "doctype": "Custom Field",
     "dt": "Company",
     "name": "Company-column_break_10001",
     "fieldname": "column_break_10001",
     "fieldtype": "Column Break",
-    "insert_after": "use_simulation_mode",
+    "insert_after": "section_break_ride_ec",
     "idx": 230,
     "is_custom_field": 1
   },
