@@ -165,6 +165,7 @@ def jenv_customizations(jenv):
 before_install = "erpnext_ec.install.before_install"
 #after_install = ["erpnext_ec.install.after_install","erpnext_ec.patches.client_scripts.execute"]
 after_install = ["erpnext_ec.install.after_install"]
+after_migrate = "erpnext_ec.install.after_migrate"
 
 # Uninstallation
 # ------------

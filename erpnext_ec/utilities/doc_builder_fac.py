@@ -91,7 +91,7 @@ def build_doc_fac(doc_name):
 		#for paym in  doc.paymentsItems:
 		#	print(paym)
 
-		doc.infoAdicional = build_infoAdicional_sri(doc_name, customer_email_id, customer_phone)
+		doc.infoAdicional = build_infoAdicional_sri(doc_name, customer_email_id, customer_phone, company_full)
 
 		# print(doc.infoAdicional)
 		#doc.taxes_full = get_full_taxes(doc.taxes)		

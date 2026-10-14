@@ -3,13 +3,20 @@ name = "erpnext_ec"
 authors = [
     { name = "BeebTech", email = "ronald.chonillo@gmail.com"}
 ]
-description = "ErpNext Ecuador"
+description = "ERPNext Ecuador"
 requires-python = ">=3.6"
 readme = "README.md"
 dynamic = ["version"]
 dependencies = [
-    # "frappe~=15.0.0" # Installed and managed by bench.
-    #dicttoxml=1.7.16
+    # "frappe~=15.0.0" # Installed and managed by bench.    
+    "suds",
+    "xmlsig",
+    "xades",
+    "web3",
+    "python-barcode",
+    "dicttoxml",
+    "xmltodict",
+    "pycryptodome"
 ]
 
 [tool.black]

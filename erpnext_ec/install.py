@@ -4,7 +4,7 @@ import frappe
 import json
 import os
 #from frappe.utils import validate_email_address, split_emails
-from erpnext_ec.patches.v15_0.custom_fields import *
+from erpnext_ec.patches.v15_0.default_suppliers import execute as setup_default_suppliers
 
 import click
 # from ec_extend.setup import after_install as setup
@@ -17,8 +17,7 @@ def before_install():
 def after_install():
 	try:
 		print("Setting ERPNext Ecuador...")
-		# setup()
-
+		setup()		
 		click.secho("Thank you for installing ERPNext Ecuador!", fg="green")
 
 	except Exception as e:
@@ -37,4 +36,10 @@ def after_install():
 		)
 
 		raise e	
-	
+
+def after_migrate():
+    setup()
+
+def setup():
+	setup_default_suppliers()	
+    

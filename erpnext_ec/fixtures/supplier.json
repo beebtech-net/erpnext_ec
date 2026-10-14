@@ -9,6 +9,7 @@
 		"label": "Nombre Comercial",
 		"fieldtype": "Data",
 		"fieldname": "nombreComercial",		
+		"inser_after": "tax_id",		
 		"reqd": 0,
 		"bold": 1,
 		"allow_in_quick_entry": 1,
@@ -27,9 +28,25 @@
 		"label": "Tipo Identificación",
 		"fieldtype": "Link",
 		"fieldname": "typeidtax",
-		"inser_after": "tax_id",		
+		"inser_after": "nombreComercial",		
 		"doctype": "Custom Field",
 		"options":"Sri Type Id",
 		"dt": "Supplier"
+	},	
+	{
+	"name": "Supplier-esProveedorServiciosDocumentosElectronicosSRI",
+	"parent": "Customize Form",
+	"parentfield": "fields",
+	"parenttype": "Customize Form",
+	"idx": 22,
+	"docstatus": 0,
+	"label": "Proveedor de Servicios de Documentos Electrónicos del SRI",
+	"fieldtype": "Check",
+	"fieldname": "es_proveedor_servicios_documentos_electronicos_sri",
+	"insert_after": "typeidtax",
+	"default": "0",
+	"reqd": 0,
+	"doctype": "Custom Field",
+	"dt": "Supplier"
 	}
 ]

@@ -56,7 +56,44 @@ def build_infoAdicional_sri(doc_name, customer_email_id, customer_phone):
     strComment = build_comment(commentsApi)
 
     infoAdicionalData = "";
-    infoAdicionalData = [{
+    infoAdicionalData = [                           
+                            {
+                            "nombre":"email",
+                            "valor": customer_email_id
+                            },
+                            {
+                            "nombre":"tel.",
+                            "valor": customer_phone
+                            },
+                            {
+                            "nombre":"Doc. Ref.",
+                            "valor":doc_name
+                            },
+                            {
+                            "nombre":"Coment.",
+                            "valor":strComment
+                            }
+                        ];
+
+    return infoAdicionalData
+
+def build_infoAdicional_sri(doc_name, customer_email_id, customer_phone, company_full):
+
+    commentsApi = frappe.get_all('Comment', filters = { 'reference_name': doc_name }, fields='*' );
+    # print('COMENTAAAAAARIOOOOOOSSSSSS')
+    # print(commentsApi)
+
+    strComment = build_comment(commentsApi)
+
+    ruc_proveedor = company_full['sri_electronic_documents_supplier_tax_id']
+
+    infoAdicionalData = "";
+    infoAdicionalData = [   
+                            {
+                            "nombre":"Ruc Proveedor",
+                            "valor": ruc_proveedor
+                            },
+                            {
                             "nombre":"email",
                             "valor": customer_email_id
                             },
@@ -201,6 +238,16 @@ def get_full_company_sri(def_company):
             compania_sri['dirMatriz'] = company_address_primary.address_line1
         else:
             compania_sri['dirMatriz'] = ''
+
+        compania_sri['sri_electronic_documents_supplier'] = ''
+        compania_sri['sri_electronic_documents_supplier_tax_id'] = '0999999999999' 
+        
+        # se obtiene información del proveedor de servicios de documentos electrónicos SRI
+        found_sri_supplier = frappe.get_all('Supplier', fields='*', filters={'name': doc.sri_electronic_documents_supplier})
+        if found_sri_supplier:
+            supplier = found_sri_supplier[0]
+            compania_sri['sri_electronic_documents_supplier'] = supplier.name
+            compania_sri['sri_electronic_documents_supplier_tax_id'] = supplier.tax_id
 
         #print(compania_sri)
         return compania_sri

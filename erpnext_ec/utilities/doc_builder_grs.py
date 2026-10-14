@@ -62,7 +62,7 @@ def build_doc_grs(doc_name):
 		customer_phone = customer_full['customer_phone']
 		customer_email_id = customer_full['customer_email_id']
 
-		doc.infoAdicional = build_infoAdicional_sri(doc_name, customer_email_id, customer_phone)
+		doc.infoAdicional = build_infoAdicional_sri(doc_name, customer_email_id, customer_phone, company_full)
 
 		# Obtener datos de entrega desde delivery trip y stops
 
