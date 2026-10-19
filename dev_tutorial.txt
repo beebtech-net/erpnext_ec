@@ -98,3 +98,6 @@ sudo apt-get install -y \
 
 
    cloudflared tunnel route dns erpnext-tunnel peristore.beebtech.net
+
+   #Actualización Manual
+   bench update --apps erpnext_ec
