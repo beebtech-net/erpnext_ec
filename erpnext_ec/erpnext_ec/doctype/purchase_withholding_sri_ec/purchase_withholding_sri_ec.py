@@ -26,16 +26,16 @@ class PurchaseWithholdingSriEc(Document):
 			self.db_set("status", self.status, update_modified=update_modified)
 
 	def on_submit(self):
-		print('submit!!')
-		print('Proceso de asientos contables')
+		frappe.logger().info('submit!!')
+		frappe.logger().info('Proceso de asientos contables')
 		self.create_journal_entry()
 	
 	def set_purchase_withholding_supplier(self):
-		print('set_purchase_withholding_supplier')
+		frappe.logger().info('set_purchase_withholding_supplier')
 		pass
 
 	def validate(self):
-		print('validate_link')
+		frappe.logger().info('validate_link')
 		self.set_status()
 		
 		pass
@@ -96,7 +96,7 @@ class PurchaseWithholdingSriEc(Document):
 		journal_entry.submit()
 
 	def before_save(self):
-		print('before_save')
+		frappe.logger().info('before_save')
         # Acceder a los datos del detalle y realizar acciones en función de los cambios
         #for row in self.table_fieldname:
             # Realizar acciones necesarias en función de los valores de los campos en el detalle

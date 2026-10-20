@@ -3,12 +3,12 @@ from erpnext_ec.utilities.email_tool import sendmail
 from erpnext_ec.utilities.sri_ws import add_email_quote
 
 def validate(doc, event):
-    print("validate")
-    print(doc)
+    frappe.logger().info("validate")
+    #frappe.logger().info(doc)
 
 def on_update(doc, event):
-    print("on update")
-    print(doc)
+    frappe.logger().info("on update")
+    #frappe.logger().info(doc)
 
 def after_insert(doc, event):
 
@@ -28,10 +28,10 @@ def after_insert(doc, event):
     
     if(doc.sri_status == 'AUTORIZADO'):
     #if(True):
-        #print(doc)
+        #frappe.logger().info(doc)
 
         add_email_quote(doc.doc_ref, '', '', '', doc.tip_doc, doc.doc_type, "1")
 
-        print("Ready for send email -- FROM EVENT!!!!")
-        print("after_insert")
-        print(doc)
+        frappe.logger().info("Ready for send email -- FROM EVENT!!!!")
+        frappe.logger().info("after_insert")
+        frappe.logger().info(doc)
