@@ -1,142 +1,134 @@
 from __future__ import unicode_literals
-import os
 import frappe
 import json
 
-def insert_new_data(DocTypeName, JsonPath):
-    # Lee el archivo JSON
-    with open(JsonPath, 'r') as file:
-        contenido_json = file.read()
-        contenido_json_modificado = contenido_json
+from erpnext_ec.utilities.secure_reader import read_file_in_app
 
-        default_company = frappe.defaults.get_user_default("Company") #se obtiene compañia por defecto
-        print(default_company)
+def insert_new_data(DocTypeName, contenido_json):
+    # Ya no recibe una ruta: recibe el contenido ya leído y validado
+    contenido_json_modificado = contenido_json
 
-        data = json.loads(contenido_json_modificado)
-        #data = json.load(file)
+    default_company = frappe.defaults.get_user_default("Company")
+    frappe.logger().info(default_company)
 
-    # Itera sobre los registros en el JSON e inserta en el DocType
+    data = json.loads(contenido_json_modificado)
+
     for record in data:
         record["company"] = default_company
-        pasivo_circulante_account = '' # buscar en la base de datos la cuenta que vaya a ser padre
-        print(record['parent_account'])
-        print("*" in record['parent_account'])
+        pasivo_circulante_account = ''
+        frappe.logger().info(record['parent_account'])
+        frappe.logger().info("*" in record['parent_account'])
 
-        #La busqueda de la cuenta de pasivo circulante
-        if("*" in record['parent_account']):
-            #resulParentAccount = frappe.get_all("Account", filters={"name": record['parent_account']})
-            parent_account_search = record['parent_account'].replace("*","")
-            print(parent_account_search)
-            resulParentAccount = frappe.get_all("Account", filters={"name": ["like", "%" + parent_account_search + "%"]})
-            print(resulParentAccount)
-            print("CUENTA DE PASIVO!!")
-            
+        # La busqueda de la cuenta de pasivo circulante
+        if "*" in record['parent_account']:
+            parent_account_search = record['parent_account'].replace("*", "")
+            frappe.logger().info(parent_account_search)
+            resulParentAccount = frappe.get_all(
+                "Account",
+                filters={"name": ["like", "%" + parent_account_search + "%"]}
+            )
+            frappe.logger().info(resulParentAccount)
+            frappe.logger().info("CUENTA DE PASIVO!!")
+
             if resulParentAccount:
-                pasivo_circulante_account=resulParentAccount[0].name
+                pasivo_circulante_account = resulParentAccount[0].name
                 record["parent_account"] = pasivo_circulante_account
                 record["parent"] = pasivo_circulante_account
-                
+
                 try:
-                    #CREACION DE SUBCUENTA DE RETENCIONES
-                    resulRetenAccount = frappe.get_all("Account", filters={"name": ["like", "%" + record["account_name"] + "%"]})
-                    print(resulRetenAccount)
-                    if(resulRetenAccount):
-                        print("Ya existente: " + record["account_name"])
+                    # CREACION DE SUBCUENTA DE RETENCIONES
+                    resulRetenAccount = frappe.get_all(
+                        "Account",
+                        filters={"name": ["like", "%" + record["account_name"] + "%"]}
+                    )
+                    frappe.logger().info(resulRetenAccount)
+                    if resulRetenAccount:
+                        frappe.logger().info("Ya existente: " + record["account_name"])
                     else:
                         doc = frappe.new_doc(DocTypeName)
                         doc.update(record)
-                        print("REGISTRO NUEVO")
-                        print(doc)
+                        frappe.logger().info("REGISTRO NUEVO")
+                        frappe.logger().info(doc)
                         doc.insert()
-                    
-                    #Continua con las siguientes subcuentas
+
+                    # Continua con las siguientes subcuentas
                     continue
                 except Exception as e:
-                    print("Error:" + e)
-        
-                continue                
+                    frappe.logger().error(str(e))
 
-    print("Registros insertados exitosamente.")
+                continue
+
+    frappe.logger().info("Registros insertados exitosamente.")
 
 
-def update_data(DocTypeName, JsonPath):
-    print("update_data")
-    # Lee el archivo JSON
-    with open(JsonPath, 'r') as file:
-        contenido_json = file.read()
-        contenido_json_modificado = contenido_json
+def update_data(DocTypeName, contenido_json):
+    frappe.logger().info("update_data")
+    # Ya no recibe una ruta: recibe el contenido ya leído y validado
+    contenido_json_modificado = contenido_json
 
-        default_company = frappe.defaults.get_user_default("Company") #se obtiene compañia por defecto
-        print(default_company)
+    default_company = frappe.defaults.get_user_default("Company")
+    frappe.logger().info(default_company)
 
-        data = json.loads(contenido_json_modificado)
-        #data = json.load(file)
+    data = json.loads(contenido_json_modificado)
 
-    # Itera sobre los registros en el JSON e inserta en el DocType
     for record in data:
         record["company"] = default_company
-        #pasivo_circulante_account = '' # buscar en la base de datos la cuenta que vaya a ser padre
-        #print(record['parent_account'])
-        #print("*" in record['parent_account'])
-        
-        try:
-            record["account_name"] = record['account_name'].replace("*","")
-            print(record["account_name"])
-            #CREACION DE SUBCUENTA DE RETENCIONES
-            #resulRetenAccount = frappe.get_all("Account", filters={"name": ["like", "%" + record["account_name"] + "%"]})
-            
-            document_object = frappe.get_last_doc('Account', filters={"name": ["like", "%" + record["account_name"] + "%"]})
 
-            #document_object = frappe.get_last_doc('Account', filters={"name": ["like", "%" + record["account_name"] + "%"],
-            #                                                          "company":record["company"]})
-            
-            print(document_object)
-            
-            #Realiza modificaciones en la base solo si los datos no coinciden
-            if(not document_object.codigoporcentaje == record["codigoporcentaje"]):
+        try:
+            record["account_name"] = record['account_name'].replace("*", "")
+            frappe.logger().info(record["account_name"])
+
+            document_object = frappe.get_last_doc(
+                'Account',
+                filters={"name": ["like", "%" + record["account_name"] + "%"]}
+            )
+
+            frappe.logger().info(document_object)
+
+            # Realiza modificaciones en la base solo si los datos no coinciden
+            if not document_object.codigoporcentaje == record["codigoporcentaje"]:
                 document_object.db_set('codigoporcentaje', record["codigoporcentaje"])
 
-            if(not document_object.sricode == record["sricode"]):
-                document_object.db_set('sricode', record["sricode"])           
-            
-            #No funcionará porque estan dentro de un Try
-            #raise ReferenceError("Error de prueba")
-        
+            if not document_object.sricode == record["sricode"]:
+                document_object.db_set('sricode', record["sricode"])
+
         except Exception as e:
-            print("Error:" + e)
+            frappe.logger().error(str(e))
 
         continue
 
 
-#def import_batch_special():
 def execute():
-
-    cwd = os.getcwd()
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-
     source_list = [
         {
-                "doctype" : "Account",
-                "json_file" : "account_insert.json",
-                "action":"insert"
+            "doctype": "Account",
+            "json_file": "account_insert.json",
+            "action": "insert"
         },
         {
-                "doctype" : "Account",
-                "json_file" : "account_update.json",
-                "action":"update"
+            "doctype": "Account",
+            "json_file": "account_update.json",
+            "action": "update"
         }
-	]
+    ]
 
     for source_item in source_list:
-        print (source_item)
-        filepathfull = dir_path + "/../../fixtures/specials/" + source_item['json_file']
-        
-        try:
-            if(source_item["action"] == "insert"):
-                insert_new_data(source_item["doctype"], filepathfull)
+        frappe.logger().info(source_item)
 
-            if(source_item["action"] == "update"):
-                update_data(source_item["doctype"], filepathfull)
+        try:
+            # El helper valida la ruta y devuelve el contenido
+            contenido_json = read_file_in_app(
+                "erpnext_ec",
+                "fixtures",
+                "specials",
+                source_item["json_file"]
+            )
+
+            if source_item["action"] == "insert":
+                insert_new_data(source_item["doctype"], contenido_json)
+
+            if source_item["action"] == "update":
+                update_data(source_item["doctype"], contenido_json)
+
         except Exception as e:
             return {"message": "Failed import.", "error": str(e)}
-    

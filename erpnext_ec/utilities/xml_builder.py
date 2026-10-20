@@ -205,8 +205,8 @@ def build_xml_signed(doc_name, typeDocSri, typeFile, siteName):
             #signed_xml = SriXmlData.sign_xml(SriXmlData, xml_beautified, data, sri_signatures[0])
             #signed_xml = XadesToolV1.sign_xml(SriXmlData, xml_beautified, data, sri_signatures[0])
             #signed_xml = XadesToolV2.sign_xml(XadesToolV2, xml_beautified, data, sri_signatures[0])
-            signed_xml = XadesToolV4.sign_xml(XadesToolV4, xml_beautified, data, sri_signatures[0])
-                    
+            #signed_xml = XadesToolV4.sign_xml(XadesToolV4, xml_beautified, data, sri_signatures[0])
+            pass 
         #if sri_signatures:
         #    signatureP12 = sri_signatures[0]
         #    signatureP12 = json.dumps(sri_signatures[0], default=str)

@@ -906,18 +906,8 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName, regional_setti
 		if(regional_settings_ec.signature_tool == "XadesSignerCmd"):
 			signed_xml = SriXmlData.sign_xml_cmd(SriXmlData, xml_string, sri_signatures[0])
 
-		#if(regional_settings_ec.signature_tool == "Python Native (With Fails)"):
-			#signed_xml = SriXmlData.sign_xml(SriXmlData, xml_string, doc_data, sri_signatures[0])
-			#signed_xml = SriXmlData.sign_xml_xades(SriXmlData, xml_string, sri_signatures[0])			
-		#	signed_xml =XadesToolV2.sign_xml(SriXmlData, xml_string, doc_data, sri_signatures[0])
-	
 		print(xml_string)
 		
-		#signed_xml = build_xml_signed(xml_string, doc_data, signatureP12)
-		#signed_xml = SriXmlData.sign_xml_old(SriXmlData, xml_string, signatureP12)  		
-
-		#print(signed_xml)
-		#print(type(str(signed_xml)))
 		xml_bytes = signed_xml.encode()
 
 		base64_string = base64.b64encode(bytes(signed_xml,'utf-8')).decode('utf-8')
