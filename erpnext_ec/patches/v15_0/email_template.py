@@ -8,7 +8,8 @@ def execute():
 	
 	cwd = os.getcwd()
 	dir_path = os.path.dirname(os.path.realpath(__file__))
-	
+	jinja_base = os.path.realpath(os.path.join(dir_path, "../../public/jinja"))
+
 	script_list = [
             {
                   "doc_type" : "Sales Invoice",
@@ -64,7 +65,13 @@ def execute():
     
 	for script_item in script_list:
 		print (script_item)
-		with open(dir_path + "/../../public/jinja/" + script_item['source_path']) as f:			
+		file_path = os.path.realpath(os.path.join(jinja_base, script_item["source_path"]))
+
+		# Verificación explícita de path traversal
+		if not file_path.startswith(jinja_base + os.sep):
+			frappe.throw(f"Ruta de archivo no permitida: {script_item['source_path']}")
+			
+		with open(file_path) as f:		
 			data = f.read()
 			#data = data.replace('[DOCTYPE_CUSTOM_FORM_SRI]',script_item['doc_type'])
 		create_email_template(script_item, data)
