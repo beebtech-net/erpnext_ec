@@ -1077,11 +1077,7 @@ def setSecuencial_obs(doc, typeDocSri):
 					  'sri_type_doc_lnk': typeDocSri })
 		
         doc_sequence_object.db_set('value', nuevo_secuencial)
-		
-        frappe.db.commit()
-	#	return True
-	#else:
-	#	return False	
+		        	
     return nuevo_secuencial
 
 def setSecuencial(doc, typeDocSri):
@@ -1193,22 +1189,22 @@ def setSecuencial(doc, typeDocSri):
             
             if typeDocSri ==  "FAC":
                 doc_sequence_object.db_set('sec_factura', nuevo_secuencial)
-                frappe.db.commit()
+                
             elif typeDocSri ==  "NCR":			
                 doc_sequence_object.db_set('sec_notacredito', nuevo_secuencial)
-                frappe.db.commit()
+                
             elif typeDocSri ==  "GRS":
                 doc_sequence_object.db_set('sec_guiaremision', nuevo_secuencial)
-                frappe.db.commit()
+                
             elif typeDocSri ==  "CRE":                    
                 doc_sequence_object.db_set('sec_comprobanteretencion', nuevo_secuencial)
-                frappe.db.commit()
+                
             elif typeDocSri ==  "LIQ":
                 doc_sequence_object.db_set('sec_liquidacioncompra', nuevo_secuencial)
-                frappe.db.commit()
+                
             elif typeDocSri ==  "NDE":
                 doc_sequence_object.db_set('sec_notadebito', nuevo_secuencial)
-                frappe.db.commit()                	
+                              	
         return nuevo_secuencial
     
     return 0
