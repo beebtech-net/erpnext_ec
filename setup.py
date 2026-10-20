@@ -19,7 +19,7 @@ with open('erpnext_ec/__init__.py', 'rb') as f:
 setup(
         name='erpnext_ec',
         version=version,
-        description='ErpNext Ecuador',
+        description='ERPNext Ecuador',
         author='BeebTech Studios',
         author_email='ronald.chonillo@beebtech.net',
         packages=find_packages(),
