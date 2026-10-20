@@ -44,6 +44,8 @@ from email.mime.text import MIMEText
 from suds import WebFault
 from suds.client import Client
 
+from erpnext_ec.utils.secure_reader import read_file_in_site
+
 @frappe.whitelist()
 def test_signature(signature_doc):
 	#print ("----")
@@ -51,10 +53,8 @@ def test_signature(signature_doc):
 	#Este metodo aun utiliza el api
 	doc_data = build_doc_fac('ACC-SINV-2024-00001')
 	#archivo XML de prueba
-	full_path_doc = '/opt/bench/frappe-bench/sites/principal/private/files/ACC-SINV-2024-00001.xml'
-	file = open(full_path_doc, "r")
-	doc_text = file.read()
-	file.close()
+	#full_path_doc = '/opt/bench/frappe-bench/sites/principal/private/files/ACC-SINV-2024-00001.xml'
+	doc_text = read_file_in_site('/private/files/ACC-SINV-2024-00001.xml', mode='r')
 	#print(doc_text)
 
 	#doc_text = get_doc('ACC-SINV-2024-00001', 'FAC', 'xml', 'principal')
@@ -67,8 +67,8 @@ def verify_signature(signature_doc):
 	
 	#doc_text = get_doc('ACC-SINV-2024-00001', 'FAC', 'xml', 'principal')
 	private_key, p12 = SriXmlData.get_sri_signature_from_json(SriXmlData, signature_doc)
-	print(private_key)
-	print(p12)
+	frappe.logger().info(private_key)
+	frappe.logger().info(p12)
 
 	#propietario = p12.subject.rfc4514_string() #certificado_decodificado.subject.rfc4514_string()
 	#fecha_emision = p12.not_valid_before #certificado_decodificado.not_valid_before
@@ -168,7 +168,7 @@ def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnex
 			print_format_name = 'Retención SRI'
 			email_subject = f'Comprobante de Retención {doc_data.estab}-{doc_data.ptoemi}-{doc_data.secuencial:09d}'
 	
-	print("---------ENVIANDO")
+	frappe.logger().info("---------ENVIANDO")
 	#print(doc_data)
 
 	templates = frappe.get_list('Email Template', fields = ['*'], filters = { 'name': template_name })
@@ -180,7 +180,7 @@ def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnex
 
 	msg_template = frappe.render_template(template, { "doc": doc_data }) 
 	
-	print(msg_template)
+	frappe.logger().info(msg_template)
 
 	#build attachments
 	xml_responses = frappe.get_list('Xml Responses', fields = ['*'], filters = { 'doc_ref': doc_name, 'tip_doc': typeDocSri, 'sri_status': 'AUTORIZADO' })
@@ -221,16 +221,15 @@ def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnex
 
 	#my_attachments = [frappe.attach_print(self.doctype, self.name, file_name=self.name)]
 
-	print('LISTO PARA ENVIAR')
-	print(recipients)
-	print(use_doc_email)
+	frappe.logger().info('LISTO PARA ENVIAR')
+	frappe.logger().info(recipients)
+	frappe.logger().info(use_doc_email)
 
 	if((recipients == "" or not recipients) and use_doc_email == "1"):
-		print('Se usará email de documento')
+		frappe.logger().info('Se usará email de documento')
 		recipients = doc_data.customer_email_id
 
-	print("recipients final:")
-	print(recipients)
+	frappe.logger().info("recipients final: %s" % recipients)
 	#var url = `${btApiServer}/api/Tool/AddToEmailQuote/${doc}?tip_doc=FAC&sitename=${sitenameVar}&email_to=${values.email_to}`;
 	sendmail(doc_data, recipients, email_subject, msg_template, attachments)	        
 	pass
@@ -304,7 +303,7 @@ def get_info_doc(doc_name, typeDocSri, doctype_erpnext, siteName):
 	#for xml_response_item in xml_responses:
 	#	print(xml_response_item.xmldata)
 	
-	print(doc_name, typeDocSri, doctype_erpnext, siteName)
+	frappe.logger().info("%s %s %s %s" % (doc_name, typeDocSri, doctype_erpnext, siteName))
 
 	doc_json = get_doc_json(doc_name, typeDocSri, doctype_erpnext, siteName)
 	info_doc['responses'] = xml_responses
@@ -389,15 +388,15 @@ def get_doc_blob(doc_name, typeDocSri, typeFile, siteName):
       
 	if typeDocSri == "FAC":
 			doc = build_doc_fac(doc_name)
-			print ("")
+			frappe.logger().info("")
 	elif typeDocSri == "GRS":
 			doc = build_doc_grs(doc_name)
 	elif typeDocSri == "CRE":
 			doc = build_doc_cre(doc_name)
-			print(doc)
+			frappe.logger().info(doc)
 	elif typeDocSri == "NCR":
 			doc = build_doc_ncr(doc_name)
-			print(doc)
+			frappe.logger().info(doc)
 	
 	if doc:		
 		doc_str = json.dumps(doc, default=str) 
@@ -432,18 +431,18 @@ def get_doc_blob(doc_name, typeDocSri, typeFile, siteName):
 @frappe.whitelist()
 def get_doc(doc_name, typeDocSri, typeFile, siteName):
 
-	print(doc_name, typeDocSri, typeFile, siteName)
+	frappe.logger().info("%s %s %s %s" % (doc_name, typeDocSri, typeFile, siteName))
 
 	#El parametro doc aquí es el nombre del documento
       
 	if typeDocSri == "FAC":
 			doc = build_doc_fac(doc_name)
-			print ("")
+			frappe.logger().info("")
 	elif typeDocSri == "GRS":
 			doc = build_doc_grs(doc_name)
 	elif typeDocSri == "CRE":
 			doc = build_doc_cre(doc_name)
-			print(doc)
+			frappe.logger().info(doc)
 	
 	if doc:		
 		doc_str = json.dumps(doc, default=str) 
@@ -456,8 +455,8 @@ def get_doc(doc_name, typeDocSri, typeFile, siteName):
 		
 		url_server_beebtech, server_timeout = get_api_url()
 		#url_server_beebtech = "https://192.168.200.9:7037/api/v2"
-		print(url_server_beebtech)
-		print(server_timeout)
+		frappe.logger().info(url_server_beebtech)
+		frappe.logger().info(server_timeout)
 
 		api_url = f"{url_server_beebtech}/Download/{typeFile}?documentName={doc_name}&tip_doc={typeDocSri}&sitename={siteName}"	
 		#response = requests.post(api_url, json=doc_str, verify=False, stream=True, headers= headers)
@@ -465,7 +464,7 @@ def get_doc(doc_name, typeDocSri, typeFile, siteName):
 
 		#print(response.headers['Content-Type'])
 		#print(response.text)
-		print(response)
+		frappe.logger().info(response)
 		return response.text
 		#frappe.local.response.filename = "nombre_del_archivo.pdf"
 		#frappe.local.response.filecontent = response.content
@@ -483,7 +482,7 @@ def handler(obj):
 	elif isinstance(obj, timedelta):
 		return obj.total_seconds()	
 	elif isinstance(obj, bytes):
-		print('ENTRO EN EL BYTES!!!!')
+		frappe.logger().info('ENTRO EN EL BYTES!!!!')
 		return base64.b64encode(obj).decode('utf-8')
 	
 	raise TypeError("El objeto de tipo %s no es serializable JSON." % type(obj).__name__)
@@ -496,12 +495,12 @@ def validate_doc(doc, typeDocSri, doctype_erpnext, siteName):
 	#		
 	#	case "CRE":
 
-	print ('---------------')
-	print ('validacion')
-	print (doc)
-	print(doc.customer_tax_id)
-	print(doc.RazonSocial)
-	print(doc.tipoIdentificacionComprador)
+	frappe.logger().info('---------------')
+	frappe.logger().info('validacion')
+	frappe.logger().info(doc)
+	frappe.logger().info(doc.customer_tax_id)
+	frappe.logger().info(doc.RazonSocial)
+	frappe.logger().info(doc.tipoIdentificacionComprador)
 	
 	raise ValueError("Error de validación %s" % type(doc).__name__)
 
@@ -509,30 +508,6 @@ def validate_doc(doc, typeDocSri, doctype_erpnext, siteName):
 def send_doc_external(doc, typeDocSri, doctype_erpnext, siteName):	
 	
 	doc_data = None
-
-	# for doctype, min_count in doctypes.items():
-	# 	count = frappe.db.count(doctype)
-	# 	if count > min_count:
-	# 		activation_level += 1
-	# 	sales_data.append({doctype: count})
-
-	# if frappe.db.get_single_value("System Settings", "setup_complete"):
-	# 	activation_level += 1
-
-	# communication_number = frappe.db.count("Communication", dict(communication_medium="Email"))
-	# if communication_number > 10:
-	# 	activation_level += 1
-	# sales_data.append({"Communication": communication_number})
-
-	# # recent login
-	# if frappe.db.sql(
-	# 	"select name from tabUser where last_login > date_sub(now(), interval 2 day) limit 1"
-	# ):
-	# 	activation_level += 1
-
-	# level = {"activation_level": activation_level, "sales_data": sales_data}
-	
-	#print(doc.company)
 
 	#	SE OMITE ESTE PASO
 	doc_object_build = json.loads(doc, object_hook=lambda d: SimpleNamespace(**d))
@@ -601,7 +576,7 @@ def send_doc_external(doc, typeDocSri, doctype_erpnext, siteName):
 		#print(response)
 		#print(response.text)
 
-		print('Numero de respuesta')
+		frappe.logger().info('Numero de respuesta')
 		
 		#print(response.text)
 
@@ -616,7 +591,7 @@ def send_doc_external(doc, typeDocSri, doctype_erpnext, siteName):
 			registerResponse(doc_data, typeDocSri, doctype_erpnext, response_json, response_xml_data_string)
 			if(response_json.data.numeroComprobantes is not None and int(response_json.data.numeroComprobantes) > 0):
 				if( not response_json.error is None and  'ya estaba autorizada' in response_json.error):
-					print ("correcto ya registrado previamente")					
+					frappe.logger().info("correcto ya registrado previamente")					
 					response.status_code = 200
 					response_ok = True
 
@@ -624,35 +599,21 @@ def send_doc_external(doc, typeDocSri, doctype_erpnext, siteName):
 			registerResponse(doc_data, typeDocSri, doctype_erpnext, response_json, response_xml_data_string)
 
 		if(response_ok and int(response_json.data.numeroComprobantes) > 0):
-			print ("correcto")
-			print(response_json)
-			print(response_json.data.claveAccesoConsultada)
-			print(response_json.data.numeroComprobantes)
-			print(response_json.data.autorizaciones.autorizacion[0].estado)
-			print(response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
-			print(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
-			print(response_json.data.autorizaciones.autorizacion[0].ambiente)
+			frappe.logger().info("correcto")
+			frappe.logger().info(response_json)
+			frappe.logger().info(response_json.data.claveAccesoConsultada)
+			frappe.logger().info(response_json.data.numeroComprobantes)
+			frappe.logger().info(response_json.data.autorizaciones.autorizacion[0].estado)
+			frappe.logger().info(response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
+			frappe.logger().info(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
+			frappe.logger().info(response_json.data.autorizaciones.autorizacion[0].ambiente)
 			if(response_json.data.autorizaciones.autorizacion[0].estado == "AUTORIZADO"):					
 				updateStatusDocument(doc_data, typeDocSri, response_json)
 		
 		#print(response_json.data)
 		
 		return response.text
-	
-		#api_url = "https://jsonplaceholder.typicode.com/todos/10"
-		#response = requests.get(api_url)
-		
-		#print(response.json());
 
-		#{'userId': 1, 'id': 10, 'title': 'illo est ... aut', 'completed': True}
-
-		#todo = {"userId": 1, "title": "Wash car", "completed": True}
-		#response = requests.put(api_url, json=todo)
-		#print(response.json())
-		#{'userId': 1, 'title': 'Wash car', 'completed': True, 'id': 10}
-
-		#frappe.msgprint(f"{xml_response_new.id} has been created.")
-		
 
 def validaComprobanteSuds(xml_string):
 	api_url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl"
@@ -700,7 +661,7 @@ def autorizacionComprobante(sri_environment, claveAccesoComprobante, server_time
 	if (sri_environment.service_url_authorize != api_url):
 		api_url = sri_environment.service_url_authorize
 
-	print(api_url)
+	frappe.logger().info(api_url)
 	body = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ec="http://ec.gob.sri.ws.autorizacion">
    <soapenv:Header/>
    <soapenv:Body>
@@ -748,7 +709,7 @@ def processAuthorization(doc_data,
 		if(response_json_auto_comprobantes.numeroComprobantes is not None and int(response_json_auto_comprobantes.numeroComprobantes) > 0):
 			#if( not response_json_auto_comprobantes.error is None and  'ya estaba autorizada' in response_json_auto_comprobantes.error):
 			
-			print ("correcto ya registrado previamente")
+			frappe.logger().info("correcto ya registrado previamente")
 			#Se simula que el proceso fue correcto para que los datos sean actualizados
 			response_auto.status_code = 200
 			response_ok = True
@@ -760,17 +721,17 @@ def processAuthorization(doc_data,
 
 		#evaluar estado de respuesta SRI
 		if(response_ok and int(response_json_auto_comprobantes['numeroComprobantes']) > 0):
-			print ("correcto")
+			frappe.logger().info("correcto")
 
-			print(response_json_auto_comprobantes)
+			frappe.logger().info(response_json_auto_comprobantes)
 
 			#proceder a actualizar datos del registro	
-			print(response_json_auto_comprobantes['claveAccesoConsultada'])
-			print(response_json_auto_comprobantes['numeroComprobantes'])
-			print(response_json_auto_comprobantes['autorizaciones']['autorizacion']['estado'])
+			frappe.logger().info(response_json_auto_comprobantes['claveAccesoConsultada'])
+			frappe.logger().info(response_json_auto_comprobantes['numeroComprobantes'])
+			frappe.logger().info(response_json_auto_comprobantes['autorizaciones']['autorizacion']['estado'])
 			#print(response_json_auto_comprobantes['claveAccesoConsultada'])
-			print(response_json_auto_comprobantes['autorizaciones']['autorizacion']['fechaAutorizacion'])
-			print(response_json_auto_comprobantes['autorizaciones']['autorizacion']['ambiente'])
+			frappe.logger().info(response_json_auto_comprobantes['autorizaciones']['autorizacion']['fechaAutorizacion'])
+			frappe.logger().info(response_json_auto_comprobantes['autorizaciones']['autorizacion']['ambiente'])
 
 			if(response_json_auto_comprobantes['autorizaciones']['autorizacion']['estado'] == "AUTORIZADO"):
 				#updateStatusDocument(doc_object_build, typeDocSri, response_json)
@@ -833,20 +794,20 @@ def send_doc_native(doc, typeDocSri, doctype_erpnext, siteName):
 		company_object = frappe.get_last_doc('Company', filters = { 'name': doc_data.company  })
 
 		if(company_object.use_simulation_mode):
-			print('SE USARA MODO DE SIMULACION')
+			frappe.logger().info('SE USARA MODO DE SIMULACION')
 			return BuildSimulationResponse()
 
 		sri_environment = frappe.get_last_doc('Sri Environment', filters = { 'id': doc_data.ambiente })
 
 		if (sri_environment):
 
-			print(sri_environment.name)
-			print(sri_environment.id)
+			frappe.logger().info(sri_environment.name)
+			frappe.logger().info(sri_environment.id)
 		
 		regional_settings_ec = frappe.get_last_doc('Regional Settings Ec', filters = { 'name': company_object.regional_settings_ec })
-		print(regional_settings_ec)
-		print('regional_settings_ec.signature_tool')
-		print(regional_settings_ec.signature_tool)
+		frappe.logger().info(regional_settings_ec)
+		frappe.logger().info('regional_settings_ec.signature_tool')
+		frappe.logger().info(regional_settings_ec.signature_tool)
 		if(regional_settings_ec):
 			if regional_settings_ec.use_external_service:
 				#Se utilizará el servicio externo
@@ -881,12 +842,12 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName, regional_setti
 		company_object = frappe.get_last_doc('Company', filters = { 'name': doc_data.company  })
 
 		if(company_object.use_simulation_mode):
-			print('SE USARA MODO DE SIMULACION')
+			frappe.logger().info('SE USARA MODO DE SIMULACION')
 			return BuildSimulationResponse()
 
 		sri_environment = frappe.get_last_doc('Sri Environment', filters = { 'id': doc_data.ambiente })
-		print(sri_environment.name)
-		print(sri_environment.id)
+		frappe.logger().info(sri_environment.name)
+		frappe.logger().info(sri_environment.id)
  
 		#sri_signatures = frappe.get_all('Sri Signature', filters={"tax_id": doc_data.tax_id}, fields = ['*'])
 		sri_signatures = frappe.get_all('Sri Signature', filters={"name": company_object.sri_signature}, fields = ['*'])
@@ -906,21 +867,31 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName, regional_setti
 		if(regional_settings_ec.signature_tool == "XadesSignerCmd"):
 			signed_xml = SriXmlData.sign_xml_cmd(SriXmlData, xml_string, sri_signatures[0])
 
-		print(xml_string)
+		#if(regional_settings_ec.signature_tool == "Python Native (With Fails)"):
+			#signed_xml = SriXmlData.sign_xml(SriXmlData, xml_string, doc_data, sri_signatures[0])
+			#signed_xml = SriXmlData.sign_xml_xades(SriXmlData, xml_string, sri_signatures[0])			
+		#	signed_xml =XadesToolV2.sign_xml(SriXmlData, xml_string, doc_data, sri_signatures[0])
+	
+		frappe.logger().info(xml_string)
 		
+		#signed_xml = build_xml_signed(xml_string, doc_data, signatureP12)
+		#signed_xml = SriXmlData.sign_xml_old(SriXmlData, xml_string, signatureP12)  		
+
+		#print(signed_xml)
+		#print(type(str(signed_xml)))
 		xml_bytes = signed_xml.encode()
 
 		base64_string = base64.b64encode(bytes(signed_xml,'utf-8')).decode('utf-8')
 		
 		response = validaComprobante(sri_environment, base64_string, server_timeout)
 
-		print('Numero de respuesta')
+		frappe.logger().info('Numero de respuesta')
 		
 		#print(response.text)
 		
 		response_valida_json_auto = xmltodict.parse(response.text)
 		
-		print(response_valida_json_auto)
+		frappe.logger().info(response_valida_json_auto)
 
 		#informacion_adicional = json_data['soap:Envelope']['soap:Body']['ns2:validarComprobanteResponse']['RespuestaRecepcionComprobante']['comprobantes']['comprobante']['mensajes']['mensaje']['informacionAdicional']
 		#estado = json_data['soap:Envelope']['soap:Body']['ns2:validarComprobanteResponse']['RespuestaRecepcionComprobante']['estado']
@@ -939,7 +910,7 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName, regional_setti
 			if (response_valida['comprobantes']['comprobante']['mensajes']['mensaje']['tipo'] == "ERROR"):
 				if (response_valida['comprobantes']['comprobante']['mensajes']['mensaje']['identificador'] == "43" or 
 					response_valida['comprobantes']['comprobante']['mensajes']['mensaje']['identificador'] == "65"):
-					print('PROBAR AUTORIZACION PORQUE PARECE YA AUTORIZADA')
+					frappe.logger().info('PROBAR AUTORIZACION PORQUE PARECE YA AUTORIZADA')
 					message_identificador = response_valida['comprobantes']['comprobante']['mensajes']['mensaje']['identificador']
 					message_text = response_valida['comprobantes']['comprobante']['mensajes']['mensaje']['mensaje']
 					
@@ -956,7 +927,7 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName, regional_setti
 					return response_auto
 
 				else:
-					print('ACTUALIZAR EL ESTADO DE DOCUMENTO l1')
+					frappe.logger().info('ACTUALIZAR EL ESTADO DE DOCUMENTO l1')
 					
 					response_xml_data_string = response.text
 
@@ -972,7 +943,7 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName, regional_setti
 				pass
 
 		if(response_valida['estado'] == 'ERROR'):
-			print('ACTUALIZAR EL ESTADO DE DOCUMENTO l2')
+			frappe.logger().info('ACTUALIZAR EL ESTADO DE DOCUMENTO l2')
 			#response['ok'] = False
 			response_valida['ok'] = False
 			return response_valida
@@ -980,7 +951,7 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName, regional_setti
 			#return response
 
 		if(response_valida['estado'] == 'RECIBIDA'):
-			print('ACTUALIZAR EL ESTADO DE DOCUMENTO l3')
+			frappe.logger().info('ACTUALIZAR EL ESTADO DE DOCUMENTO l3')
 		
 			#SE REQUIERE METODO PARA CREAR LA CLAVE DE ACCESO	
 
@@ -1024,7 +995,7 @@ def updateStatusDocument(doc, typeDocSri, response_json):
 
 				#fechaAutorizacion = parser.parse(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
 
-				print(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
+				frappe.logger().info(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
 
 				fecha_string = response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion				
 				#fecha_con_zona = datetime.strptime(fecha_string, "%Y-%m-%dT%H:%M:%S")
@@ -1035,23 +1006,11 @@ def updateStatusDocument(doc, typeDocSri, response_json):
 				# Eliminar la zona horaria
 				fechaAutorizacion = fecha_con_zona.replace(tzinfo=None)
 
-				#print(fechaAutorizacion)
-				#print(type(fechaAutorizacion))
-				#print(datetime.now())
-				#print(type(datetime.now()))
-
 				document_object.db_set('fechaautorizacion', fechaAutorizacion)
-				#document_object.db_set('fechaautorizacion', datetime.now())
-				
-				#NO ES NECESARIO EJECUTAR SAVE
-				#document_object.save(
-				#	ignore_permissions=True, # ignore write permissions during insert
-				#	ignore_version=True # do not create a version record
-				#)
 	
 	elif typeDocSri ==  "GRS":
 			
-			print(response_json)
+			frappe.logger().info(response_json)
 
 			document_object = frappe.get_last_doc('Delivery Note', filters = { 'name': doc.name })
 			if(document_object):				
@@ -1061,19 +1020,11 @@ def updateStatusDocument(doc, typeDocSri, response_json):
 				#document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
 
 				fechaAutorizacion = parser.parse(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
-				#fecha_con_zona = datetime.fromisoformat(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
-				# Eliminar la zona horaria
-				#fechaAutorizacion = fecha_con_zona.replace(tzinfo=None)
-
-				#print(fechaAutorizacion)
-				#print(type(fechaAutorizacion))
-				#print(datetime.now())
-				#print(type(datetime.now()))
 
 				document_object.db_set('fechaautorizacion', fechaAutorizacion)
 
 	elif typeDocSri ==  "CRE":
-			print(response_json)
+			frappe.logger().info(response_json)
 			document_object = frappe.get_last_doc('Purchase Withholding Sri Ec', filters = { 'name': doc.name })
 			if(document_object):				
 				document_object.db_set('numeroAutorizacion', response_json.data.autorizaciones.autorizacion[0].numeroAutorizacion)
@@ -1092,7 +1043,7 @@ def updateStatusDocument(doc, typeDocSri, response_json):
 				#TODO: Corregir
 				document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
 
-				print(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
+				frappe.logger().info(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
 
 				fecha_string = response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion				
 				fecha_con_zona = parser.parse(fecha_string)
@@ -1108,7 +1059,7 @@ def updateStatusDocument(doc, typeDocSri, response_json):
 				document_object.db_set('sri_response', response_json.data.autorizaciones.autorizacion[0].estado)
 				
 				document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
-				print(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
+				frappe.logger().info(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
 
 				fecha_string = response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion				
 				fecha_con_zona = parser.parse(fecha_string)
@@ -1123,7 +1074,7 @@ def registerResponse_native(doc, typeDocSri, doctype_erpnext, response_json, res
 
 	#Si es que tiene items de autorizaciones
 	if('autorizaciones' in response_json):
-		print(response_json['autorizaciones'])
+		frappe.logger().info(response_json['autorizaciones'])
 		sri_status = response_json['autorizaciones']['autorizacion']['estado']
 
 	if('estado' in response_json):
@@ -1152,27 +1103,14 @@ def updateStatusDocument_native(doc, typeDocSri, response_json):
 				#TODO: Corregir
 				document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
 
-				#fechaAutorizacion = parser.parse(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
-
-				print(response_json['autorizaciones']['autorizacion']['fechaAutorizacion'])
+				frappe.logger().info(response_json['autorizaciones']['autorizacion']['fechaAutorizacion'])
 
 				fecha_string = response_json['autorizaciones']['autorizacion']['fechaAutorizacion']				
-				#fecha_con_zona = datetime.strptime(fecha_string, "%Y-%m-%dT%H:%M:%S")
 				fecha_con_zona = parser.parse(fecha_string)
 
-				#datetime.fromisoformat NO COMPATIBLE CON PYTHON 3.6
-				#fecha_con_zona = datetime.fromisoformat(response_json.data.autorizaciones.autorizacion[0].fechaAutorizacion)
-				# Eliminar la zona horaria
 				fechaAutorizacion = fecha_con_zona.replace(tzinfo=None)
 
 				document_object.db_set('fechaautorizacion', fechaAutorizacion)
-				#document_object.db_set('fechaautorizacion', datetime.now())
-				
-				#NO ES NECESARIO EJECUTAR SAVE
-				#document_object.save(
-				#	ignore_permissions=True, # ignore write permissions during insert
-				#	ignore_version=True # do not create a version record
-				#)
 	
 	elif typeDocSri ==  "GRS":			
 			#print(response_json)
@@ -1191,7 +1129,7 @@ def updateStatusDocument_native(doc, typeDocSri, response_json):
 
 
 	elif typeDocSri ==  "CRE":
-			print(response_json)
+			frappe.logger().info(response_json)
 			document_object = frappe.get_last_doc('Purchase Withholding Sri Ec', filters = { 'name': doc.name })
 			if(document_object):
 				document_object.db_set('numeroAutorizacion', response_json['autorizaciones']['autorizacion']['numeroAutorizacion'])
@@ -1212,7 +1150,7 @@ def updateStatusDocument_native(doc, typeDocSri, response_json):
 				#TODO: Corregir
 				document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
 
-				print(response_json['autorizaciones']['autorizacion']['fechaAutorizacion'])
+				frappe.logger().info(response_json['autorizaciones']['autorizacion']['fechaAutorizacion'])
 
 				fecha_string = response_json['autorizaciones']['autorizacion']['fechaAutorizacion']				
 				fecha_con_zona = parser.parse(fecha_string)
@@ -1229,7 +1167,7 @@ def updateStatusDocument_native(doc, typeDocSri, response_json):
 				#TODO: Corregir
 				document_object.db_set('docidsri', doc.estab + "-" + doc.ptoemi + "-" + '{:09d}'.format(doc.secuencial) )
 
-				print(response_json['autorizaciones']['autorizacion']['fechaAutorizacion'])
+				frappe.logger().info(response_json['autorizaciones']['autorizacion']['fechaAutorizacion'])
 
 				fecha_string = response_json['autorizaciones']['autorizacion']['fechaAutorizacion']				
 				fecha_con_zona = parser.parse(fecha_string)
