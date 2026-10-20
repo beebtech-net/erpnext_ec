@@ -40,4 +40,4 @@ indent = "\t"
 # package_name = "~=1.1.0"
 
 [tool.bench.frappe-dependencies]
-frappe = ">=12.0.0,<16.51.1"
+frappe = ">=15.40.4,<16.0.0"
