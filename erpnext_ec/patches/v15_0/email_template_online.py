@@ -3,6 +3,7 @@ from frappe import __version__ as frappe_version
 import frappe
 import json
 import os
+from erpnext_ec.utilities.secure_reader import read_file_in_app
 
 def execute():
 	
@@ -44,9 +45,7 @@ def execute():
     
 	for script_item in script_list:
 		print (script_item)
-		with open(dir_path + "/../../public/jinja/" + script_item['source_path']) as f:			
-			data = f.read()
-			#data = data.replace('[DOCTYPE_CUSTOM_FORM_SRI]',script_item['doc_type'])
+		data = read_file_in_app("erpnext_ec", "public", "jinja", script_item["source_path"])
 		create_email_template(script_item, data)
 
 def create_email_template(doc_data, template_content):
