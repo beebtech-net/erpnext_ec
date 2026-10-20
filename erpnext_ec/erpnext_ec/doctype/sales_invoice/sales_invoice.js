@@ -1,7 +1,7 @@
 frappe.ui.form.on('Sales Invoice', {
     setup: function(frm) {        
         console.log('Setup!!!');
-        cur_frm.fields_dict['taxes'].grid.get_field("codigoRetencion").get_query = function(doc, cdt, cdn) 
+        frm.fields_dict['taxes'].grid.get_field("codigoRetencion").get_query = function(doc, cdt, cdn) 
     		{
     			return {                    
     				filters: {
@@ -30,7 +30,6 @@ frappe.ui.form.on('Sales Invoice', {
     },
     
 })
-
 
 frappe.ui.form.on("Purchase Taxes and Charges Ec", "codDocSustentoLink", function(frm, cdt, cdn) {     
      
