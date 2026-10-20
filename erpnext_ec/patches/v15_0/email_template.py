@@ -3,6 +3,7 @@ from frappe import __version__ as frappe_version
 import frappe
 import json
 import os
+from erpnext_ec.utilities.secure_reader import read_file_in_app
 
 def execute():	
 	cwd = os.getcwd()
@@ -62,17 +63,10 @@ def execute():
     
 	for script_item in script_list:
 		print (script_item)
-		app_root = os.path.realpath(frappe.get_app_path("erpnext_ec"))
-
-		requested_path = os.path.realpath(
-            frappe.get_app_path("erpnext_ec", "public", "jinja", script_item["source_path"])
-        )
-        		
-		if not requested_path.startswith(app_root + os.sep):
-			frappe.throw(f"Security Error: The Path provided is not safe: {script_item['source_path']}")
+		data = read_file_in_app("erpnext_ec", "public", "jinja", script_item["source_path"])
 			
-		with open(requested_path) as f:	# nosec
-			data = f.read()
+		#with open(requested_path) as f:	# nosec
+		#data = f.read()
 			#data = data.replace('[DOCTYPE_CUSTOM_FORM_SRI]',script_item['doc_type'])
 		create_email_template(script_item, data)
 
