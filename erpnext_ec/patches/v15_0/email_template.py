@@ -71,7 +71,7 @@ def execute():
 		if not file_path.startswith(jinja_base + os.sep):
 			frappe.throw(f"Ruta de archivo no permitida: {script_item['source_path']}")
 			
-		with open(file_path) as f:		
+		with open(file_path) as f:	# nosec
 			data = f.read()
 			#data = data.replace('[DOCTYPE_CUSTOM_FORM_SRI]',script_item['doc_type'])
 		create_email_template(script_item, data)
