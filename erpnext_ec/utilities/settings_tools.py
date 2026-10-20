@@ -218,8 +218,6 @@ def load_sri_sequences(company):
 			})
 
 			doc.insert()
-	
-	frappe.db.commit()
 
 	pass
 

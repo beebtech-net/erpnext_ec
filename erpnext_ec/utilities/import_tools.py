@@ -48,8 +48,6 @@ def evaluate_supplier(create_if_not_exists, tax_id, supplier_name, nombreComerci
         })
 
         new_data.insert()
-        frappe.db.commit()
-
 
 def evaluate_item(create_if_not_exists, item_code, item_name, item_group, item_brand, item_description, item_standard_rate):
     frappe.logger().info('Buscar productos')
@@ -72,7 +70,6 @@ def evaluate_item(create_if_not_exists, item_code, item_name, item_group, item_b
         })
 
         new_data.insert()
-        frappe.db.commit()
 
 
 def evaluate_brand(create_if_not_exists, name_for_search):
@@ -90,8 +87,6 @@ def evaluate_brand(create_if_not_exists, name_for_search):
         })
 
         new_data.insert()
-        frappe.db.commit()
-
 
 def evaluate_product_group(create_if_not_exists, name_for_search):
     found_data = frappe.get_all('Item Group', filters={"name": name_for_search})
@@ -111,8 +106,6 @@ def evaluate_product_group(create_if_not_exists, name_for_search):
         })
 
         new_data.insert()
-        frappe.db.commit()
-
 
 def search_account_tax(create_if_not_exists, codigo, codigoPorcentaje, tarifa):
     found_data_taxes_template = frappe.get_all('Purchase Taxes and Charges Template', fields=['*'])

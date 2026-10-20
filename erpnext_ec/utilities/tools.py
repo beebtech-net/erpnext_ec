@@ -208,7 +208,3 @@ def create_notification_log(user, subject, body):
     
     # Guardar el documento en la base de datos
     notification_log.insert(ignore_permissions=True)
-    
-    # Confirmar los cambios
-    frappe.db.commit()
-

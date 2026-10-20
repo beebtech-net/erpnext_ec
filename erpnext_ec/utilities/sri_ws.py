@@ -981,8 +981,7 @@ def registerResponse(doc, typeDocSri, doctype_erpnext, response_json, response_j
 				})
 
 	xml_response_new.insert()
-	frappe.db.commit()
-
+	
 def updateStatusDocument(doc, typeDocSri, response_json):
 	if typeDocSri ==  "FAC":
 			document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name })
@@ -1091,8 +1090,7 @@ def registerResponse_native(doc, typeDocSri, doctype_erpnext, response_json, res
 				})
 
 	xml_response_new.insert()
-	frappe.db.commit()
-
+	
 def updateStatusDocument_native(doc, typeDocSri, response_json):
 	if typeDocSri ==  "FAC":
 			document_object = frappe.get_last_doc('Sales Invoice', filters = { 'name': doc.name })
