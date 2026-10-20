@@ -4,12 +4,9 @@ import frappe
 import json
 import os
 
-def execute():
-	
+def execute():	
 	cwd = os.getcwd()
-	dir_path = os.path.dirname(os.path.realpath(__file__))
-	jinja_base = os.path.realpath(os.path.join(dir_path, "../../public/jinja"))
-
+	
 	script_list = [
             {
                   "doc_type" : "Sales Invoice",
@@ -65,13 +62,16 @@ def execute():
     
 	for script_item in script_list:
 		print (script_item)
-		file_path = os.path.realpath(os.path.join(jinja_base, script_item["source_path"]))
+		app_root = os.path.realpath(frappe.get_app_path("erpnext_ec"))
 
-		# Verificación explícita de path traversal
-		if not file_path.startswith(jinja_base + os.sep):
-			frappe.throw(f"Ruta de archivo no permitida: {script_item['source_path']}")
+		requested_path = os.path.realpath(
+            frappe.get_app_path("erpnext_ec", "public", "jinja", script_item["source_path"])
+        )
+        		
+		if not requested_path.startswith(app_root + os.sep):
+			frappe.throw(f"Security Error: The Path provided is not safe: {script_item['source_path']}")
 			
-		with open(file_path) as f:	# nosec
+		with open(requested_path) as f:	# nosec
 			data = f.read()
 			#data = data.replace('[DOCTYPE_CUSTOM_FORM_SRI]',script_item['doc_type'])
 		create_email_template(script_item, data)
