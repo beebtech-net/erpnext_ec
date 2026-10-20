@@ -1,42 +1,38 @@
-//Prepare in list mode
-//NO USAR AQUI
-//SetListSriButtons('Purchase Withholding Sri Ec');
-
-function refreshPurchaseInvoicesFilter()
+function refreshPurchaseInvoicesFilter(frm)
 {    
-    var purchase_withholding_supplier = cur_frm.doc.purchase_withholding_supplier;
+    var purchase_withholding_supplier = frm.doc.purchase_withholding_supplier;
     if(purchase_withholding_supplier.length == 0)
     {
         purchase_withholding_supplier = '--------';
     }
 
-    //cur_frm.fields_dict['taxes'].grid.update_docfield_property(
+    //frm.fields_dict['taxes'].grid.update_docfield_property(
     //    "numDocSustentoLink","value", "");
     
-    for(i=0;i<cur_frm.fields_dict['taxes'].grid.grid_rows.length;i++)
+    for(i=0;i<frm.fields_dict['taxes'].grid.grid_rows.length;i++)
     {        
-        cur_frm.fields_dict['taxes'].grid.get_grid_row(i).doc.numDocSustentoLink='';
+        frm.fields_dict['taxes'].grid.get_grid_row(i).doc.numDocSustentoLink='';
 
-        cur_frm.fields_dict['taxes'].grid.get_grid_row(i).doc.baseImponible=0;
-        cur_frm.fields_dict['taxes'].grid.get_grid_row(i).doc.porcentajeRetener=0;
-        cur_frm.fields_dict['taxes'].grid.get_grid_row(i).doc.valorRetenido=0;
+        frm.fields_dict['taxes'].grid.get_grid_row(i).doc.baseImponible=0;
+        frm.fields_dict['taxes'].grid.get_grid_row(i).doc.porcentajeRetener=0;
+        frm.fields_dict['taxes'].grid.get_grid_row(i).doc.valorRetenido=0;
 
-        cur_frm.fields_dict['taxes'].grid.get_grid_row(i).refresh();
+        frm.fields_dict['taxes'].grid.get_grid_row(i).refresh();
     }
 
-    cur_frm.fields_dict['taxes'].grid.update_docfield_property(
+    frm.fields_dict['taxes'].grid.update_docfield_property(
         "numDocSustentoLink","filters", {
             "supplier": purchase_withholding_supplier
             }); 
 }
 
-function setPurchaseInvoicesFilter()
+function setPurchaseInvoicesFilter(frm)
 {
     console.log('SHOW');
     
-    //console.log(cur_frm.fields_dict);
+    //console.log(frm.fields_dict);
 
-    var purchase_withholding_supplier = cur_frm.doc.purchase_withholding_supplier;
+    var purchase_withholding_supplier = frm.doc.purchase_withholding_supplier;
     if(purchase_withholding_supplier.length == 0)
     {
         purchase_withholding_supplier = '44566%^78iu';
@@ -44,7 +40,7 @@ function setPurchaseInvoicesFilter()
 
     console.log(purchase_withholding_supplier);
 
-    cur_frm.fields_dict['taxes'].grid.get_field("numDocSustentoLink").get_query = function(doc, cdt, cdn) 
+    frm.fields_dict['taxes'].grid.get_field("numDocSustentoLink").get_query = function(doc, cdt, cdn) 
         {
             return {
                 filters: {
@@ -59,12 +55,12 @@ frappe.ui.form.on('Purchase Withholding Sri Ec',
 {
     setup: async function(frm) 
     {
-        //console.log(cur_frm);
+        //console.log(frm);
 
         /*******************************/
         /* FILTRO PARA CAMPO */
         /*
-        cur_frm.set_query("codigoRetencion", function() {
+        frm.set_query("codigoRetencion", function() {
             return {
                 filters: 
                 {
@@ -79,14 +75,14 @@ frappe.ui.form.on('Purchase Withholding Sri Ec',
         
         //frm.fields_dict.pos_search_fields.grid.update_docfield_property('field', 'options', fields);
 
-        //cur_frm.fields_dict['taxes'].grid.update_docfield_property("codigoRetencion", "search_fields","sricode, account_name");
-        //console.log(cur_frm.fields_dict['taxes'].grid);
-        //cur_frm.refresh_field('taxes');
+        //frm.fields_dict['taxes'].grid.update_docfield_property("codigoRetencion", "search_fields","sricode, account_name");
+        //console.log(frm.fields_dict['taxes'].grid);
+        //frm.refresh_field('taxes');
 
-        //cur_frm.fields_dict['taxes'].grid.get_field("codigoRetencion").search_fields = "sricode, account_name";        
+        //frm.fields_dict['taxes'].grid.get_field("codigoRetencion").search_fields = "sricode, account_name";        
         
-        //cur_frm funciona por defecto [!]
-        cur_frm.fields_dict['taxes'].grid.get_field("codigoRetencion").get_query = function(doc, cdt, cdn) 
+        //frm funciona por defecto [!]
+        frm.fields_dict['taxes'].grid.get_field("codigoRetencion").get_query = function(doc, cdt, cdn) 
         {
             return {
                 filters: {
@@ -95,7 +91,7 @@ frappe.ui.form.on('Purchase Withholding Sri Ec',
             }
         }
 
-        setPurchaseInvoicesFilter();
+        setPurchaseInvoicesFilter(frm);
         
         if(frm.doc.status == 'Draft')
         {
@@ -156,7 +152,7 @@ frappe.ui.form.on('Purchase Withholding Sri Ec',
 		});
 
         //setPurchaseInvoicesFilter();
-        refreshPurchaseInvoicesFilter();
+        refreshPurchaseInvoicesFilter(frm);
 	},
 	estab: function(frm)
 	{
@@ -167,12 +163,12 @@ frappe.ui.form.on('Purchase Withholding Sri Ec',
         setTimeout(
             async function () 
             {
-                $(cur_frm.fields_dict.periodoFiscal.$input).monthpicker({
+                $(frm.fields_dict.periodoFiscal.$input).monthpicker({
                     changeYear:true,
                     defaultDate: null
                 });
                     
-                $(cur_frm.fields_dict.periodoFiscal.$input).val(moment().format('MM/YYYY'));
+                $(frm.fields_dict.periodoFiscal.$input).val(moment().format('MM/YYYY'));
 
                 // var user_setings = {"updated_on":"Fri+May+24+2024+15:36:47+GMT-0500","GridView":{"Purchase+Taxes+and+Charges+Ec":[{"fieldname":"codDocSustentoLink","columns":1},{"fieldname":"numDocSustentoLink","columns":1},{"fieldname":"fechaEmisionDocSustento","columns":1},{"fieldname":"codigoRetencion","columns":1},{"fieldname":"baseImponible","columns":2},{"fieldname":"porcentajeRetener","columns":2},{"fieldname":"valorRetenido","columns":2}]}};
 
@@ -206,15 +202,15 @@ frappe.ui.form.on('Purchase Withholding Sri Ec',
         //    frappe.datetime.monthpicker(this);
         //});
 
-        //cur_frm.fields_dict.periodoFiscal.$input.on('focus', function() {
+        //frm.fields_dict.periodoFiscal.$input.on('focus', function() {
             // Abre un selector de fecha personalizado con solo mes y año
         //    frappe.datetime.monthpicker(this);
         //});
 
-        //$(cur_frm.fields_dict.periodoFiscal.$input).monthpicker({changeYear:true, minDate: "-3 M", maxDate: "+2 Y" });
+        //$(frm.fields_dict.periodoFiscal.$input).monthpicker({changeYear:true, minDate: "-3 M", maxDate: "+2 Y" });
         
         /*
-        cur_frm.fields_dict.periodoFiscal.$input.datepicker({ 
+        frm.fields_dict.periodoFiscal.$input.datepicker({ 
             changeMonth: true,
             changeYear: true,            
             showButtonPanel: false,
@@ -239,11 +235,11 @@ frappe.ui.form.on('Purchase Withholding Sri Ec',
         });
         */
        /*
-        $(cur_frm.fields_dict.periodoFiscal.$input).find('[data-action="month"]').click(() => {
+        $(frm.fields_dict.periodoFiscal.$input).find('[data-action="month"]').click(() => {
 			this.datepicker.selectDate(this.get_now_date());
 		});
         */
-        //cur_frm.fields_dict.anio_fiscal.$input.datepicker({ 
+        //frm.fields_dict.anio_fiscal.$input.datepicker({ 
         //    changeMonth: true,
         //    changeYear: true,            
         //    showButtonPanel: false,
@@ -251,9 +247,9 @@ frappe.ui.form.on('Purchase Withholding Sri Ec',
         //   dateFormat: 'dd-mm-yyyy',
         //});
 
-        //$(cur_frm.fields_dict.periodoFiscal.$input).datepicker("widget").find(".ui-datepicker-current").hide();
-        //$(cur_frm.fields_dict.periodoFiscal).find('.datepicker--buttons').attr('style','display: none;');
-        //$(cur_frm.fields_dict.periodoFiscal.$input).find('.datepicker--days').attr('style','display: none;');
+        //$(frm.fields_dict.periodoFiscal.$input).datepicker("widget").find(".ui-datepicker-current").hide();
+        //$(frm.fields_dict.periodoFiscal).find('.datepicker--buttons').attr('style','display: none;');
+        //$(frm.fields_dict.periodoFiscal.$input).find('.datepicker--days').attr('style','display: none;');
     },
     periodoFiscal: function(frm)
     {
