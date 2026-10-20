@@ -1,28 +1,9 @@
 import json
 from types import SimpleNamespace
-from lxml import etree
-from xml.etree.ElementTree import Element, SubElement, tostring
-from datetime import datetime
-from suds import WebFault
-from suds.client import Client
-from pprint import pformat
-from OpenSSL import crypto
-from random import randrange
-
-import xmlsig
-from xades import template, XAdESContext
-from xades.policy import GenericPolicyId, ImpliedPolicy
 import frappe
 from frappe import _
 
 from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.serialization import pkcs12
-from cryptography.hazmat.primitives.serialization.pkcs12 import load_key_and_certificates
-from cryptography import x509 as x509_crypt
-from cryptography.hazmat.backends import default_backend
-
-from requests import Session
-import base64
 
 import subprocess
 import os

@@ -16,7 +16,6 @@ import requests
 #from erpnext_ec.utilities.encryption import *
 from erpnext_ec.utilities.signature_tool import *
 from erpnext_ec.utilities.xml_builder import *
-#from erpnext_ec.utilities.xades_tool_v2 import *
 
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -44,7 +43,7 @@ from email.mime.text import MIMEText
 from suds import WebFault
 from suds.client import Client
 
-from erpnext_ec.utils.secure_reader import read_file_in_site
+from erpnext_ec.utilities.secure_reader import read_file_in_site
 
 @frappe.whitelist()
 def test_signature(signature_doc):
@@ -178,7 +177,7 @@ def add_email_quote(doc_name, recipients, msg, title, typeDocSri, doctype_erpnex
 
 	#print(template)
 
-	msg_template = frappe.render_template(template, { "doc": doc_data }) 
+	msg_template = frappe.render_template(template, { "doc": doc_data })  # nosemgrep Esto es información confiable
 	
 	frappe.logger().info(msg_template)
 
@@ -860,25 +859,13 @@ def send_doc_internal(doc, typeDocSri, doctype_erpnext, siteName, regional_setti
 
 		xml_string = build_xml_data(doc_data, doc_data.name, typeDocSri, siteName)
 
-		#print('regional_settings_ec.signature_tool')
-		#print(regional_settings_ec.signature_tool)
-
 		#Se firma el documento con la aplicacion externa XadesSignerCmd
 		if(regional_settings_ec.signature_tool == "XadesSignerCmd"):
 			signed_xml = SriXmlData.sign_xml_cmd(SriXmlData, xml_string, sri_signatures[0])
 
-		#if(regional_settings_ec.signature_tool == "Python Native (With Fails)"):
-			#signed_xml = SriXmlData.sign_xml(SriXmlData, xml_string, doc_data, sri_signatures[0])
-			#signed_xml = SriXmlData.sign_xml_xades(SriXmlData, xml_string, sri_signatures[0])			
-		#	signed_xml =XadesToolV2.sign_xml(SriXmlData, xml_string, doc_data, sri_signatures[0])
 	
-		frappe.logger().info(xml_string)
-		
-		#signed_xml = build_xml_signed(xml_string, doc_data, signatureP12)
-		#signed_xml = SriXmlData.sign_xml_old(SriXmlData, xml_string, signatureP12)  		
+		frappe.logger().info(xml_string)			
 
-		#print(signed_xml)
-		#print(type(str(signed_xml)))
 		xml_bytes = signed_xml.encode()
 
 		base64_string = base64.b64encode(bytes(signed_xml,'utf-8')).decode('utf-8')
