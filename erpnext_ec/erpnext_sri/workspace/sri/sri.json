@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"zGVrPDbnHn\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Sri</span>\",\"col\":12}},{\"id\":\"jUYKLjvGRZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Retenciones\",\"col\":3}},{\"id\":\"MtTIC-F4iI\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Secuencias\",\"col\":3}},{\"id\":\"UAo3z71NbA\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Firmas Electr\u00f3nicas\",\"col\":3}}]",
+ "content": "[{\"id\":\"zGVrPDbnHn\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Sri</span>\",\"col\":12}},{\"id\":\"jUYKLjvGRZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Retenciones\",\"col\":3}},{\"id\":\"UAo3z71NbA\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Firmas Electr\u00f3nicas\",\"col\":3}},{\"id\":\"KC3T4j2Vsb\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Ambientes SRI\",\"col\":3}},{\"id\":\"ZHOkUbfuWK\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Establecimiento SRI\",\"col\":3}},{\"id\":\"mER-dai5P8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Tipo Documento SRI\",\"col\":3}}]",
  "creation": "2024-01-26 11:24:07.707685",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "Sri",
  "links": [],
- "modified": "2024-01-29 08:42:33.540814",
+ "modified": "2026-10-21 16:22:29.263979",
  "modified_by": "Administrator",
  "module": "Erpnext Sri",
  "name": "Sri",
@@ -28,6 +28,30 @@
   {
    "color": "Grey",
    "doc_view": "List",
+   "label": "Ambientes SRI",
+   "link_to": "Sri Environment",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "label": "Establecimiento SRI",
+   "link_to": "Sri Establishment",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Pink",
+   "doc_view": "List",
+   "label": "Tipo Documento SRI",
+   "link_to": "Sri Type Doc",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
    "label": "Firmas Electr\u00f3nicas",
    "link_to": "Sri Signature",
    "type": "DocType"
@@ -38,13 +62,6 @@
    "label": "Retenciones",
    "link_to": "Purchase Withholding Sri Ec",
    "stats_filter": "[]",
-   "type": "DocType"
-  },
-  {
-   "color": "Grey",
-   "doc_view": "List",
-   "label": "Secuencias",
-   "link_to": "Sri Sequence",
    "type": "DocType"
   }
  ],
