@@ -5,12 +5,14 @@ import json
 import os
 
 COMPANY_SUPPLIER_FIELD = "sri_electronic_documents_supplier"
+DEFAULT_SUPPLIER_GROUP = "All Supplier Groups"  # ajusta si tu sitio usa otro nombre
+
 
 def execute():
     supplier_list = [
         {
             "supplier_name": "Raul Borbor",
-            "supplier_group": "Servicios",
+            "supplier_group": ["Servicios", "Services"],
             "supplier_type": "Company",
             "tax_id": "0915885404001",
             "es_proveedor_servicios_documentos_electronicos_sri": 1,
@@ -82,13 +84,21 @@ def create_supplier(supplier_data):
         return existing_supplier
 
     # Validar que exista el grupo de proveedores.
-    supplier_group = supplier_data["supplier_group"]
+    raw = supplier_data["supplier_group"]
+    candidatos = raw if isinstance(raw, (list, tuple)) else [raw]
 
-    if not frappe.db.exists("Supplier Group", supplier_group):
-        frappe.throw(
-            "No existe el grupo de proveedores: "
-            + supplier_group
+    supplier_group = next(
+        (g for g in candidatos if g and frappe.db.exists("Supplier Group", g)),
+        None,
+    )
+
+    if not supplier_group:
+        frappe.log_error(
+            message=", ".join(str(c) for c in candidatos),
+            title="Grupo de proveedores no encontrado: " + supplier_name,
         )
+        # Fallback para no romper la inserción si el campo es obligatorio.
+        supplier_group = DEFAULT_SUPPLIER_GROUP
 
     supplier_doc = frappe.get_doc({
         "doctype": "Supplier",
@@ -108,6 +118,7 @@ def create_supplier(supplier_data):
     print("Instalado Supplier: " + supplier_doc.name)
 
     return supplier_doc.name
+
 
 def assign_supplier_to_companies(supplier_name):
     # Verificar que el campo personalizado exista.
