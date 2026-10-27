@@ -84,7 +84,7 @@ def create_supplier(supplier_data):
         return existing_supplier
 
     # Validar que exista el grupo de proveedores.
-        raw = supplier_data["supplier_group"]
+    raw = supplier_data["supplier_group"]
     candidatos = raw if isinstance(raw, (list, tuple)) else [raw]
     candidatos = [str(c).strip() for c in candidatos if c]
 
