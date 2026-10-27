@@ -84,21 +84,34 @@ def create_supplier(supplier_data):
         return existing_supplier
 
     # Validar que exista el grupo de proveedores.
-    raw = supplier_data["supplier_group"]
+        raw = supplier_data["supplier_group"]
     candidatos = raw if isinstance(raw, (list, tuple)) else [raw]
+    candidatos = [str(c).strip() for c in candidatos if c]
 
-    supplier_group = next(
-        (g for g in candidatos if g and frappe.db.exists("Supplier Group", g)),
-        None,
-    )
+    supplier_group = None
+    for g in candidatos:
+        supplier_group = frappe.db.get_value(
+            "Supplier Group", {"name": g}, "name"
+        ) or frappe.db.get_value(
+            "Supplier Group", {"supplier_group_name": g}, "name"
+        )
+        if supplier_group:
+            break
 
     if not supplier_group:
         frappe.log_error(
-            message=", ".join(str(c) for c in candidatos),
+            message="Candidatos: " + ", ".join(candidatos),
             title="Grupo de proveedores no encontrado: " + supplier_name,
         )
-        # Fallback para no romper la inserción si el campo es obligatorio.
-        supplier_group = DEFAULT_SUPPLIER_GROUP
+        supplier_group = frappe.db.get_value(
+            "Supplier Group", {"is_group": 1, "parent_supplier_group": ""}, "name"
+        ) or frappe.db.get_value("Supplier Group", {"is_group": 1}, "name")
+
+    if not supplier_group:
+        frappe.throw(
+            "No hay ningún Supplier Group válido en el sitio. "
+            "Crea al menos uno antes de ejecutar esto."
+        )
 
     supplier_doc = frappe.get_doc({
         "doctype": "Supplier",
