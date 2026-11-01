@@ -1,0 +1,12 @@
+/* Solo la columna que contiene el botón "Enviar al SRI" */
+.list-row-col:has(> .btn-action[data-name]) {
+    padding-right: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Solo la columna del dropdown */
+.list-row-col.inner-group-button[data-name] {
+
+    padding-left: 0 !important;
+    margin-left: 0px !important;
+}

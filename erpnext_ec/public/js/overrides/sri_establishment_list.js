@@ -67,7 +67,7 @@ async function SriEstablishmentBuild (listview) {
 
 frappe.listview_settings['Sri Establishment'] = {
    refresh: function(listview) {
-       listview.page.add_inner_button('<i class="fa fa-file"></i> Crear datos', function() {
+       listview.page.add_inner_button('🏦 Crear datos', function() {
            SriEstablishmentBuild(listview);
        });;
    },

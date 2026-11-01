@@ -51,7 +51,7 @@ function AccountSriBuild(listview) {
 
 frappe.listview_settings['Account'] = {
     onload: function (listview) {
-		var buttonObj = listview.page.add_inner_button('<i class="fa fa-file"></i> Crear datos SRI', function() {
+		var buttonObj = listview.page.add_inner_button('📑 Crear datos SRI', function() {
             AccountSriBuild(listview);
            });
         

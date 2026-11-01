@@ -35,6 +35,7 @@ app_include_css = [
     "/assets/erpnext_ec/js/libs/jsonTree/jsonTree.css",
     "/assets/erpnext_ec/js/libs/monthpicker/qunit.min.css",
     "/assets/erpnext_ec/js/libs/monthpicker/jquery-ui.css",
+    "/assets/erpnext_ec/css/custom.bundle.css",
 ]
 
 # include js, css files in header of web template

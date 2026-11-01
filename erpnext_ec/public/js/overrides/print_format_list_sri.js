@@ -95,11 +95,11 @@ function PrintFormatSriBuildOnline(listview) {
 
 frappe.listview_settings['Print Format'] = {
    refresh: function(listview) {
-       listview.page.add_inner_button('<i class="fa fa-file"></i> Crear Formatos SRI', function() {
+       listview.page.add_inner_button('📃 Crear Formatos SRI', function() {
            PrintFormatSriBuild(listview);
        });
 
-       listview.page.add_inner_button('<i class="fa fa-file"></i> Formatos SRI Online', function() {
+       listview.page.add_inner_button('☁ Formatos SRI Online', function() {
             PrintFormatSriBuildOnline(listview);
         });
    },

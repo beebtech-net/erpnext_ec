@@ -2,23 +2,31 @@ var doctype_customized = "Delivery Note";
 
 frappe.listview_settings[doctype_customized] = frappe.listview_settings[doctype_customized] || {};
 
-frappe.listview_settings[doctype_customized].button = {
-    show(doc) {
-
-        if (doc.status == 'Cancelled' || doc.status == 'Draft') {
-            return false;
-        }
-
-        SetupCustomButtons(doc, doctype_customized);
-        return true;
+frappe.listview_settings[doctype_customized]  = {
+    add_fields: ['numeroautorizacion', 'sri_estado', 'status'],
+button : {
+    show(doc) {        
+        return doc.status !== 'Cancelled' && doc.status !== 'Draft';
     },
-    get_label() 
+    get_label(doc) 
     {
-        return __('<i class="fa fa-play"></i>');
+        //console.log('get_label called for doc:', doc);
+        const d = doc;
+        if (!d) return frappe.utils.icon('play', 'sm');
+        const autorizado = d.numeroautorizacion && d.numeroautorizacion !== '0' && d.sri_estado == 200;
+        return autorizado
+            ? frappe.utils.icon('send', 'sm')
+            : frappe.utils.icon('play', 'sm');
     },
     get_description(doc) 
     {
-        return __('Enviar al SRI')
+        const d = doc;
+        if (!d) return frappe.utils.icon('play', 'sm');
+        const autorizado = d.numeroautorizacion && d.numeroautorizacion !== '0' && d.sri_estado == 200;
+
+        return autorizado
+            ? 'Enviar email'
+            : 'Enviar al SRI';
     },
     action(doc) 
     {
@@ -31,4 +39,40 @@ frappe.listview_settings[doctype_customized].button = {
             }, 3);
         }        
     }
+},
+
+dropdown_button: {
+        get_label: __('⬇'),
+        buttons: [
+            {
+                get_label: frappe.utils.icon('code', 'sm') + __(' Descargar XML'),
+                show: function(doc) { return true; },
+                action: function(doc) {
+                    document.Website.DownloadXml_v2(doc.name);
+                }
+            },
+            {
+                get_label: __('📄 Descargar PDF'),
+                show: function(doc) { return true; },
+                action: function(doc) {
+                    document.Website.DownloadPdf_v2(doc.name);
+                }
+            },
+            {
+                get_label: __('ⓘ Ver información'),
+                show: function(doc) { return true; },
+                action: function(doc) {
+                    document.Website.ShowInfo(doc.name);
+                }
+            },
+            {
+                get_label: __('✍ XML Signed'),
+                show: function(doc) { return true; }, // Puedes añadir condiciones aquí para controlar la visualización
+                action: function(doc) {
+                    document.Website.DownloadXmlSigned(doc.name);
+                }
+            }
+        ]
+    }
+
 }

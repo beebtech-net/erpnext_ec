@@ -51,7 +51,7 @@ function EmailTemplateSriBuild(listview) {
 
 frappe.listview_settings['Email Template'] = {
    refresh: function(listview) {
-       listview.page.add_inner_button('<i class="fa fa-file"></i> Crear Formatos SRI', function() {
+       listview.page.add_inner_button('📑 Crear Formatos SRI', function() {
            EmailTemplateSriBuild(listview);
        });;
    },

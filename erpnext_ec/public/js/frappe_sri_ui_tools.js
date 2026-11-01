@@ -1,4 +1,4 @@
-function PrepareDocumentForSendV2(doc, DocTypeErpNext)
+function PrepareDocumentForSend(doc, DocTypeErpNext)
 {
 	switch(DocTypeErpNext)
 	{
@@ -63,8 +63,8 @@ function SetupCustomButtons(doc, DocTypeErpNext)
 
             $(actionButton).click(function (e) {
                 e.preventDefault();
-                //PrepareDocumentForSend(doc);
-				PrepareDocumentForSendV2(doc, DocTypeErpNext);
+                
+				PrepareDocumentForSend(doc, DocTypeErpNext);
             });
 
             //icon-attachment
@@ -141,52 +141,85 @@ function SetupCustomButtons(doc, DocTypeErpNext)
         }, 1000);
 }
 
+/* NO UTILIZADO */
 function SetListSriButtons(DocTypeErpNext)
 {
-	//
-	//TODO: Colocar validacide lista hasta solucionar la carga focalizada
-	console.log("Inicio Lista v2:" + Date().toString());
+	
+frappe.listview_settings[doctype_customized] = frappe.listview_settings[doctype_customized] || {};
 
-	frappe.listview_settings[DocTypeErpNext] = frappe.listview_settings[DocTypeErpNext] || {};
+frappe.listview_settings[doctype_customized] = {
+    add_fields: ['numeroautorizacion', 'sri_estado', 'status'],
+button: {
+    show(doc) {        
+        return doc.status !== 'Cancelled' && doc.status !== 'Draft';
+    },
+    get_label(doc) 
+    {
+        //console.log('get_label called for doc:', doc);
+        const d = doc;
+        if (!d) return frappe.utils.icon('play', 'sm');
+        const autorizado = d.numeroautorizacion && d.numeroautorizacion !== '0' && d.sri_estado == 200;
+        return autorizado
+            ? frappe.utils.icon('send', 'sm')
+            : frappe.utils.icon('play', 'sm');
+    },
+    get_description(doc) 
+    {
+        const d = doc;
+        if (!d) return frappe.utils.icon('play', 'sm');
+        const autorizado = d.numeroautorizacion && d.numeroautorizacion !== '0' && d.sri_estado == 200;
 
-	frappe.listview_settings[DocTypeErpNext].button = {
-		show(doc) 
-		{
-			//console.log("Lista:" + Date().toString());
-			//return doc.status != 'Paid';
+        return autorizado
+            ? 'Enviar email'
+            : 'Enviar al SRI';
+    },
+    action(doc) 
+    {
+        var actionButton = $('.list-actions > .btn-action[data-name="' + doc.name + '"]');
 
-			//if (doc.status == 'Cancelled' || doc.status == 'Draft') {
-			//    return false;
-			//}
+        if ($(actionButton).attr('endRender') != 'true') {
+            frappe.show_alert({
+                message: __(`${doc.name} aún se está configurando, espere un momento por favor.`),
+                indicator: 'red'
+            }, 3);
+        }        
+    }
+},
 
-			SetupCustomButtons(doc,DocTypeErpNext);
-			return true;
-		},
-		get_label() 
-		{
-			//old return __('<svg class="icon icon-sm" style=""><use class="" href="#icon-mark-as-read"></use></svg>');
-			return __('<i class="fa fa-play"></i>');
-		},
-		get_description(doc) 
-		{
-			return __('Enviar al SRI')
-		},
-		action(doc) 
-		{
-			var actionButton = $('.list-actions > .btn-action[data-name="' + doc.name + '"]');
-			//console.log($(actionButton).attr('endRender'));
-
-			if ($(actionButton).attr('endRender') != 'true') {
-				frappe.show_alert({
-					message: __(`${doc.name} aún se está configurando, espere un momento por favor.`),
-					indicator: 'red'
-				}, 3);
-			}
-			
-			//Se omite la siguiente linea porque se redunda el llamado de la funcion
-			//PrepareDocumentForSend(doc);
-		}
-	}
+dropdown_button: {
+        get_label: __('⬇'),
+        buttons: [
+            {
+                get_label: frappe.utils.icon('code', 'sm') + __(' Descargar XML'),
+                show: function(doc) { return true; },
+                action: function(doc) {
+                    document.Website.DownloadXml_v2(doc.name);
+                }
+            },
+            {
+                get_label: __('📄 Descargar PDF'),
+                show: function(doc) { return true; },
+                action: function(doc) {
+                    document.Website.DownloadPdf_v2(doc.name);
+                }
+            },
+            {
+                get_label: __('ⓘ Ver información'),
+                show: function(doc) { return true; },
+                action: function(doc) {
+                    document.Website.ShowInfo(doc.name);
+                }
+            },
+            {
+                get_label: __('✍ XML Signed'),
+                show: function(doc) { return true; }, // Puedes añadir condiciones aquí para controlar la visualización
+                action: function(doc) {
+                    document.Website.DownloadXmlSigned(doc.name);
+                }
+            }
+        ]
+    }
+}
 }
 
 function allowSendSri(docApi)
@@ -203,41 +236,27 @@ function allowSendSri(docApi)
 
 function SetFormSriButtons(frm, DocTypeErpNext)
 {
-	//console.log('allowSendSri');
-	//console.log(allowSendSri(frm.doc));
-
 	if(allowSendSri(frm.doc))
 	{
-		frm.add_custom_button(__('<i class="fa fa-play"></i> Enviar al SRI'), function() {
-			// When this button is clicked, do this            
-			console.log(frm.doc);
-			console.log("Cargado Script add_custom_button ----cambiado");
+		frm.add_custom_button(__('▶ Enviar al SRI'), function() {			
 			var subject = frm.doc.subject;
-			var event_type = frm.doc.event_type;
-			//PrepareDocumentForSend(frm.doc);
-			PrepareDocumentForSendV2(frm.doc, DocTypeErpNext);
+			var event_type = frm.doc.event_type;			
+			PrepareDocumentForSend(frm.doc, DocTypeErpNext);
 		},);
 	}
 
-	frm.add_custom_button(__('<i class="fa fa-file-code-o"></i> Descargar XML'), function() 
-	{
-		//frappe.show_alert({
-		//	message: __(`${frm.doc.name} Implementación requerida.`),
-		//	indicator: 'red'
-		//}, 3);
-
-		//console.log('DOC NAMEEEEEEEEEEE');
-		//console.log(frm.doc.name);
-
-		//document.Website.DownloadXml('` + frm.doc.name + `');
+	frm.add_custom_button(__('🧾 Descargar XML'), function() 
+	{		
 		document.Website.DownloadXml_v2(frm.doc.name);
 
-	},__('<svg class="icon  icon-sm" style=""><use class="" href="#icon-organization"></use></svg>Sri')); //NO SOPORTA AWESOME ICONS
+	},__('🏛 Sri'));
 
-	frm.add_custom_button(__('<i class="fa fa-file-pdf-o"></i> Descargar PDF'), function() 
+	frm.add_custom_button(__('📄 Descargar PDF'), function() 
 	{		
 		document.Website.DownloadPdf_v2(frm.doc.name);
-	},__('<svg class="icon  icon-sm" style=""><use class="" href="#icon-organization"></use></svg>Sri'));
+	},__('🏛 Sri')).addClass("btn-primary");
+
+	frm.page.set_inner_btn_group_as_primary(__('🏛 Sri'));
 }
 
 async function GetFullCompanySri(def_company)

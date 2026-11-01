@@ -20,13 +20,7 @@ frappe.ui.form.on(doctype_customized, {
             return false;
         }
         
-        SetFormSriButtons(frm, doctype_customized);      
-        //console.log(frm);
-        //console.log(frm.doctype_customized);
+        SetFormSriButtons(frm, doctype_customized);        
     },
-    //estab: function(frm)
-	//{
-        //frm.set_value('ptoemi',  '');
-        //frm.refresh_field('ptoemi');
-	//},
+    
 })

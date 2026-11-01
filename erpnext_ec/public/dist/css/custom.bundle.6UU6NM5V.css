@@ -1,0 +1,10 @@
+/* ../../../../../../../tmp/tmp-57922-w0BOXn818E4f/erpnext_ec/erpnext_ec/public/css/custom.bundle.css */
+.list-row-col:has(> .btn-action[data-name]) {
+  padding-right: 0 !important;
+  margin-right: 0 !important;
+}
+.list-row-col.inner-group-button[data-name] {
+  padding-left: 0 !important;
+  margin-left: 0px !important;
+}
+/*# sourceMappingURL=custom.bundle.6UU6NM5V.css.map */
