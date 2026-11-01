@@ -346,3 +346,12 @@ on_session_creation = [
 get_translated_dict = {
 	("doctype", "Global Defaults"): "frappe.geo.country_info.get_translated_dict"
 }
+
+add_to_apps_screen = [
+    {
+        "name": "erpnext_ec",
+        "logo": "/assets/erpnext_ec/images/logo.svg",
+        "title": "ERPNext Ecuador",
+        "route": "/desk/erpnext-ec/purchase-withholding-sri-ec",
+    }
+]

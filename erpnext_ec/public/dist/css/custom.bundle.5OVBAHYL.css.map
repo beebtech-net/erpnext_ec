@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "sources": ["../../../../../../../../../../tmp/tmp-57922-w0BOXn818E4f/erpnext_ec/erpnext_ec/public/css/custom.bundle.css"],
+  "sources": ["../../../../../../../../../../tmp/tmp-68355-0JaFTDIaWGb0/erpnext_ec/erpnext_ec/public/css/custom.bundle.css"],
   "sourcesContent": ["/* Solo la columna que contiene el bot\u00F3n \"Enviar al SRI\" */\n.list-row-col:has(> .btn-action[data-name]) {\n    padding-right: 0 !important;\n    margin-right: 0 !important;\n}\n\n/* Solo la columna del dropdown */\n.list-row-col.inner-group-button[data-name] {\n\n    padding-left: 0 !important;\n    margin-left: 0px !important;\n}"],
   "mappings": ";AACA;AACI;AACA;AAAA;AAIJ;AAEI;AACA;AAAA;",
   "names": []
